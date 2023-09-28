@@ -8,9 +8,40 @@
 
     <!-- Stylesheets here -->
     <link rel="stylesheet" href="style/mainapp.css">
-
     <!-- ---------------- -->
 
+    <!-- Fonts here -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <!-- ---------- -->
+
+    <!-- Scripts here -->
+    <script>
+        function myFunction() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("tabletwo");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- ------------ -->
 
 
 
@@ -21,7 +52,7 @@
     <h1>WELCOME TO TURNING POINT MUSOS NEW APP</h1>
 
     <div>
-        <table>
+        <table id="tableone">
             <caption>SONG LIST</caption>
             <thead>
                 <tr>
@@ -31,16 +62,73 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- SONG 1 -->
                 <tr>
                     <td>Song 1</td>
-                    <td><a href="assets/chords/we-are-the-free.html">Chords</a></td>
-                    <td><a href="assets/lyrics/we-are-the-free.html">Lyrics</a></td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
+                </tr>
+                <!-- SONG 2 -->
+                <tr>
+                    <td>Song 2</td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
+                </tr>
+                <!-- SONG 3 -->
+                <tr>
+                    <td>Song 3</td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
+                </tr>
+                <!-- SONG 4 -->
+                <tr>
+                    <td>Song 4</td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-
+    <div>
+        <input id="myInput" onkeyup="myFunction()" placeholder="Search for a song name" type="text">
+        <table id="tabletwo">
+            <caption>SONG DATABASE</caption>
+            <thead>
+                <tr>
+                    <td>NAME OF SONG</td>
+                    <td>CHORDS LINK</td>
+                    <td>LYRICS LINK</td>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- SONG 1 -->
+                <tr>
+                    <td>Song 1</td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
+                </tr>
+                <!-- SONG 2 -->
+                <tr>
+                    <td>Song 2</td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
+                </tr>
+                <!-- SONG 3 -->
+                <tr>
+                    <td>Song 3</td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
+                </tr>
+                <!-- SONG 4 -->
+                <tr>
+                    <td>Song 4</td>
+                    <td><a href="assets/chords/">Chords</a></td>
+                    <td><a href="assets/lyrics/">Lyrics</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 
 
