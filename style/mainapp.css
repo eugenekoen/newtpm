@@ -29,6 +29,13 @@ table {
     font-family: 'Montserrat', sans-serif;
 }
 
+caption {
+    color: white;
+    text-align: left;
+    padding: 8px;
+    background-color: rgba(30, 168, 210, 0.295);
+}
+
 thead {
     background-color: #4CAF50;
     color: white;
