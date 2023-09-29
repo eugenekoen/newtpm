@@ -63,7 +63,7 @@ table a {
 table td:nth-child(2),
 table td:nth-child(3) {
     text-align: center;
-    column-width: 30%;
+    width: 20%;
 }
 
 tr:nth-child(even) {
