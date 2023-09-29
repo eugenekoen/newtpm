@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
+  <!-- Additional Important Items -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- -------------------------- -->
 
-    <!-- THESE ARE MY LINK TO ALL STYLESHEETS JS & JQUERY -->
+  <!-- THESE ARE MY LINKS TO ALL STYLESHEETS JS & JQUERY -->
+  <link rel="shortcut icon" href="./../../style/images/LOGO.jpg" />
+  <link rel="stylesheet" type="text/css" href="./../../style/song.css">
+  <link rel="stylesheet" type="text/css" href="./../../style/jquery.transposer.css">
+  <!-- ------------------------------------------------- -->
 
-    <link rel="shortcut icon" href="../LOGO.jpg" />
-    <link rel="stylesheet" type="text/css" href="../song.css">
-    <link rel="stylesheet" type="text/css" href="../jquery.transposer.css">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Links to Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,500,500i,600" rel="stylesheet">
+  <!-- -------------- -->
 
-    <!-- These are the links to the Google fonts relating to the different fonts that i am using in the website -->
+  <!-- Scripts -->
+  <script type="text/javascript" src="../jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="../jquery/jquery.transposer.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("pre").transpose();
+    });
+  </script>
+  <!-- ------ -->
 
-    <link href="https://fonts.googleapis.com/css?family=Allerta+Stencil" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,500,500i,600" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Bangers" rel="stylesheet">
-
-    <!-- SCRIPTS -->
-
-    <script type="text/javascript" src="../jquery.min.js"></script>
-    <script type="text/javascript" src="../jquery.transposer.js"></script>
-    <script type="text/javascript">
-      $(function() {
-          $("pre").transpose();
-      });
-    </script>
-
-    <title>Template</title>
+  <title>Template</title>
 </head>
+
 <body>
   <pre data-key="Em">
   -------------------------
@@ -81,4 +82,5 @@
   </pre>
 
 </body>
+
 </html>
