@@ -174,7 +174,7 @@
         };
 
 
-        return $(this).each(function () {
+        return this.each(function () {
 
             var startKey = $(this).attr("data-key");
             if (!startKey || $.trim(startKey) == "") {
@@ -188,7 +188,7 @@
 
             currentKey = getKeyByName(startKey);
 
-            // Build tranpose links ===========================================
+            // Build transpose links ===========================================
             var keyLinks = [];
             $(keys).each(function (i, key) {
                 if (currentKey.name == key.name)
@@ -201,7 +201,7 @@
             var $this = $(this);
             var keysHtml = $("<div class='transpose-keys'></div>");
             keysHtml.html(keyLinks.join(""));
-            $("a", keysHtml).click(function (e) {
+            $("a", keysHtml).on("click", function (e) {
                 e.preventDefault();
                 transposeSong($this, $(this).text());
                 $(".transpose-keys a").removeClass("selected");
@@ -222,12 +222,11 @@
                     output.push("<span>" + wrapChords(line) + "</span>");
                 else
                     output.push("<span>" + line + "</span>");
-            };
+            }
 
             $(this).html(output.join("\n"));
         });
     };
-
 
     $.fn.transpose.defaults = {
         chordRegex: /^[A-G][b\#]?(2|4|5|6|7|9|11|13|6\/9|7\-5|7\-9|7\#5|7\#9|7\+5|7\+9|b5|#5|#9|7b5|7b9|7sus2|7sus4|add2|add4|add9|aug|dim|dim7|m\/maj7|m6|m7|m7b5|m9|m11|m13|maj7|maj9|maj11|maj13|mb5|m|sus|sus2|sus4)*(\/[A-G][b\#]*)*$/,
@@ -235,6 +234,3 @@
     };
 
 })(jQuery);
-
-
-
