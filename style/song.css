@@ -34,13 +34,3 @@ body {
     margin-left: 10px;
     /* Add some spacing between the slider and the code */
 }
-
-/* Add some styling to the code container */
-#code-container {
-    overflow-y: scroll;
-    /* Enable vertical scrolling for the code container */
-    max-height: 300px;
-    /* Set a maximum height for the code container */
-    width: 70%;
-    /* Adjust the width as needed */
-}
