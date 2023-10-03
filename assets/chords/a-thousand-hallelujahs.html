@@ -21,18 +21,18 @@
    <!-- Scripts -->
    <script type="text/javascript" src="../jquery/jquery.min.js"></script>
    <script type="text/javascript" src="../jquery/jquery.transposer.js"></script>
-   <script type="text/javascript">
-      $(function () {
-         $("pre").transpose();
-      });
-   </script>
    <!-- ------ -->
 
    <title>A Thousand Hallelujahs</title>
 </head>
 
 <body>
-   <pre data-key="C">
+   <div id="slider-container">
+      <input type="range" id="scroll-speed" min="0" max="3" step="1" value="0">
+      <label for="scroll-speed">Scroll Speed:</label>
+   </div>
+
+   <pre id="song-lyrics" data-key="C" style="height: 1000px; overflow: auto;">
   ================================================ 
   A THOUSAND HALLELUJAHS
   ======================
@@ -94,10 +94,9 @@
           Fsus2  Fmaj7  G6  G
   We will sing  for -  ever
 
-  ================================================ 
 
 
-            
+  ================================================             
   </pre>
 
 </body>
