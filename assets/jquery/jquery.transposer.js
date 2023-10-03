@@ -1,20 +1,8 @@
 $(function () {
     $("pre").transpose();
 
-    // Dynamically set the height of the <pre> element to match the content's height
-    function adjustPreElementHeight() {
-        const contentHeight = preElement.scrollHeight;
-        preElement.style.height = contentHeight + 'px';
-    }
-
     // Add an ID to the <pre> element for easy targeting
     const preElement = document.getElementById('song-lyrics');
-
-    // Call the function to adjust the <pre> element's height initially
-    adjustPreElementHeight();
-
-    // Add an event listener to handle window resize events
-    window.addEventListener('resize', adjustPreElementHeight);
 
     // Get the slider element
     const scrollSpeedSlider = document.getElementById('scroll-speed');
