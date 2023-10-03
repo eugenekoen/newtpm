@@ -51,8 +51,8 @@ $(function () {
 
     // Dynamically set the height of the <pre> element to match the device's screen height
     function adjustPreElementHeight() {
-        const windowHeight = window.innerHeight;
-        preElement.style.height = windowHeight + 'px';
+        const windowHeight = window.innerHeight - 50;
+        preElement.style.maxHeight = windowHeight + 'px';
 
         // Apply overflow: auto to enable scrolling if necessary
         preElement.style.overflow = preElement.scrollHeight > windowHeight ? 'auto' : 'hidden';
