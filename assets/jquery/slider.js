@@ -11,7 +11,7 @@ $(function () {
     let scrollInterval;
 
     // Define scroll speeds (adjust these values as needed)
-    const scrollSpeeds = [0, 1, 1.5, 2]; // 0 for stop, 5 for slow, 10 for medium, 15 for fast
+    const scrollSpeeds = [0, 1, 2, 3]; // 0 for stop, 5 for slow, 10 for medium, 15 for fast
 
     // Function to handle scroll speed changes
     function handleScrollSpeedChange() {
@@ -37,4 +37,19 @@ $(function () {
 
     // Trigger initial scroll speed setup
     handleScrollSpeedChange();
+
+    // Dynamically set the height of the <pre> element to match the device's screen height
+    function adjustPreElementHeight() {
+        const windowHeight = window.innerHeight;
+        preElement.style.height = windowHeight + 'px';
+
+        // Apply overflow: auto to enable scrolling if necessary
+        preElement.style.overflow = preElement.scrollHeight > windowHeight ? 'auto' : 'hidden';
+    }
+
+    // Call the function to adjust the <pre> element's height initially
+    adjustPreElementHeight();
+
+    // Add an event listener to handle window resize events
+    window.addEventListener('resize', adjustPreElementHeight);
 });

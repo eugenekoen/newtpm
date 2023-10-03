@@ -156,7 +156,6 @@
             return o.join("");
         }
 
-
         var isChordLine = function (input) {
             var tokens = input.replace(/\s+/, " ").split(" ");
 
@@ -173,8 +172,7 @@
             return input.replace(opts.chordReplaceRegex, "<span class='c'>$1</span>");
         };
 
-
-        return $(this).each(function () {
+        return this.each(function () {
 
             var startKey = $(this).attr("data-key");
             if (!startKey || $.trim(startKey) == "") {
@@ -188,7 +186,7 @@
 
             currentKey = getKeyByName(startKey);
 
-            // Build tranpose links ===========================================
+            // Build transpose links ===========================================
             var keyLinks = [];
             $(keys).each(function (i, key) {
                 if (currentKey.name == key.name)
@@ -235,6 +233,3 @@
     };
 
 })(jQuery);
-
-
-
