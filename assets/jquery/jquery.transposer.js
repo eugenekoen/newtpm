@@ -49,20 +49,20 @@ $(function () {
     // Trigger initial scroll speed setup
     handleScrollSpeedChange();
 
-    // // Dynamically set the height of the <pre> element to match the device's screen height
-    // function adjustPreElementHeight() {
-    //     const windowHeight = window.innerHeight;
-    //     preElement.style.height = windowHeight + 'px';
+    // Dynamically set the height of the <pre> element to match the device's screen height
+    function adjustPreElementHeight() {
+        const windowHeight = window.innerHeight;
+        preElement.style.height = windowHeight + 'px';
 
-    //     // Apply overflow: auto to enable scrolling if necessary
-    //     preElement.style.overflow = preElement.scrollHeight > windowHeight ? 'auto' : 'hidden';
-    // }
+        // Apply overflow: auto to enable scrolling if necessary
+        preElement.style.overflow = preElement.scrollHeight > windowHeight ? 'auto' : 'hidden';
+    }
 
-    // // Call the function to adjust the <pre> element's height initially
-    // adjustPreElementHeight();
+    // Call the function to adjust the <pre> element's height initially
+    adjustPreElementHeight();
 
-    // // Add an event listener to handle window resize events
-    // window.addEventListener('resize', adjustPreElementHeight);
+    // Add an event listener to handle window resize events
+    window.addEventListener('resize', adjustPreElementHeight);
 });
 
 (function ($) {
