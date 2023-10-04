@@ -21,18 +21,19 @@
   <!-- Scripts -->
   <script type="text/javascript" src="../jquery/jquery.min.js"></script>
   <script type="text/javascript" src="../jquery/jquery.transposer.js"></script>
-  <script type="text/javascript">
-    $(function () {
-      $("pre").transpose();
-    });
-  </script>
   <!-- ------ -->
 
   <title>Above all</title>
 </head>
 
 <body>
-  <pre data-key="G">
+
+  <div id="slider-container">
+    <input type="range" id="scroll-speed" min="0" max="3" step="1" value="0">
+    <label for="scroll-speed">Scroll Speed:</label>
+  </div>
+
+  <pre id="song-lyrics" data-key="G">
   ================================================ 
    ABOVE ALL
    =========
@@ -80,10 +81,11 @@
    You took the fall, and thought of me 
           G
    Above all
-  ================================================ 
 
 
-            
+
+
+  ================================================             
   </pre>
 
 </body>
