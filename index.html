@@ -1107,10 +1107,10 @@
                 </tr>
                 <tr>
                     <td>You're Beautiful</td>
-                    <td class="clickable" data-song-name="youre-beautiful-phil-whickam" data-content-type="chords"
-                        data-target="song-content">Chords</td>
-                    <td class="clickable" data-song-name="youre-beautiful-phil-whickam" data-content-type="lyrics"
-                        data-target="song-content">Lyrics</td>
+                    <a href="#" class="clickable" data-song-name="youre-beautiful-phil-whickam"
+                        data-content-type="chords" data-target="song-content">Chords</td>
+                        <a href="#" class="clickable" data-song-name="youre-beautiful-phil-whickam"
+                            data-content-type="lyrics" data-target="song-content">Lyrics</td>
                 </tr>
             </tbody>
         </table>
@@ -1122,6 +1122,42 @@
             songCells.forEach(cell => cell.addEventListener('click', handleSongClick));
 
             function handleSongClick(event) {
+                var songName = event.target.dataset.songName;
+                var contentType = event.target.dataset.contentType;
+                loadSong(songName, contentType);
+            }
+
+            function loadSong(songName, contentType) {
+                var songURL = `https://turningpointmusos.co.za//assets/${contentType}/${songName}.txt`;
+                var templateURL = "./assets/master/template.html";
+
+                // Fetch the song content
+                fetch(songURL)
+                    .then(response => {
+                        if (!response.ok) throw new Error(`Failed to load song content for ${songName}`);
+                        return response.text();
+                    })
+                    .then(songContent => {
+                        // Navigate to template.html
+                        window.location.href = templateURL + `?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodeURIComponent(songContent)}`;
+                    })
+                    .catch(error => {
+                        console.error("Error: ", error.message);
+                        document.body.innerHTML = `<p>Error loading content: ${error.message}</p>`;
+                    });
+            }
+
+        });
+
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var songLinks = document.querySelectorAll('table a');
+            songLinks.forEach(link => link.addEventListener('click', handleSongClick));
+
+            function handleSongClick(event) {
+                event.preventDefault();
                 var songName = event.target.dataset.songName;
                 var contentType = event.target.dataset.contentType;
                 loadSong(songName, contentType);
