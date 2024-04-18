@@ -2,40 +2,75 @@
 <html lang="en">
 
 <head>
+  <!-- Additional Important Items -->
   <meta charset="utf-8" />
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=2.0, user-scalable=yes" /> -->
+  <meta name="viewport" content="width=device-width, initial-scale=0.75" />
+  <!-- -------------------------- -->
 
-  <!-- THESE ARE MY LINK TO ALL STYLESHEETS JS & JQUERY -->
-
-  <link rel="shortcut icon" href="../LOGO.jpg" />
+  <!-- THESE ARE MY LINKS TO ALL STYLESHEETS JS & JQUERY -->
+  <link rel="shortcut icon" href="./../../style/images/LOGO.jpg" />
   <link rel="stylesheet" type="text/css" href="./../../style/song.css">
   <link rel="stylesheet" type="text/css" href="./../../style/jquery.transposer.css">
+  <!-- ------------------------------------------------- -->
 
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- These are the links to the Google fonts relating to the different fonts that i am using in the website -->
-
+  <!-- Links to Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,500,500i,600" rel="stylesheet">
+  <!-- -------------- -->
 
-  <!-- SCRIPTS -->
-
+  <!-- Scripts -->
   <script type="text/javascript" src="../jquery/jquery.min.js"></script>
   <script type="text/javascript" src="../jquery/jquery.transposer.js"></script>
-  <script type="text/javascript">
-    $(function () {
-      $("pre").transpose();
-    });
-  </script>
+  <!-- ------ -->
 
   <title>Template</title>
 </head>
 
 <body>
-  <pre data-key="A">
-  <!--code starts here -->
-  A     B     C
-  HERE I AM HUMBLED
-    
+  <pre id="songContent" data-key="A">
+
   </pre>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const songName = params.get('songName');
+      const contentType = params.get('contentType');
+      const songContent = params.get('songContent');
+
+      if (songName && contentType && songContent) {
+        const preElement = document.getElementById('songContent');
+        if (preElement) {
+          // Split the song content by line breaks
+          let lines = songContent.split('\n');
+
+          // Remove the first line (assuming it contains the key)
+          const key = lines.shift().trim();
+
+          // Set the text content of the pre element
+          preElement.textContent = lines.join('\n');
+
+          // Set the data-key attribute
+          preElement.setAttribute('data-key', key);
+
+          // Set the document title to the first line of the remaining song content
+          document.title = lines[0].trim();
+        } else {
+          console.error("No <pre> tag found in the template.");
+        }
+      } else {
+        console.error("Missing song parameters in the URL.");
+      }
+    });
+  </script>
+
+
+
+
+
+
+
+
+
 
 </body>
 

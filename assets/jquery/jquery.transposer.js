@@ -25,66 +25,6 @@ $(function () {
 
     // Add an ID to the <pre> element for easy targeting
     const preElement = document.getElementById('song-lyrics');
-
-    // Get the slider element
-    const scrollSpeedSlider = document.getElementById('scroll-speed');
-
-    // Initialize the interval variable
-    let scrollInterval = null;
-
-    // Define scroll speeds (adjust these values as needed)
-    const scrollSpeeds = [0, 1, 2, 3]; // 0 for stop, 1 for slow, 2 for medium, 3 for fast
-
-    // Function to handle scroll speed changes
-    function handleScrollSpeedChange() {
-        // Get the value of the slider
-        const speed = parseInt(scrollSpeedSlider.value);
-
-        // Calculate the scroll amount based on the selected speed
-        const scrollAmount = scrollSpeeds[speed];
-
-        // If there is an existing scroll interval, clear it
-        if (scrollInterval) {
-            clearInterval(scrollInterval);
-            scrollInterval = null;
-        }
-
-        // Create a new interval to continuously scroll (if not stopped)
-        if (scrollAmount > 0) {
-            scrollInterval = setInterval(() => {
-                preElement.scrollTop += scrollAmount;
-            }, 100); // Adjust the interval timing as needed
-        }
-    }
-
-    // Add an event listener to the slider
-    scrollSpeedSlider.addEventListener('input', handleScrollSpeedChange);
-
-    // Add an event listener to stop scrolling when the user manually scrolls up
-    preElement.addEventListener('scroll', function () {
-        // Check if the user has scrolled up (reached the top of the <pre> element)
-        if (preElement.scrollTop === 0) {
-            clearInterval(scrollInterval); // Stop the interval
-        }
-    });
-
-    // Trigger initial scroll speed setup
-    handleScrollSpeedChange();
-
-    // Dynamically set the height of the <pre> element to match the device's screen height
-    function adjustPreElementHeight() {
-        const windowHeight = window.innerHeight;
-        preElement.style.height = windowHeight + 'px';
-
-        // Apply overflow: auto to enable scrolling if necessary
-        preElement.style.overflow = preElement.scrollHeight > windowHeight ? 'auto' : 'hidden';
-    }
-
-    // Call the function to adjust the <pre> element's height initially
-    adjustPreElementHeight();
-
-    // Add an event listener to handle window resize events
-    window.addEventListener('resize', adjustPreElementHeight);
 });
 
 (function ($) {

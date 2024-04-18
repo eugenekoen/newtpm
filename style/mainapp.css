@@ -85,3 +85,8 @@ input {
     background-color: honeydew;
     width: 300px;
 }
+
+.clickable {
+    cursor: pointer;
+    /* Change cursor to pointer on hover */
+}
