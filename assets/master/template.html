@@ -32,19 +32,19 @@
   </pre>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const params = new URLSearchParams(window.location.search);
-      const songName = params.get('songName');
-      const contentType = params.get('contentType');
-      const songContent = params.get('songContent');
+      var params = new URLSearchParams(window.location.search);
+      var songName = params.get('songName');
+      var contentType = params.get('contentType');
+      var songContent = params.get('songContent');
 
       if (songName && contentType && songContent) {
-        const preElement = document.getElementById('songContent');
+        var preElement = document.getElementById('songContent');
         if (preElement) {
           // Split the song content by line breaks
           let lines = songContent.split('\n');
 
           // Remove the first line (assuming it contains the key)
-          const key = lines.shift().trim();
+          var key = lines.shift().trim();
 
           // Set the text content of the pre element
           preElement.textContent = lines.join('\n');

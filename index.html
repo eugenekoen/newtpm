@@ -75,10 +75,10 @@
                 </tr>
                 <!-- SONG 5 -->
                 <tr>
-                    <td>10 000 reasons</td>
-                    <td class="clickable" data-song-name="10000-reasons" data-content-type="chords"
+                    <td>A Thousand Hallelujahs</td>
+                    <td class="clickable" data-song-name="a-thousand-hallelujahs" data-content-type="chords"
                         data-target="song-content">Chords</td>
-                    <td class="clickable" data-song-name="10000-reasons" data-content-type="lyrics"
+                    <td class="clickable" data-song-name="a-thousand-hallelujahs" data-content-type="lyrics"
                         data-target="song-content">Lyrics</td>
                 </tr>
             </tbody>
@@ -1118,18 +1118,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const songCells = document.querySelectorAll('.clickable');
+            var songCells = document.querySelectorAll('.clickable');
             songCells.forEach(cell => cell.addEventListener('click', handleSongClick));
 
             function handleSongClick(event) {
-                const songName = event.target.dataset.songName;
-                const contentType = event.target.dataset.contentType;
+                var songName = event.target.dataset.songName;
+                var contentType = event.target.dataset.contentType;
                 loadSong(songName, contentType);
             }
 
             function loadSong(songName, contentType) {
-                const songURL = `https://eugenekoen.github.io/testnewtpm/assets/${contentType}/${songName}.txt`;
-                const templateURL = "./assets/master/template.html";
+                var songURL = `https://eugenekoen.github.io/testnewtpm/assets/${contentType}/${songName}.txt`;
+                var templateURL = "./assets/master/template.html";
 
                 // Fetch the song content
                 fetch(songURL)
