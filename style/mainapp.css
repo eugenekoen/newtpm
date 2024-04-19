@@ -67,7 +67,7 @@ table td:nth-child(3) {
 }
 
 tr:nth-child(even) {
-    background-color: #1cb9be0c;
+    background-color: #1cb9be21;
 }
 
 tr:nth-child(odd) {
