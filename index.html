@@ -42,39 +42,35 @@
             </thead>
             <tbody>
                 <!-- SONG 1 -->
-                <!-- <tr>
-                    <td>A Thousand Hallelujahs</td>
-                    <td><a href="#" data-song-name="a-thousand-hallelujahs" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="a-thousand-hallelujahs" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr> -->
+                <tr>
+                    <td>God is Great</td>
+                    <td><a href="#" data-song-name="god-is-great" data-content-type="chords"
+                            data-target="song-content">Chords</td>
+                    <td><a href="#" data-song-name="god-is-great" data-content-type="lyrics"
+                            data-target="song-content">Lyrics</td>
+                </tr>
                 <!-- SONG 2 -->
                 <tr>
-                    <td>A Thousand Hallelujahs</td>
-                    <td><a href="#" data-song-name="a-thousand-hallelujahs" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="a-thousand-hallelujahs" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
+                    <td>Champion</td>
+                    <td><a href="#" data-song-name="champion" data-content-type="chords"
+                            data-target="song-content">Chords</td>
+                    <td><a href="#" data-song-name="champion" data-content-type="lyrics"
+                            data-target="song-content">Lyrics</td>
                 </tr>
                 <!-- SONG 3 -->
                 <tr>
-                    <td>God of Revival</td>
-                    <td><a href="#" data-song-name="god-of-revival" data-content-type="chords"
+                    <td>It is well</td>
+                    <td><a href="#" data-song-name="it-is-well" data-content-type="chords"
                             data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-of-revival" data-content-type="lyrics"
+                    <td><a href="#" data-song-name="it-is-well" data-content-type="lyrics"
                             data-target="song-content">Lyrics</td>
                 </tr>
                 <!-- SONG 4 -->
                 <tr>
-                    <td>10 000 Reasons</td>
-                    <td><a href="#" data-song-name="10000-reasons" data-content-type="chords"
+                    <td>Goodness of God</td>
+                    <td><a href="#" data-song-name="goodness-of-god" data-content-type="chords"
                             data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="10000-reasons" data-content-type="lyrics"
+                    <td><a href="#" data-song-name="goodness-of-god" data-content-type="lyrics"
                             data-target="song-content">Lyrics</td>
                 </tr>
                 <!-- SONG 5 -->
@@ -703,6 +699,13 @@
                             data-target="song-content">Lyrics</td>
                 </tr>
                 <tr>
+                    <td>It is well</td>
+                    <td><a href="#" data-song-name="it-is-well" data-content-type="chords"
+                            data-target="song-content">Chords</td>
+                    <td><a href="#" data-song-name="it-is-well" data-content-type="lyrics"
+                            data-target="song-content">Lyrics</td>
+                </tr>
+                <tr>
                     <td>I've found a love</td>
                     <td><a href="#" data-song-name="ive-found-a-love" data-content-type="chords"
                             data-target="song-content">Chords</td>
@@ -1242,31 +1245,37 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function ()
+        {
             var songCells = document.querySelectorAll('.clickable');
             songCells.forEach(cell => cell.addEventListener('click', handleSongClick));
 
-            function handleSongClick(event) {
+            function handleSongClick(event)
+            {
                 var songName = event.target.dataset.songName;
                 var contentType = event.target.dataset.contentType;
                 loadSong(songName, contentType);
             }
 
-            function loadSong(songName, contentType) {
+            function loadSong(songName, contentType)
+            {
                 var songURL = `https://turningpointmusos.co.za//assets/${contentType}/${songName}.txt`;
                 var templateURL = "./assets/master/template.html";
 
                 // Fetch the song content
                 fetch(songURL)
-                    .then(response => {
+                    .then(response =>
+                    {
                         if (!response.ok) throw new Error(`Failed to load song content for ${songName}`);
                         return response.text();
                     })
-                    .then(songContent => {
+                    .then(songContent =>
+                    {
                         // Navigate to template.html
                         window.location.href = templateURL + `?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodeURIComponent(songContent)}`;
                     })
-                    .catch(error => {
+                    .catch(error =>
+                    {
                         console.error("Error: ", error.message);
                         document.body.innerHTML = `<p>Error loading content: ${error.message}</p>`;
                     });
@@ -1277,32 +1286,38 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function ()
+        {
             var songLinks = document.querySelectorAll('table a');
             songLinks.forEach(link => link.addEventListener('click', handleSongClick));
 
-            function handleSongClick(event) {
+            function handleSongClick(event)
+            {
                 event.preventDefault();
                 var songName = event.target.dataset.songName;
                 var contentType = event.target.dataset.contentType;
                 loadSong(songName, contentType);
             }
 
-            function loadSong(songName, contentType) {
+            function loadSong(songName, contentType)
+            {
                 var songURL = `https://turningpointmusos.co.za//assets/${contentType}/${songName}.txt`;
                 var templateURL = "./assets/master/template.html";
 
                 // Fetch the song content
                 fetch(songURL)
-                    .then(response => {
+                    .then(response =>
+                    {
                         if (!response.ok) throw new Error(`Failed to load song content for ${songName}`);
                         return response.text();
                     })
-                    .then(songContent => {
+                    .then(songContent =>
+                    {
                         // Navigate to template.html
                         window.location.href = templateURL + `?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodeURIComponent(songContent)}`;
                     })
-                    .catch(error => {
+                    .catch(error =>
+                    {
                         console.error("Error: ", error.message);
                         document.body.innerHTML = `<p>Error loading content: ${error.message}</p>`;
                     });
