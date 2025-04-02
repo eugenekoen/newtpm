@@ -141,6 +141,36 @@
             cursor: pointer;
             margin-top: 10px;
         }
+
+        /* Password Modal Specific Styles (Optional Additions) */
+        #password-input {
+            width: 95%;
+            /* Adjust as needed */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            /* Include padding in width */
+        }
+
+        #password-error-msg {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            height: 16px;
+            /* Reserve space to prevent layout shift */
+        }
+
+        #submit-password-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -151,17 +181,33 @@
         </div>
     </div>
 
-    <!-- Button to Open Setlist Modal -->
+    <!-- Button to Open Setlist Modal (triggers password first) -->
     <div style="padding: 15px; text-align: center;">
         <button id="open-setlist-modal-btn"
             style=" background-color: #4CAF50; border: none;border-radius: 5px; color: white; padding: 15px 20px; font-size: 16px;font-family: 'Montserrat', sans-serif; font-weight: 500;">Set
             List Management</button>
     </div>
 
+    <!-- Password Modal (Initially Hidden) -->
+    <div id="password-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-password-modal-btn close-modal-btn">×</span> <!-- Use common class + specific -->
+            <h2>Enter Access Code</h2>
+            <p style="color: #666; font-size: 14px;">Enter the code to manage the setlist.</p>
+            <div style="margin: 20px 0;">
+                <label for="password-input" style="display: block; margin-bottom: 5px;">Code:</label>
+                <input type="password" id="password-input"> <!-- Styles moved to CSS -->
+                <p id="password-error-msg"></p> <!-- Error message placeholder -->
+            </div>
+            <button id="submit-password-btn">Submit Code</button> <!-- Styles moved to CSS -->
+        </div>
+    </div>
+    <!-- --------------- -->
+
     <!-- Setlist Modal (Initially Hidden) -->
     <div id="setlist-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span class="close-modal-btn">×</span>
+            <span class="close-modal-btn">×</span> <!-- Note: This is the setlist modal's close button -->
             <h2>Weekend Setlist Management</h2>
 
             <div id="current-setlist-display">
@@ -240,6 +286,7 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- START OF SONG LIST -->
                 <tr>
                     <td>10 000 Reasons</td>
                     <td><a href="#" data-song-name="10000-reasons" data-content-type="chords"
@@ -1404,6 +1451,7 @@
                             data-target="song-content">Lyrics
                     </td>
                 </tr>
+                <!-- END OF SONG LIST -->
             </tbody>
         </table>
     </div>
@@ -1435,22 +1483,33 @@
             {
                 openBtn.disabled = true;
                 openBtn.textContent = "Setlist Disabled (Config Error)";
+                openBtn.style.backgroundColor = '#ccc'; // Optional: grey out button
             }
         }
 
         let currentSetlist = []; // In-memory cache of the setlist
         const setlistLabel = 'current_weekend'; // The label used in the database
+        const CORRECT_PASSWORD = "1111"; // <<< --- Your access code --- >>>
 
         // --- DOM Elements ---
-        const modal = document.getElementById('setlist-modal');
-        const openModalBtn = document.getElementById('open-setlist-modal-btn');
-        const closeModalBtn = modal ? modal.querySelector('.close-modal-btn') : null;
+        const setlistModal = document.getElementById('setlist-modal'); // Renamed from 'modal' for clarity
+        const openSetlistBtn = document.getElementById('open-setlist-modal-btn'); // Renamed for clarity
+        const closeSetlistModalBtn = setlistModal ? setlistModal.querySelector('.close-modal-btn') : null; // Specific close button for setlist modal
+
+        // --- Password Modal Elements ---
+        const passwordModal = document.getElementById('password-modal');
+        const closePasswordModalBtn = passwordModal ? passwordModal.querySelector('.close-password-modal-btn') : null;
+        const passwordInput = document.getElementById('password-input');
+        const submitPasswordBtn = document.getElementById('submit-password-btn');
+        const passwordErrorMsg = document.getElementById('password-error-msg');
+        // --- End Password Modal Elements ---
+
         const currentSetlistItemsUl = document.getElementById('current-setlist-items');
         const songSelectDropdown = document.getElementById('song-select-dropdown');
         const keySelectDropdown = document.getElementById('key-select-dropdown');
         const addSongBtn = document.getElementById('add-song-to-setlist-btn');
         const tableOneBody = document.querySelector('#tableone tbody');
-        const searchInput = document.getElementById("myInput"); // Keep reference to search input
+        const searchInput = document.getElementById("myInput");
 
         // --- Core Functions ---
 
@@ -1505,7 +1564,7 @@
             } finally
             {
                 // Always render UI based on the final state of currentSetlist
-                if (currentSetlistItemsUl) renderSetlistUI(); // Update modal list
+                if (currentSetlistItemsUl) renderSetlistUI(); // Update modal list (even if empty/error)
                 if (tableOneBody) updateTableOneWithSetlist(); // Update table one
             }
         }
@@ -1547,7 +1606,7 @@
         function renderSetlistUI()
         {
             if (!currentSetlistItemsUl) return;
-            currentSetlistItemsUl.innerHTML = '';
+            currentSetlistItemsUl.innerHTML = ''; // Clear previous items
 
             if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
             {
@@ -1580,7 +1639,7 @@
         function updateTableOneWithSetlist()
         {
             if (!tableOneBody) return;
-            tableOneBody.innerHTML = '';
+            tableOneBody.innerHTML = ''; // Clear previous rows
 
             if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
             {
@@ -1595,7 +1654,7 @@
                 if (!songName)
                 {
                     console.warn("Skipping setlist item due to missing songName:", item);
-                    return;
+                    return; // Don't add rows for invalid items
                 }
 
                 const row = tableOneBody.insertRow();
@@ -1657,11 +1716,6 @@
                 {
                     songFileIdentifier = chordLink.dataset.songName;
                 }
-                // Fallback if no chord link (less ideal)
-                // else {
-                //     const lyricsLink = row.cells[2]?.querySelector('a[data-song-name]');
-                //     if (lyricsLink) songFileIdentifier = lyricsLink.dataset.songName;
-                // }
 
                 // Add to map only if we have both identifier and display name, and it's not already added
                 if (songFileIdentifier && displayName && !uniqueSongs.has(songFileIdentifier))
@@ -1669,6 +1723,7 @@
                     uniqueSongs.set(songFileIdentifier, displayName);
                 } else if (displayName && displayName !== 'NAME OF SONG' && !chordLink)
                 {
+                    // Only warn if it looks like a real song title but lacks the identifier link
                     console.warn(`Could not find file identifier link for: ${displayName}`);
                 }
             });
@@ -1799,50 +1854,115 @@
         {
             console.log("DOM fully loaded.");
 
-            // Populate the song dropdown for the modal
             populateSongDropdown();
+            loadSetlistFromSupabase(); // Initial load for table one
 
-            // Load initial setlist (this now also updates table one)
-            loadSetlistFromSupabase();
-
-            // --- Modal Event Listeners ---
-            if (openModalBtn)
+            // --- Open Password Modal First ---
+            if (openSetlistBtn)
             {
-                openModalBtn.addEventListener('click', () =>
+                openSetlistBtn.addEventListener('click', () =>
                 {
-                    if (modal && supabase)
-                    {
-                        modal.style.display = 'block';
-                        // Reload fresh data when opening
-                        // No need to reload here unless you suspect staleness
-                        // loadSetlistFromSupabase();
-                        renderSetlistUI(); // Just render the current cache
-                    } else if (!supabase)
+                    if (!supabase)
                     {
                         alert("Setlist feature unavailable (Supabase connection failed).");
+                        return; // Stop if Supabase isn't working
+                    }
+                    if (passwordModal && passwordInput && passwordErrorMsg)
+                    {
+                        // Reset password modal state before showing
+                        passwordInput.value = '';
+                        passwordErrorMsg.textContent = '';
+                        passwordModal.style.display = 'block';
+                        passwordInput.focus(); // Focus on input field
+                    } else
+                    {
+                        console.error("Password modal element(s) not found!");
                     }
                 });
             }
 
-            if (closeModalBtn)
+            // --- Password Modal Submit Logic ---
+            if (submitPasswordBtn && passwordInput && passwordModal && setlistModal && passwordErrorMsg)
             {
-                closeModalBtn.addEventListener('click', () =>
+                submitPasswordBtn.addEventListener('click', () =>
                 {
-                    if (modal) modal.style.display = 'none';
-                    updateTableOneWithSetlist(); // Ensure table reflects any changes made in modal
+                    const enteredPassword = passwordInput.value.trim();
+                    if (enteredPassword === CORRECT_PASSWORD)
+                    {
+                        // Correct password
+                        passwordModal.style.display = 'none'; // Hide password modal
+                        passwordInput.value = ''; // Clear input
+                        passwordErrorMsg.textContent = ''; // Clear any error
+
+                        // Proceed to show the setlist modal
+                        if (setlistModal)
+                        {
+                            setlistModal.style.display = 'block';
+                            // Ensure setlist UI in modal is up-to-date
+                            renderSetlistUI(); // Render based on current 'currentSetlist' cache
+                        } else
+                        {
+                            console.error("Setlist modal element not found!");
+                        }
+                    } else
+                    {
+                        // Incorrect password
+                        passwordErrorMsg.textContent = 'Incorrect code. Please try again.';
+                        passwordInput.value = ''; // Clear input for re-entry
+                        passwordInput.focus(); // Set focus back to input
+                    }
+                });
+                // Allow submitting with Enter key in password field
+                passwordInput.addEventListener('keyup', (event) =>
+                {
+                    if (event.key === 'Enter')
+                    {
+                        event.preventDefault(); // Prevent default form submission if it were in a form
+                        submitPasswordBtn.click(); // Trigger the submit button's click handler
+                    }
+                });
+            } else
+            {
+                console.error("One or more elements required for password submission are missing.");
+            }
+
+            // --- Password Modal Close Logic ---
+            if (closePasswordModalBtn && passwordModal && passwordInput && passwordErrorMsg)
+            {
+                closePasswordModalBtn.addEventListener('click', () =>
+                {
+                    passwordModal.style.display = 'none';
+                    passwordInput.value = ''; // Clear input on close
+                    passwordErrorMsg.textContent = ''; // Clear error on close
                 });
             }
 
-            // Close modal if clicking outside of it
+            // --- Setlist Modal Event Listeners ---
+            if (closeSetlistModalBtn && setlistModal)
+            {
+                closeSetlistModalBtn.addEventListener('click', () =>
+                {
+                    setlistModal.style.display = 'none';
+                    updateTableOneWithSetlist(); // Update table one when closing setlist modal
+                });
+            }
+
+            // --- Close *any* modal if clicking outside of its content ---
             window.addEventListener('click', (event) =>
             {
-                if (modal && event.target == modal)
-                {
-                    modal.style.display = 'none';
-                    updateTableOneWithSetlist(); // Ensure table reflects any changes
+                if (event.target == setlistModal && setlistModal)
+                { // Check if click was on setlist modal background
+                    setlistModal.style.display = 'none';
+                    updateTableOneWithSetlist();
+                } else if (event.target == passwordModal && passwordModal)
+                { // Check if click was on password modal background
+                    passwordModal.style.display = 'none';
+                    if (passwordInput) passwordInput.value = ''; // Clear input
+                    if (passwordErrorMsg) passwordErrorMsg.textContent = ''; // Clear error
                 }
             });
 
+            // --- Add Song Button Listener (Inside Setlist Modal) ---
             if (addSongBtn)
             {
                 addSongBtn.addEventListener('click', async () =>
@@ -1859,7 +1979,7 @@
                         alert('Please select a song.');
                         return;
                     }
-                    if (!Array.isArray(currentSetlist)) currentSetlist = [];
+                    if (!Array.isArray(currentSetlist)) currentSetlist = []; // Ensure it's an array
 
                     const exists = currentSetlist.some(item => item && item.songName === songFileIdentifier);
                     if (exists)
@@ -1874,14 +1994,15 @@
                         key: selectedKey
                     });
 
-                    renderSetlistUI(); // Update modal UI
-                    await saveSetlistToSupabase(); // Save change
+                    renderSetlistUI(); // Update modal UI immediately
+                    await saveSetlistToSupabase(); // Save change to backend
 
                     songSelectDropdown.selectedIndex = 0; // Reset dropdowns
                     keySelectDropdown.selectedIndex = 0;
                 });
             }
 
+            // --- Remove Song Button Listener (Inside Setlist Modal) ---
             if (currentSetlistItemsUl)
             {
                 currentSetlistItemsUl.addEventListener('click', async (event) =>
@@ -1889,15 +2010,15 @@
                     if (event.target.classList.contains('remove-song-btn'))
                     {
                         const indexToRemove = parseInt(event.target.dataset.index, 10);
-                        if (!Array.isArray(currentSetlist)) currentSetlist = [];
+                        if (!Array.isArray(currentSetlist)) currentSetlist = []; // Ensure it's an array
 
                         if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < currentSetlist.length)
                         {
                             const removedItem = currentSetlist.splice(indexToRemove, 1);
                             console.log("Removed:", removedItem[0]?.displayName ?? 'item');
 
-                            renderSetlistUI(); // Update modal UI
-                            await saveSetlistToSupabase(); // Save change
+                            renderSetlistUI(); // Update modal UI immediately
+                            await saveSetlistToSupabase(); // Save change to backend
                         } else
                         {
                             console.error("Invalid index for removal:", event.target.dataset.index);
@@ -1906,7 +2027,7 @@
                 });
             }
 
-            // --- Delegated Click Listener for ALL Song Links ---
+            // --- Delegated Click Listener for ALL Song Links (Tables 1 & 2) ---
             document.body.addEventListener('click', (event) =>
             {
                 const link = event.target.closest('a[data-song-name]');
@@ -1919,15 +2040,14 @@
                         event.preventDefault();
                         handleSongClick(event, link);
                     }
-                    // If the link is not in tableone or tabletwo, let the default behavior occur
-                    // (though there shouldn't be any such links based on current HTML)
+                    // If the link is not in tableone or tabletwo, let the default browser behavior occur
                 }
             });
 
-            // Search function setup (from your HTML)
+            // --- Search function setup (for Table Two) ---
             if (searchInput)
             {
-                // The onkeyup is already in HTML, but ensure the function exists globally
+                // Make the function globally accessible if called via onkeyup in HTML
                 window.myFunction = function ()
                 {
                     var input, filter, table, tr, td, i, txtValue;
@@ -1936,18 +2056,19 @@
                     table = document.getElementById("tabletwo");
                     tr = table.getElementsByTagName("tr");
 
+                    // Loop through all table rows (start from 1 to skip header)
                     for (i = 1; i < tr.length; i++)
-                    { // Start from 1 to skip header row
-                        td = tr[i].getElementsByTagName("td")[0];
+                    {
+                        td = tr[i].getElementsByTagName("td")[0]; // Get the first cell (NAME OF SONG)
                         if (td)
                         {
                             txtValue = td.textContent || td.innerText;
                             if (txtValue.toUpperCase().indexOf(filter) > -1)
                             {
-                                tr[i].style.display = "";
+                                tr[i].style.display = ""; // Show row if match
                             } else
                             {
-                                tr[i].style.display = "none";
+                                tr[i].style.display = "none"; // Hide row if no match
                             }
                         }
                     }
