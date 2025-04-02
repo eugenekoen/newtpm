@@ -6,21 +6,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turningpoint Musos</title>
 
-    <!-- Stylesheets here -->
+    <!-- Stylesheets -->
     <link rel="shortcut icon" href="./style/images/LOGO.jpg" />
     <link rel="stylesheet" href="./style/mainapp.css">
+    <!-- Add modal styles to mainapp.css or link a separate CSS -->
+    <link rel="stylesheet" href="./style/jquery.transposer.css"> <!-- Keep for key buttons too -->
     <!-- ---------------- -->
 
-    <!-- Fonts here -->
+    <!-- SUPABASE CLIENT -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> <!-- Add this line -->
+
+    <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <!-- ---------- -->
 
-    <!-- Scripts here -->
+    <!-- Scripts -->
+    <script type="text/javascript" src="./assets/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="./assets/jquery/jquery.transposer.js"></script>
     <!------------------>
 
+    <!-- Add Modal CSS here or ensure it's in mainapp.css -->
+    <style>
+        /* Basic Modal Styling (Add to mainapp.css ideally) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1000;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            /* 5% from the top and centered */
+            padding: 25px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+            max-width: 600px;
+            /* Maximum width */
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .close-modal-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .close-modal-btn:hover,
+        .close-modal-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #current-setlist-items {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 10px;
+        }
+
+        #current-setlist-items li {
+            padding: 8px 5px;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #current-setlist-items li:last-child {
+            border-bottom: none;
+        }
+
+        .remove-song-btn {
+            background-color: #f44336;
+            /* Red */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 15px;
+        }
+
+        #add-song-section div {
+            margin-bottom: 15px;
+        }
+
+        #add-song-section label {
+            display: inline-block;
+            width: 50px;
+            margin-right: 10px;
+        }
+
+        #add-song-section select,
+        #add-song-section button {
+            padding: 8px 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        #add-song-section button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,66 +151,85 @@
         </div>
     </div>
 
+    <!-- Button to Open Setlist Modal -->
+    <div style="padding: 15px; text-align: center;">
+        <button id="open-setlist-modal-btn"
+            style=" background-color: #4CAF50; border: none;border-radius: 5px; color: white; padding: 15px 20px; font-size: 16px;font-family: 'Montserrat', sans-serif; font-weight: 500;">Set
+            List Management</button>
+    </div>
+
+    <!-- Setlist Modal (Initially Hidden) -->
+    <div id="setlist-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal-btn">×</span>
+            <h2>Weekend Setlist Management</h2>
+
+            <div id="current-setlist-display">
+                <h3>Current Setlist:</h3>
+                <ul id="current-setlist-items">
+                    <!-- Populated by JavaScript -->
+                    <li>Loading...</li>
+                </ul>
+            </div>
+
+            <hr style="margin: 20px 0;">
+
+            <div id="add-song-section">
+                <h3>Add Song:</h3>
+                <div>
+                    <label for="song-select-dropdown">Song:</label>
+                    <select id="song-select-dropdown">
+                        <option value="">-- Select a Song --</option>
+                        <!-- Options populated by JavaScript -->
+                    </select>
+                </div>
+                <div>
+                    <label for="key-select-dropdown">Key:</label>
+                    <select id="key-select-dropdown">
+                        <option value="C">C</option>
+                        <option value="Db">Db</option>
+                        <option value="D">D</option>
+                        <option value="Eb">Eb</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="Gb">Gb</option>
+                        <option value="G">G</option>
+                        <option value="Ab">Ab</option>
+                        <option value="A">A</option>
+                        <option value="Bb">Bb</option>
+                        <option value="B">B</option>
+                    </select>
+                </div>
+                <button id="add-song-to-setlist-btn">Add to Setlist</button>
+            </div>
+        </div>
+    </div>
+    <!-- --------------- -->
+
+
     <div>
+        <!-- Table One (SONG LIST / SETLIST) - Now dynamically populated -->
         <table id="tableone">
-            <caption>SONG LIST</caption>
+            <caption>SONG LIST (This Weekend's Setlist)</caption>
             <thead>
                 <tr>
                     <td>NAME OF SONG</td>
-                    <td>CHORDS</td>
+                    <td>CHORDS (Selected Key)</td>
                     <td>LYRICS</td>
                 </tr>
             </thead>
             <tbody>
-                <!-- SONG 1 -->
+                <!-- This will be populated by JavaScript -->
                 <tr>
-                    <td>God is Great</td>
-                    <td><a href="#" data-song-name="god-is-great" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-is-great" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
+                    <td colspan="3" style="text-align:center;">Loading setlist...</td>
                 </tr>
-                <!-- SONG 2 -->
-                <tr>
-                    <td>Here for You</td>
-                    <td><a href="#" data-song-name="here-for-you" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="here-for-you" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <!-- SONG 3 -->
-                <tr>
-                    <td>King of Kings</td>
-                    <td><a href="#" data-song-name="king-of-kings" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="king-of-kings" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <!-- SONG 4 -->
-                <tr>
-                    <td>Worthy</td>
-                    <td><a href="#" data-song-name="worthy-elevation" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="worthy-elevation" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <!-- SONG 5 -->
-                <!-- <tr>
-                    <td>How Great is our God</td>
-                    <td><a href="#" data-song-name="how-great-is-our-god" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="how-great-is-our-god" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr> -->
             </tbody>
         </table>
     </div>
 
     <div>
         <input id="myInput" onkeyup="myFunction()" placeholder="Search for a song name" type="text">
+        <!-- Table Two (SONG DATABASE) - Keep as is -->
         <table id="tabletwo">
             <caption>SONG DATABASE</caption>
             <thead>
@@ -1268,89 +1408,556 @@
         </table>
     </div>
 
+    <!-- Combined JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', function ()
+        // --- SUPABASE INTEGRATION ---
+        const SUPABASE_URL = 'https://hjnewoghwyecmgmjsxgn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqbmV3b2dod3llY21nbWpzeGduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MDU5ODEsImV4cCI6MjA1OTA4MTk4MX0.lzs2Ol0tUWzk0-m-gQHBRPsOjWLBKA0bhImOixFeoUY';
+
+        let supabase = null;
+        if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase)
         {
-            var songCells = document.querySelectorAll('.clickable');
-            songCells.forEach(cell => cell.addEventListener('click', handleSongClick));
-
-            function handleSongClick(event)
+            try
             {
-                var songName = event.target.dataset.songName;
-                var contentType = event.target.dataset.contentType;
-                loadSong(songName, contentType);
-            }
-
-            function loadSong(songName, contentType)
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log("Supabase client initialized.");
+            } catch (e)
             {
-                var songURL = `https://turningpointmusos.co.za//assets/${contentType}/${songName}.txt`;
-                var templateURL = "./assets/master/template.html";
-
-                // Fetch the song content
-                fetch(songURL)
-                    .then(response =>
-                    {
-                        if (!response.ok) throw new Error(`Failed to load song content for ${songName}`);
-                        return response.text();
-                    })
-                    .then(songContent =>
-                    {
-                        // Navigate to template.html
-                        window.location.href = templateURL + `?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodeURIComponent(songContent)}`;
-                    })
-                    .catch(error =>
-                    {
-                        console.error("Error: ", error.message);
-                        document.body.innerHTML = `<p>Error loading content: ${error.message}</p>`;
-                    });
+                console.error("Error initializing Supabase client:", e);
+                supabase = null;
             }
-
-        });
-
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function ()
+        } else
         {
-            var songLinks = document.querySelectorAll('table a');
-            songLinks.forEach(link => link.addEventListener('click', handleSongClick));
-
-            function handleSongClick(event)
+            console.error("Supabase URL/Key missing or client library not loaded.");
+            // Disable setlist button if Supabase fails
+            const openBtn = document.getElementById('open-setlist-modal-btn');
+            if (openBtn)
             {
-                event.preventDefault();
-                var songName = event.target.dataset.songName;
-                var contentType = event.target.dataset.contentType;
-                loadSong(songName, contentType);
+                openBtn.disabled = true;
+                openBtn.textContent = "Setlist Disabled (Config Error)";
+            }
+        }
+
+        let currentSetlist = []; // In-memory cache of the setlist
+        const setlistLabel = 'current_weekend'; // The label used in the database
+
+        // --- DOM Elements ---
+        const modal = document.getElementById('setlist-modal');
+        const openModalBtn = document.getElementById('open-setlist-modal-btn');
+        const closeModalBtn = modal ? modal.querySelector('.close-modal-btn') : null;
+        const currentSetlistItemsUl = document.getElementById('current-setlist-items');
+        const songSelectDropdown = document.getElementById('song-select-dropdown');
+        const keySelectDropdown = document.getElementById('key-select-dropdown');
+        const addSongBtn = document.getElementById('add-song-to-setlist-btn');
+        const tableOneBody = document.querySelector('#tableone tbody');
+        const searchInput = document.getElementById("myInput"); // Keep reference to search input
+
+        // --- Core Functions ---
+
+        async function loadSetlistFromSupabase()
+        {
+            if (!supabase || !currentSetlistItemsUl || !tableOneBody)
+            {
+                console.warn("Supabase client not ready or UI elements missing. Cannot load setlist.");
+                if (tableOneBody) tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Setlist feature unavailable.</td></tr>';
+                if (currentSetlistItemsUl) currentSetlistItemsUl.innerHTML = '<li>Setlist unavailable</li>';
+                return;
             }
 
-            function loadSong(songName, contentType)
-            {
-                var songURL = `https://turningpointmusos.co.za//assets/${contentType}/${songName}.txt`;
-                var templateURL = "./assets/master/template.html";
+            console.log("Loading setlist from Supabase...");
+            if (currentSetlistItemsUl) currentSetlistItemsUl.innerHTML = '<li>Loading...</li>';
+            if (tableOneBody) tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Loading setlist...</td></tr>';
 
-                // Fetch the song content
-                fetch(songURL)
-                    .then(response =>
+            try
+            {
+                const { data, error, status } = await supabase
+                    .from('setlists')
+                    .select('songs')
+                    .eq('label', setlistLabel)
+                    .single();
+
+                if (error)
+                {
+                    if (status === 406 || error.code === 'PGRST116')
+                    { // PGRST116: "results contain 0 rows"
+                        console.warn(`Setlist row with label "${setlistLabel}" not found. Treating as empty.`);
+                        currentSetlist = [];
+                    } else
                     {
-                        if (!response.ok) throw new Error(`Failed to load song content for ${songName}`);
-                        return response.text();
-                    })
-                    .then(songContent =>
+                        throw error; // Rethrow other errors
+                    }
+                } else if (data && data.songs)
+                {
+                    currentSetlist = Array.isArray(data.songs) ? data.songs : []; // Ensure it's an array
+                    console.log("Setlist loaded:", currentSetlist);
+                } else
+                {
+                    currentSetlist = []; // Default to empty if data is missing or malformed
+                    console.warn("Setlist row found but 'songs' data is missing or invalid.");
+                }
+
+            } catch (error)
+            {
+                console.error('Error loading setlist:', error);
+                currentSetlist = []; // Reset on error
+                if (currentSetlistItemsUl) currentSetlistItemsUl.innerHTML = '<li>Error loading setlist.</li>';
+                if (tableOneBody) tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Error loading setlist.</td></tr>';
+            } finally
+            {
+                // Always render UI based on the final state of currentSetlist
+                if (currentSetlistItemsUl) renderSetlistUI(); // Update modal list
+                if (tableOneBody) updateTableOneWithSetlist(); // Update table one
+            }
+        }
+
+        async function saveSetlistToSupabase()
+        {
+            if (!supabase)
+            {
+                alert('Cannot save setlist: Supabase connection issue.');
+                return;
+            }
+            if (!Array.isArray(currentSetlist))
+            {
+                console.error("Attempted to save non-array data as setlist. Aborting.", currentSetlist);
+                alert("Error: Invalid setlist data. Cannot save.");
+                return;
+            }
+            console.log("Saving setlist to Supabase:", currentSetlist);
+
+            try
+            {
+                // Use upsert to handle cases where the row might not exist yet
+                const { error } = await supabase
+                    .from('setlists')
+                    .upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' }); // Update if label exists, insert if not
+
+                if (error) throw error;
+                console.log('Setlist saved successfully.');
+
+            } catch (error)
+            {
+                console.error('Error saving setlist:', error);
+                alert('Failed to save setlist. Please check console.');
+                // Consider reloading data on error?
+                // await loadSetlistFromSupabase();
+            }
+        }
+
+        function renderSetlistUI()
+        {
+            if (!currentSetlistItemsUl) return;
+            currentSetlistItemsUl.innerHTML = '';
+
+            if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
+            {
+                currentSetlistItemsUl.innerHTML = '<li>Setlist is empty.</li>';
+                return;
+            }
+
+            currentSetlist.forEach((item, index) =>
+            {
+                const displayName = item?.displayName ?? 'Unknown Song';
+                const key = item?.key ?? '?';
+
+                const listItem = document.createElement('li');
+                listItem.dataset.songName = item?.songName ?? ''; // Add song name for potential future use
+
+                const span = document.createElement('span');
+                span.textContent = `${displayName} (${key})`;
+
+                const button = document.createElement('button');
+                button.className = 'remove-song-btn';
+                button.dataset.index = index;
+                button.textContent = 'Remove';
+
+                listItem.appendChild(span);
+                listItem.appendChild(button);
+                currentSetlistItemsUl.appendChild(listItem);
+            });
+        }
+
+        function updateTableOneWithSetlist()
+        {
+            if (!tableOneBody) return;
+            tableOneBody.innerHTML = '';
+
+            if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
+            {
+                tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Setlist is empty. Use "Set List Management".</td></tr>';
+                return;
+            }
+
+            currentSetlist.forEach(item =>
+            {
+                const { songName, displayName = 'Unknown Song', key = '?' } = item || {};
+
+                if (!songName)
+                {
+                    console.warn("Skipping setlist item due to missing songName:", item);
+                    return;
+                }
+
+                const row = tableOneBody.insertRow();
+
+                const cellName = row.insertCell();
+                cellName.textContent = displayName;
+
+                const cellChords = row.insertCell();
+                const chordLink = document.createElement('a');
+                chordLink.href = '#'; // Keep href='#' for event delegation
+                chordLink.textContent = `Chords (${key})`;
+                chordLink.dataset.songName = songName;
+                chordLink.dataset.contentType = 'chords';
+                // DO NOT add data-target here, rely on the general click handler
+                cellChords.appendChild(chordLink);
+                cellChords.style.textAlign = 'center';
+                cellChords.style.width = '20%';
+
+
+                const cellLyrics = row.insertCell();
+                const lyricLink = document.createElement('a');
+                lyricLink.href = '#';
+                lyricLink.textContent = 'Lyrics';
+                lyricLink.dataset.songName = songName;
+                lyricLink.dataset.contentType = 'lyrics';
+                // DO NOT add data-target here
+                cellLyrics.appendChild(lyricLink);
+                cellLyrics.style.textAlign = 'center';
+                cellLyrics.style.width = '20%';
+
+            });
+            // Event listeners are handled by the delegated listener on document.body
+        }
+
+        function populateSongDropdown()
+        {
+            const songTable = document.getElementById('tabletwo');
+            if (!songSelectDropdown || !songTable) return;
+            const tableBody = songTable.querySelector('tbody');
+            if (!tableBody) return;
+            const tableRows = tableBody.querySelectorAll('tr');
+
+            songSelectDropdown.innerHTML = '<option value="">-- Select a Song --</option>'; // Reset
+
+            const uniqueSongs = new Map(); // Use Map to handle potential duplicates in tabletwo
+
+            tableRows.forEach(row =>
+            {
+                if (row.cells.length < 3) return;
+
+                const songNameCell = row.cells[0];
+                const chordsCell = row.cells[1];
+
+                let songFileIdentifier = '';
+                let displayName = (songNameCell.textContent || songNameCell.innerText || '').trim();
+
+                const chordLink = chordsCell.querySelector('a[data-song-name]');
+                if (chordLink)
+                {
+                    songFileIdentifier = chordLink.dataset.songName;
+                }
+                // Fallback if no chord link (less ideal)
+                // else {
+                //     const lyricsLink = row.cells[2]?.querySelector('a[data-song-name]');
+                //     if (lyricsLink) songFileIdentifier = lyricsLink.dataset.songName;
+                // }
+
+                // Add to map only if we have both identifier and display name, and it's not already added
+                if (songFileIdentifier && displayName && !uniqueSongs.has(songFileIdentifier))
+                {
+                    uniqueSongs.set(songFileIdentifier, displayName);
+                } else if (displayName && displayName !== 'NAME OF SONG' && !chordLink)
+                {
+                    console.warn(`Could not find file identifier link for: ${displayName}`);
+                }
+            });
+
+            // Sort songs alphabetically by display name before adding to dropdown
+            const sortedSongs = Array.from(uniqueSongs.entries()).sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
+
+            // Add sorted songs to dropdown
+            sortedSongs.forEach(([identifier, name]) =>
+            {
+                const option = document.createElement('option');
+                option.value = identifier;
+                option.textContent = name;
+                option.dataset.displayName = name; // Store display name separately
+                songSelectDropdown.appendChild(option);
+            });
+        }
+
+        // --- MODIFIED handleSongClick (to use URL parameters) ---
+        async function handleSongClick(event, linkElement)
+        {
+            event.preventDefault(); // Prevent default link behavior
+
+            const songName = linkElement.dataset.songName;
+            const contentType = linkElement.dataset.contentType;
+
+            if (!songName || !contentType)
+            {
+                console.error("Link is missing required data attributes", linkElement);
+                return;
+            }
+
+            // --- Path logic (try standard, then fallback) ---
+            const primaryPath = `./assets/${contentType}/${songName}.txt`;
+            const fallbackPath = `./${contentType}/${songName}.txt`; // Keep fallback logic just in case
+            const templateURL = "./assets/master/template.html"; // Adjust path if necessary
+
+            let songContent = '';
+            let fetchError = null;
+
+            try
+            {
+                console.log(`Attempting to fetch: ${primaryPath}`);
+                const response = await fetch(primaryPath);
+                if (!response.ok)
+                {
+                    // Try fallback path only if primary failed and it's a 404-like error
+                    if (response.status === 404)
                     {
-                        // Navigate to template.html
-                        window.location.href = templateURL + `?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodeURIComponent(songContent)}`;
-                    })
-                    .catch(error =>
+                        console.warn(`Primary path ${primaryPath} not found, trying fallback.`);
+                        const fallbackResponse = await fetch(fallbackPath);
+                        if (!fallbackResponse.ok)
+                        {
+                            throw new Error(`Fallback fetch failed: ${fallbackResponse.status} ${fallbackResponse.statusText} for ${fallbackPath}`);
+                        }
+                        songContent = await fallbackResponse.text();
+                        console.log(`Successfully fetched from fallback: ${fallbackPath}`);
+                    } else
                     {
-                        console.error("Error: ", error.message);
-                        document.body.innerHTML = `<p>Error loading content: ${error.message}</p>`;
+                        throw new Error(`Primary fetch failed: ${response.status} ${response.statusText} for ${primaryPath}`);
+                    }
+                } else
+                {
+                    songContent = await response.text();
+                    console.log(`Successfully fetched from: ${primaryPath}`);
+                }
+            } catch (error)
+            {
+                console.error(`Failed to load song content for ${songName}. Error:`, error);
+                alert(`Error loading content for "${songName}": ${error.message}. Please check file paths and network.`);
+                return;
+            }
+
+
+            // --- Key Logic ---
+            let targetKey = null; // Key to transpose *to* on the template page
+
+            // Check if the song is in the current setlist *and* the click came from tableone
+            const parentTable = linkElement.closest('#tableone');
+            if (parentTable && Array.isArray(currentSetlist) && currentSetlist.length > 0)
+            {
+                const setlistItem = currentSetlist.find(item => item && item.songName === songName);
+                if (setlistItem && setlistItem.key)
+                {
+                    targetKey = setlistItem.key;
+                    console.log(`Song ${songName} clicked from setlist. Target key for template: ${targetKey}`);
+                } else
+                {
+                    console.log(`Song ${songName} clicked from setlist but not found in currentSetlist data or has no key.`);
+                }
+            } else
+            {
+                console.log(`Song ${songName} clicked from song database (tabletwo) or setlist empty/not loaded. No target key override.`);
+            }
+            // *** DO NOT MODIFY songContent here ***
+            // We always send the original content from the file.
+
+            // --- Navigate using URL parameters ---
+            try
+            {
+                // Encode the *original* content
+                const encodedContent = encodeURIComponent(songContent);
+                let targetURL = `${templateURL}?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodedContent}`;
+
+                // Add the targetKey parameter *only* if we determined one from the setlist click
+                if (targetKey)
+                {
+                    targetURL += `&targetKey=${encodeURIComponent(targetKey)}`;
+                }
+
+                // Check length (browsers have limits, ~2000 chars is safe, but varies)
+                if (targetURL.length > 2000)
+                {
+                    console.warn("URL length might be too long (" + targetURL.length + " chars). Consider using sessionStorage if issues arise.");
+                }
+
+                window.location.href = targetURL;
+
+            } catch (error)
+            {
+                console.error("Error constructing or navigating URL:", error);
+                alert("Error preparing song data for display. Check console.");
+            }
+        }
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () =>
+        {
+            console.log("DOM fully loaded.");
+
+            // Populate the song dropdown for the modal
+            populateSongDropdown();
+
+            // Load initial setlist (this now also updates table one)
+            loadSetlistFromSupabase();
+
+            // --- Modal Event Listeners ---
+            if (openModalBtn)
+            {
+                openModalBtn.addEventListener('click', () =>
+                {
+                    if (modal && supabase)
+                    {
+                        modal.style.display = 'block';
+                        // Reload fresh data when opening
+                        // No need to reload here unless you suspect staleness
+                        // loadSetlistFromSupabase();
+                        renderSetlistUI(); // Just render the current cache
+                    } else if (!supabase)
+                    {
+                        alert("Setlist feature unavailable (Supabase connection failed).");
+                    }
+                });
+            }
+
+            if (closeModalBtn)
+            {
+                closeModalBtn.addEventListener('click', () =>
+                {
+                    if (modal) modal.style.display = 'none';
+                    updateTableOneWithSetlist(); // Ensure table reflects any changes made in modal
+                });
+            }
+
+            // Close modal if clicking outside of it
+            window.addEventListener('click', (event) =>
+            {
+                if (modal && event.target == modal)
+                {
+                    modal.style.display = 'none';
+                    updateTableOneWithSetlist(); // Ensure table reflects any changes
+                }
+            });
+
+            if (addSongBtn)
+            {
+                addSongBtn.addEventListener('click', async () =>
+                {
+                    if (!songSelectDropdown || !keySelectDropdown) return;
+
+                    const selectedSongOption = songSelectDropdown.options[songSelectDropdown.selectedIndex];
+                    const songFileIdentifier = selectedSongOption.value;
+                    const displayName = selectedSongOption.dataset.displayName || selectedSongOption.textContent;
+                    const selectedKey = keySelectDropdown.value;
+
+                    if (!songFileIdentifier)
+                    {
+                        alert('Please select a song.');
+                        return;
+                    }
+                    if (!Array.isArray(currentSetlist)) currentSetlist = [];
+
+                    const exists = currentSetlist.some(item => item && item.songName === songFileIdentifier);
+                    if (exists)
+                    {
+                        alert(`"${displayName}" is already in the setlist.`);
+                        return;
+                    }
+
+                    currentSetlist.push({
+                        songName: songFileIdentifier,
+                        displayName: displayName,
+                        key: selectedKey
                     });
+
+                    renderSetlistUI(); // Update modal UI
+                    await saveSetlistToSupabase(); // Save change
+
+                    songSelectDropdown.selectedIndex = 0; // Reset dropdowns
+                    keySelectDropdown.selectedIndex = 0;
+                });
             }
 
+            if (currentSetlistItemsUl)
+            {
+                currentSetlistItemsUl.addEventListener('click', async (event) =>
+                {
+                    if (event.target.classList.contains('remove-song-btn'))
+                    {
+                        const indexToRemove = parseInt(event.target.dataset.index, 10);
+                        if (!Array.isArray(currentSetlist)) currentSetlist = [];
+
+                        if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < currentSetlist.length)
+                        {
+                            const removedItem = currentSetlist.splice(indexToRemove, 1);
+                            console.log("Removed:", removedItem[0]?.displayName ?? 'item');
+
+                            renderSetlistUI(); // Update modal UI
+                            await saveSetlistToSupabase(); // Save change
+                        } else
+                        {
+                            console.error("Invalid index for removal:", event.target.dataset.index);
+                        }
+                    }
+                });
+            }
+
+            // --- Delegated Click Listener for ALL Song Links ---
+            document.body.addEventListener('click', (event) =>
+            {
+                const link = event.target.closest('a[data-song-name]');
+                if (link)
+                {
+                    const parentTable = link.closest('#tableone, #tabletwo');
+                    if (parentTable)
+                    {
+                        // Prevent default link behavior *only* if we handle it
+                        event.preventDefault();
+                        handleSongClick(event, link);
+                    }
+                    // If the link is not in tableone or tabletwo, let the default behavior occur
+                    // (though there shouldn't be any such links based on current HTML)
+                }
+            });
+
+            // Search function setup (from your HTML)
+            if (searchInput)
+            {
+                // The onkeyup is already in HTML, but ensure the function exists globally
+                window.myFunction = function ()
+                {
+                    var input, filter, table, tr, td, i, txtValue;
+                    input = document.getElementById("myInput");
+                    filter = input.value.toUpperCase();
+                    table = document.getElementById("tabletwo");
+                    tr = table.getElementsByTagName("tr");
+
+                    for (i = 1; i < tr.length; i++)
+                    { // Start from 1 to skip header row
+                        td = tr[i].getElementsByTagName("td")[0];
+                        if (td)
+                        {
+                            txtValue = td.textContent || td.innerText;
+                            if (txtValue.toUpperCase().indexOf(filter) > -1)
+                            {
+                                tr[i].style.display = "";
+                            } else
+                            {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                };
+            }
+
+
+            console.log("Initial setup complete.");
         });
-
     </script>
-
 
 </body>
 
