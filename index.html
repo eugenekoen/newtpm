@@ -177,29 +177,35 @@
 
         /* Add Song Search Results Styling */
         #song-search-results .results-list {
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border-radius: 0 0 4px 4px;
-            /* Optional rounding */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Soften shadow */
+            border-radius: 4px;
+            /* Can round all corners now */
             display: none;
             /* Hidden initially */
-            position: absolute;
-            /* Position relative to the container */
-            background-color: white;
+            /* position: absolute; <-- REMOVE */
+            background-color: #f8f8f8;
+            /* Slightly off-white background */
             border: 1px solid #ccc;
-            border-top: none;
-            max-height: 150px;
-            overflow-y: auto;
-            width: calc(100% - 70px);
-            /* Match input width */
-            z-index: 1001;
-            /* Ensure it's above other modal content */
-            left: 60px;
-            /* Align with input start (adjust if label width changes) */
+            /* max-height: 150px; <-- REMOVE */
+            /* overflow-y: auto; <-- REMOVE */
+            width: 100%;
+            /* Occupy available width in the flow */
+            /* z-index: 1001;  <-- REMOVE */
+            /* left: 60px; <-- REMOVE */
             box-sizing: border-box;
+            margin-top: 5px;
+            /* Add some space below the input */
+            margin-bottom: 15px;
+            /* Add space before the Key dropdown */
         }
 
+        /* --- END OF MODIFICATION --- */
+
+        /* Optional: Adjust result item padding slightly */
         #song-search-results .result-item {
-            padding: 8px 12px;
+            padding: 10px 12px;
+            /* Slightly more padding */
             cursor: pointer;
             font-size: 14px;
             border-bottom: 1px solid #eee;
