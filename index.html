@@ -122,25 +122,96 @@
 
         #add-song-section label {
             display: inline-block;
-            width: 50px;
+            min-width: 50px;
+            /* Use min-width */
             margin-right: 10px;
+            vertical-align: middle;
+            /* Align label with input */
         }
 
-        #add-song-section select,
-        #add-song-section button {
+        /* Specific styling for search input and key select */
+        #add-song-section #song-search-input,
+        #add-song-section #key-select-dropdown {
             padding: 8px 12px;
             font-family: 'Montserrat', sans-serif;
             font-size: 14px;
             border-radius: 4px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
+            /* Include padding/border in width */
+            vertical-align: middle;
+            /* Align with label */
         }
 
-        #add-song-section button {
+        #add-song-section #song-search-input {
+            width: calc(100% - 70px);
+            /* Adjust width considering label */
+        }
+
+        #add-song-section #key-select-dropdown {
+            width: calc(100% - 70px);
+            /* Adjust width considering label */
+            max-width: 100px;
+            /* Optional: Limit key dropdown width */
+        }
+
+
+        #add-song-section button#add-song-to-setlist-btn {
+            padding: 8px 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
             background-color: #007bff;
             color: white;
             cursor: pointer;
             margin-top: 10px;
         }
+
+        /* Add Song Search Results Styling */
+        #song-search-results .results-list {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 0 0 4px 4px;
+            /* Optional rounding */
+            display: none;
+            /* Hidden initially */
+            position: absolute;
+            /* Position relative to the container */
+            background-color: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            max-height: 150px;
+            overflow-y: auto;
+            width: calc(100% - 70px);
+            /* Match input width */
+            z-index: 1001;
+            /* Ensure it's above other modal content */
+            left: 60px;
+            /* Align with input start (adjust if label width changes) */
+            box-sizing: border-box;
+        }
+
+        #song-search-results .result-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        #song-search-results .result-item:last-child {
+            border-bottom: none;
+        }
+
+        #song-search-results .result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Adjust input width slightly if label makes it wrap strangely */
+        #add-song-section input[type="text"]#song-search-input {
+            box-sizing: border-box;
+            /* Include padding/border in width */
+        }
+
 
         /* Password Modal Specific Styles (Optional Additions) */
         #password-input {
@@ -223,11 +294,17 @@
             <div id="add-song-section">
                 <h3>Add Song:</h3>
                 <div>
-                    <label for="song-select-dropdown">Song:</label>
-                    <select id="song-select-dropdown">
-                        <option value="">-- Select a Song --</option>
-                        <!-- Options populated by JavaScript -->
-                    </select>
+                    <label for="song-search-input">Song:</label>
+                    <!-- Search input and results -->
+                    <input type="text" id="song-search-input" placeholder="Type to search..." autocomplete="off">
+                    <div id="song-search-results" style="position: relative;">
+                        <div class="results-list">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                    <!-- Hidden inputs to store the actual selected song data -->
+                    <input type="hidden" id="selected-song-identifier">
+                    <input type="hidden" id="selected-song-display-name">
                 </div>
                 <div>
                     <label for="key-select-dropdown">Key:</label>
@@ -1505,39 +1582,45 @@
         } else
         {
             console.error("Supabase URL/Key missing or client library not loaded.");
-            // Disable setlist button if Supabase fails
             const openBtn = document.getElementById('open-setlist-modal-btn');
             if (openBtn)
             {
                 openBtn.disabled = true;
                 openBtn.textContent = "Setlist Disabled (Config Error)";
-                openBtn.style.backgroundColor = '#ccc'; // Optional: grey out button
+                openBtn.style.backgroundColor = '#ccc';
             }
         }
 
-        let currentSetlist = []; // In-memory cache of the setlist
-        const setlistLabel = 'current_weekend'; // The label used in the database
+        let currentSetlist = [];
+        const setlistLabel = 'current_weekend';
         const CORRECT_PASSWORD = "1111"; // <<< --- Your access code --- >>>
 
-        // --- DOM Elements ---
-        const setlistModal = document.getElementById('setlist-modal'); // Renamed from 'modal' for clarity
-        const openSetlistBtn = document.getElementById('open-setlist-modal-btn'); // Renamed for clarity
-        const closeSetlistModalBtn = setlistModal ? setlistModal.querySelector('.close-modal-btn') : null; // Specific close button for setlist modal
+        // --- Store all available songs from tabletwo ---
+        let allSongsData = []; // Array to hold { identifier: '...', displayName: '...' }
 
-        // --- Password Modal Elements ---
+        // --- DOM Elements ---
+        const setlistModal = document.getElementById('setlist-modal');
+        const openSetlistBtn = document.getElementById('open-setlist-modal-btn');
+        const closeSetlistModalBtn = setlistModal ? setlistModal.querySelector('.close-modal-btn') : null;
+
         const passwordModal = document.getElementById('password-modal');
         const closePasswordModalBtn = passwordModal ? passwordModal.querySelector('.close-password-modal-btn') : null;
         const passwordInput = document.getElementById('password-input');
         const submitPasswordBtn = document.getElementById('submit-password-btn');
         const passwordErrorMsg = document.getElementById('password-error-msg');
-        // --- End Password Modal Elements ---
 
         const currentSetlistItemsUl = document.getElementById('current-setlist-items');
-        const songSelectDropdown = document.getElementById('song-select-dropdown');
+        // --- Elements for song search ---
+        const songSearchInput = document.getElementById('song-search-input');
+        const songSearchResultsContainer = document.getElementById('song-search-results');
+        const resultsListDiv = songSearchResultsContainer ? songSearchResultsContainer.querySelector('.results-list') : null;
+        const selectedSongIdentifierInput = document.getElementById('selected-song-identifier');
+        const selectedSongDisplayNameInput = document.getElementById('selected-song-display-name');
+        // --- END ---
         const keySelectDropdown = document.getElementById('key-select-dropdown');
         const addSongBtn = document.getElementById('add-song-to-setlist-btn');
         const tableOneBody = document.querySelector('#tableone tbody');
-        const searchInput = document.getElementById("myInput");
+        const searchInput = document.getElementById("myInput"); // For table two search
 
         // --- Core Functions ---
 
@@ -1591,9 +1674,8 @@
                 if (tableOneBody) tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Error loading setlist.</td></tr>';
             } finally
             {
-                // Always render UI based on the final state of currentSetlist
-                if (currentSetlistItemsUl) renderSetlistUI(); // Update modal list (even if empty/error)
-                if (tableOneBody) updateTableOneWithSetlist(); // Update table one
+                if (currentSetlistItemsUl) renderSetlistUI();
+                if (tableOneBody) updateTableOneWithSetlist();
             }
         }
 
@@ -1614,10 +1696,9 @@
 
             try
             {
-                // Use upsert to handle cases where the row might not exist yet
                 const { error } = await supabase
                     .from('setlists')
-                    .upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' }); // Update if label exists, insert if not
+                    .upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' });
 
                 if (error) throw error;
                 console.log('Setlist saved successfully.');
@@ -1626,15 +1707,13 @@
             {
                 console.error('Error saving setlist:', error);
                 alert('Failed to save setlist. Please check console.');
-                // Consider reloading data on error?
-                // await loadSetlistFromSupabase();
             }
         }
 
         function renderSetlistUI()
         {
             if (!currentSetlistItemsUl) return;
-            currentSetlistItemsUl.innerHTML = ''; // Clear previous items
+            currentSetlistItemsUl.innerHTML = '';
 
             if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
             {
@@ -1648,7 +1727,7 @@
                 const key = item?.key ?? '?';
 
                 const listItem = document.createElement('li');
-                listItem.dataset.songName = item?.songName ?? ''; // Add song name for potential future use
+                listItem.dataset.songName = item?.songName ?? '';
 
                 const span = document.createElement('span');
                 span.textContent = `${displayName} (${key})`;
@@ -1667,7 +1746,7 @@
         function updateTableOneWithSetlist()
         {
             if (!tableOneBody) return;
-            tableOneBody.innerHTML = ''; // Clear previous rows
+            tableOneBody.innerHTML = '';
 
             if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
             {
@@ -1682,7 +1761,7 @@
                 if (!songName)
                 {
                     console.warn("Skipping setlist item due to missing songName:", item);
-                    return; // Don't add rows for invalid items
+                    return;
                 }
 
                 const row = tableOneBody.insertRow();
@@ -1692,11 +1771,10 @@
 
                 const cellChords = row.insertCell();
                 const chordLink = document.createElement('a');
-                chordLink.href = '#'; // Keep href='#' for event delegation
+                chordLink.href = '#';
                 chordLink.textContent = `Chords (${key})`;
                 chordLink.dataset.songName = songName;
                 chordLink.dataset.contentType = 'chords';
-                // DO NOT add data-target here, rely on the general click handler
                 cellChords.appendChild(chordLink);
                 cellChords.style.textAlign = 'center';
                 cellChords.style.width = '20%';
@@ -1708,26 +1786,23 @@
                 lyricLink.textContent = 'Lyrics';
                 lyricLink.dataset.songName = songName;
                 lyricLink.dataset.contentType = 'lyrics';
-                // DO NOT add data-target here
                 cellLyrics.appendChild(lyricLink);
                 cellLyrics.style.textAlign = 'center';
                 cellLyrics.style.width = '20%';
-
             });
-            // Event listeners are handled by the delegated listener on document.body
         }
 
-        function populateSongDropdown()
+        // --- Populate the global `allSongsData` array ---
+        function populateSongDataSource()
         {
             const songTable = document.getElementById('tabletwo');
-            if (!songSelectDropdown || !songTable) return;
+            if (!songTable) return;
             const tableBody = songTable.querySelector('tbody');
             if (!tableBody) return;
             const tableRows = tableBody.querySelectorAll('tr');
 
-            songSelectDropdown.innerHTML = '<option value="">-- Select a Song --</option>'; // Reset
-
-            const uniqueSongs = new Map(); // Use Map to handle potential duplicates in tabletwo
+            allSongsData = []; // Clear previous data
+            const uniqueSongs = new Map();
 
             tableRows.forEach(row =>
             {
@@ -1745,35 +1820,27 @@
                     songFileIdentifier = chordLink.dataset.songName;
                 }
 
-                // Add to map only if we have both identifier and display name, and it's not already added
                 if (songFileIdentifier && displayName && !uniqueSongs.has(songFileIdentifier))
                 {
                     uniqueSongs.set(songFileIdentifier, displayName);
                 } else if (displayName && displayName !== 'NAME OF SONG' && !chordLink)
                 {
-                    // Only warn if it looks like a real song title but lacks the identifier link
                     console.warn(`Could not find file identifier link for: ${displayName}`);
                 }
             });
 
-            // Sort songs alphabetically by display name before adding to dropdown
+            // Sort songs alphabetically by display name before storing
             const sortedSongs = Array.from(uniqueSongs.entries()).sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
 
-            // Add sorted songs to dropdown
-            sortedSongs.forEach(([identifier, name]) =>
-            {
-                const option = document.createElement('option');
-                option.value = identifier;
-                option.textContent = name;
-                option.dataset.displayName = name; // Store display name separately
-                songSelectDropdown.appendChild(option);
-            });
+            // Store in the global array
+            allSongsData = sortedSongs.map(([identifier, name]) => ({ identifier, displayName: name }));
+            console.log("Song data source populated:", allSongsData.length, "songs");
         }
 
-        // --- MODIFIED handleSongClick (to use URL parameters) ---
+        // --- handleSongClick ---
         async function handleSongClick(event, linkElement)
         {
-            event.preventDefault(); // Prevent default link behavior
+            event.preventDefault();
 
             const songName = linkElement.dataset.songName;
             const contentType = linkElement.dataset.contentType;
@@ -1784,10 +1851,9 @@
                 return;
             }
 
-            // --- Path logic (try standard, then fallback) ---
             const primaryPath = `./assets/${contentType}/${songName}.txt`;
-            const fallbackPath = `./${contentType}/${songName}.txt`; // Keep fallback logic just in case
-            const templateURL = "./assets/master/template.html"; // Adjust path if necessary
+            const fallbackPath = `./${contentType}/${songName}.txt`;
+            const templateURL = "./assets/master/template.html";
 
             let songContent = '';
             let fetchError = null;
@@ -1798,7 +1864,6 @@
                 const response = await fetch(primaryPath);
                 if (!response.ok)
                 {
-                    // Try fallback path only if primary failed and it's a 404-like error
                     if (response.status === 404)
                     {
                         console.warn(`Primary path ${primaryPath} not found, trying fallback.`);
@@ -1825,11 +1890,7 @@
                 return;
             }
 
-
-            // --- Key Logic ---
-            let targetKey = null; // Key to transpose *to* on the template page
-
-            // Check if the song is in the current setlist *and* the click came from tableone
+            let targetKey = null;
             const parentTable = linkElement.closest('#tableone');
             if (parentTable && Array.isArray(currentSetlist) && currentSetlist.length > 0)
             {
@@ -1846,23 +1907,17 @@
             {
                 console.log(`Song ${songName} clicked from song database (tabletwo) or setlist empty/not loaded. No target key override.`);
             }
-            // *** DO NOT MODIFY songContent here ***
-            // We always send the original content from the file.
 
-            // --- Navigate using URL parameters ---
             try
             {
-                // Encode the *original* content
                 const encodedContent = encodeURIComponent(songContent);
                 let targetURL = `${templateURL}?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodedContent}`;
 
-                // Add the targetKey parameter *only* if we determined one from the setlist click
                 if (targetKey)
                 {
                     targetURL += `&targetKey=${encodeURIComponent(targetKey)}`;
                 }
 
-                // Check length (browsers have limits, ~2000 chars is safe, but varies)
                 if (targetURL.length > 2000)
                 {
                     console.warn("URL length might be too long (" + targetURL.length + " chars). Consider using sessionStorage if issues arise.");
@@ -1882,10 +1937,10 @@
         {
             console.log("DOM fully loaded.");
 
-            populateSongDropdown();
+            populateSongDataSource();
             loadSetlistFromSupabase(); // Initial load for table one
 
-            // --- Open Password Modal First ---
+            // --- Password Modal Logic ---
             if (openSetlistBtn)
             {
                 openSetlistBtn.addEventListener('click', () =>
@@ -1893,23 +1948,20 @@
                     if (!supabase)
                     {
                         alert("Setlist feature unavailable (Supabase connection failed).");
-                        return; // Stop if Supabase isn't working
+                        return;
                     }
                     if (passwordModal && passwordInput && passwordErrorMsg)
                     {
-                        // Reset password modal state before showing
                         passwordInput.value = '';
                         passwordErrorMsg.textContent = '';
                         passwordModal.style.display = 'block';
-                        passwordInput.focus(); // Focus on input field
+                        passwordInput.focus();
                     } else
                     {
                         console.error("Password modal element(s) not found!");
                     }
                 });
             }
-
-            // --- Password Modal Submit Logic ---
             if (submitPasswordBtn && passwordInput && passwordModal && setlistModal && passwordErrorMsg)
             {
                 submitPasswordBtn.addEventListener('click', () =>
@@ -1917,51 +1969,48 @@
                     const enteredPassword = passwordInput.value.trim();
                     if (enteredPassword === CORRECT_PASSWORD)
                     {
-                        // Correct password
-                        passwordModal.style.display = 'none'; // Hide password modal
-                        passwordInput.value = ''; // Clear input
-                        passwordErrorMsg.textContent = ''; // Clear any error
-
-                        // Proceed to show the setlist modal
+                        passwordModal.style.display = 'none';
+                        passwordInput.value = '';
+                        passwordErrorMsg.textContent = '';
                         if (setlistModal)
                         {
                             setlistModal.style.display = 'block';
-                            // Ensure setlist UI in modal is up-to-date
-                            renderSetlistUI(); // Render based on current 'currentSetlist' cache
+                            renderSetlistUI();
+                            // Clear search input when modal opens
+                            if (songSearchInput) songSearchInput.value = '';
+                            if (resultsListDiv) resultsListDiv.style.display = 'none';
+                            if (selectedSongIdentifierInput) selectedSongIdentifierInput.value = '';
+                            if (selectedSongDisplayNameInput) selectedSongDisplayNameInput.value = '';
                         } else
                         {
                             console.error("Setlist modal element not found!");
                         }
                     } else
                     {
-                        // Incorrect password
                         passwordErrorMsg.textContent = 'Incorrect code. Please try again.';
-                        passwordInput.value = ''; // Clear input for re-entry
-                        passwordInput.focus(); // Set focus back to input
+                        passwordInput.value = '';
+                        passwordInput.focus();
                     }
                 });
-                // Allow submitting with Enter key in password field
                 passwordInput.addEventListener('keyup', (event) =>
                 {
                     if (event.key === 'Enter')
                     {
-                        event.preventDefault(); // Prevent default form submission if it were in a form
-                        submitPasswordBtn.click(); // Trigger the submit button's click handler
+                        event.preventDefault();
+                        submitPasswordBtn.click();
                     }
                 });
             } else
             {
                 console.error("One or more elements required for password submission are missing.");
             }
-
-            // --- Password Modal Close Logic ---
             if (closePasswordModalBtn && passwordModal && passwordInput && passwordErrorMsg)
             {
                 closePasswordModalBtn.addEventListener('click', () =>
                 {
                     passwordModal.style.display = 'none';
-                    passwordInput.value = ''; // Clear input on close
-                    passwordErrorMsg.textContent = ''; // Clear error on close
+                    passwordInput.value = '';
+                    passwordErrorMsg.textContent = '';
                 });
             }
 
@@ -1971,43 +2020,113 @@
                 closeSetlistModalBtn.addEventListener('click', () =>
                 {
                     setlistModal.style.display = 'none';
-                    updateTableOneWithSetlist(); // Update table one when closing setlist modal
+                    updateTableOneWithSetlist();
                 });
             }
 
-            // --- Close *any* modal if clicking outside of its content ---
+            // --- Close *any* modal if clicking outside ---
             window.addEventListener('click', (event) =>
             {
                 if (event.target == setlistModal && setlistModal)
-                { // Check if click was on setlist modal background
+                {
                     setlistModal.style.display = 'none';
                     updateTableOneWithSetlist();
                 } else if (event.target == passwordModal && passwordModal)
-                { // Check if click was on password modal background
+                {
                     passwordModal.style.display = 'none';
-                    if (passwordInput) passwordInput.value = ''; // Clear input
-                    if (passwordErrorMsg) passwordErrorMsg.textContent = ''; // Clear error
+                    if (passwordInput) passwordInput.value = '';
+                    if (passwordErrorMsg) passwordErrorMsg.textContent = '';
+                }
+                // --- Hide search results if clicking outside the search area ---
+                if (songSearchInput && resultsListDiv && !songSearchInput.contains(event.target) && !resultsListDiv.contains(event.target))
+                {
+                    resultsListDiv.style.display = 'none';
                 }
             });
 
-            // --- Add Song Button Listener (Inside Setlist Modal) ---
+
+            // --- Song Search Input Logic ---
+            if (songSearchInput && resultsListDiv && selectedSongIdentifierInput && selectedSongDisplayNameInput)
+            {
+                songSearchInput.addEventListener('input', () =>
+                {
+                    const searchTerm = songSearchInput.value.trim().toLowerCase();
+                    resultsListDiv.innerHTML = ''; // Clear previous results
+                    // Clear hidden selection if user types again
+                    selectedSongIdentifierInput.value = '';
+                    selectedSongDisplayNameInput.value = '';
+
+
+                    if (searchTerm.length < 1)
+                    { // Don't search on empty string
+                        resultsListDiv.style.display = 'none';
+                        return;
+                    }
+
+                    const matchedSongs = allSongsData.filter(song =>
+                        song.displayName.toLowerCase().includes(searchTerm)
+                    );
+
+                    if (matchedSongs.length > 0)
+                    {
+                        matchedSongs.forEach(song =>
+                        {
+                            const itemDiv = document.createElement('div');
+                            itemDiv.classList.add('result-item');
+                            itemDiv.textContent = song.displayName;
+                            itemDiv.dataset.identifier = song.identifier;
+                            itemDiv.dataset.displayName = song.displayName; // Store both
+                            itemDiv.addEventListener('click', () =>
+                            {
+                                // User clicked a result
+                                songSearchInput.value = song.displayName; // Fill input with selection
+                                selectedSongIdentifierInput.value = song.identifier; // Store identifier
+                                selectedSongDisplayNameInput.value = song.displayName; // Store name
+                                resultsListDiv.style.display = 'none'; // Hide results
+                                resultsListDiv.innerHTML = ''; // Clear results content
+                                console.log("Selected song:", song.identifier);
+                            });
+                            resultsListDiv.appendChild(itemDiv);
+                        });
+                        resultsListDiv.style.display = 'block'; // Show results container
+                    } else
+                    {
+                        resultsListDiv.style.display = 'none'; // Hide if no results
+                    }
+                });
+
+                // Hide results if input is cleared completely
+                songSearchInput.addEventListener('keyup', (e) =>
+                {
+                    if (songSearchInput.value.trim() === '')
+                    {
+                        resultsListDiv.style.display = 'none';
+                        selectedSongIdentifierInput.value = '';
+                        selectedSongDisplayNameInput.value = '';
+                    }
+                });
+            }
+
+            // --- Add Song Button Listener ---
             if (addSongBtn)
             {
                 addSongBtn.addEventListener('click', async () =>
                 {
-                    if (!songSelectDropdown || !keySelectDropdown) return;
-
-                    const selectedSongOption = songSelectDropdown.options[songSelectDropdown.selectedIndex];
-                    const songFileIdentifier = selectedSongOption.value;
-                    const displayName = selectedSongOption.dataset.displayName || selectedSongOption.textContent;
+                    // Use the hidden inputs now
+                    const songFileIdentifier = selectedSongIdentifierInput.value;
+                    const displayName = selectedSongDisplayNameInput.value;
                     const selectedKey = keySelectDropdown.value;
 
-                    if (!songFileIdentifier)
+                    // --- VALIDATION ---
+                    if (!songFileIdentifier || !displayName)
                     {
-                        alert('Please select a song.');
+                        alert('Please search for a song and select it from the list.');
                         return;
                     }
-                    if (!Array.isArray(currentSetlist)) currentSetlist = []; // Ensure it's an array
+                    // --- END VALIDATION ---
+
+
+                    if (!Array.isArray(currentSetlist)) currentSetlist = [];
 
                     const exists = currentSetlist.some(item => item && item.songName === songFileIdentifier);
                     if (exists)
@@ -2022,15 +2141,19 @@
                         key: selectedKey
                     });
 
-                    renderSetlistUI(); // Update modal UI immediately
-                    await saveSetlistToSupabase(); // Save change to backend
+                    renderSetlistUI();
+                    await saveSetlistToSupabase();
 
-                    songSelectDropdown.selectedIndex = 0; // Reset dropdowns
+                    // Reset the search input and hidden fields
+                    songSearchInput.value = '';
+                    selectedSongIdentifierInput.value = '';
+                    selectedSongDisplayNameInput.value = '';
                     keySelectDropdown.selectedIndex = 0;
+                    if (resultsListDiv) resultsListDiv.style.display = 'none'; // Hide results list
                 });
             }
 
-            // --- Remove Song Button Listener (Inside Setlist Modal) ---
+            // --- Remove Song Button Listener ---
             if (currentSetlistItemsUl)
             {
                 currentSetlistItemsUl.addEventListener('click', async (event) =>
@@ -2038,15 +2161,14 @@
                     if (event.target.classList.contains('remove-song-btn'))
                     {
                         const indexToRemove = parseInt(event.target.dataset.index, 10);
-                        if (!Array.isArray(currentSetlist)) currentSetlist = []; // Ensure it's an array
+                        if (!Array.isArray(currentSetlist)) currentSetlist = [];
 
                         if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < currentSetlist.length)
                         {
                             const removedItem = currentSetlist.splice(indexToRemove, 1);
                             console.log("Removed:", removedItem[0]?.displayName ?? 'item');
-
-                            renderSetlistUI(); // Update modal UI immediately
-                            await saveSetlistToSupabase(); // Save change to backend
+                            renderSetlistUI();
+                            await saveSetlistToSupabase();
                         } else
                         {
                             console.error("Invalid index for removal:", event.target.dataset.index);
@@ -2055,7 +2177,7 @@
                 });
             }
 
-            // --- Delegated Click Listener for ALL Song Links (Tables 1 & 2) ---
+            // --- Delegated Click Listener for ALL Song Links ---
             document.body.addEventListener('click', (event) =>
             {
                 const link = event.target.closest('a[data-song-name]');
@@ -2064,45 +2186,40 @@
                     const parentTable = link.closest('#tableone, #tabletwo');
                     if (parentTable)
                     {
-                        // Prevent default link behavior *only* if we handle it
                         event.preventDefault();
                         handleSongClick(event, link);
                     }
-                    // If the link is not in tableone or tabletwo, let the default browser behavior occur
                 }
             });
 
-            // --- Search function setup (for Table Two) ---
+            // --- Search function setup for Table Two ---
             if (searchInput)
             {
-                // Make the function globally accessible if called via onkeyup in HTML
                 window.myFunction = function ()
-                {
+                { // Keep accessible globally
                     var input, filter, table, tr, td, i, txtValue;
                     input = document.getElementById("myInput");
                     filter = input.value.toUpperCase();
                     table = document.getElementById("tabletwo");
                     tr = table.getElementsByTagName("tr");
 
-                    // Loop through all table rows (start from 1 to skip header)
                     for (i = 1; i < tr.length; i++)
-                    {
-                        td = tr[i].getElementsByTagName("td")[0]; // Get the first cell (NAME OF SONG)
+                    { // Start i from 1 to skip header
+                        td = tr[i].getElementsByTagName("td")[0];
                         if (td)
                         {
                             txtValue = td.textContent || td.innerText;
                             if (txtValue.toUpperCase().indexOf(filter) > -1)
                             {
-                                tr[i].style.display = ""; // Show row if match
+                                tr[i].style.display = "";
                             } else
                             {
-                                tr[i].style.display = "none"; // Hide row if no match
+                                tr[i].style.display = "none";
                             }
                         }
                     }
                 };
             }
-
 
             console.log("Initial setup complete.");
         });
