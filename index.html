@@ -9,66 +9,46 @@
     <!-- Stylesheets -->
     <link rel="shortcut icon" href="./style/images/LOGO.jpg" />
     <link rel="stylesheet" href="./style/mainapp.css">
-    <!-- Add modal styles to mainapp.css or link a separate CSS -->
-    <link rel="stylesheet" href="./style/jquery.transposer.css"> <!-- Keep for key buttons too -->
-    <!-- ---------------- -->
+    <link rel="stylesheet" href="./style/jquery.transposer.css">
 
     <!-- SUPABASE CLIENT -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> <!-- Add this line -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-    <!-- ---------- -->
 
     <!-- Scripts -->
     <script type="text/javascript" src="./assets/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="./assets/jquery/jquery.transposer.js"></script>
-    <!------------------>
 
-    <!-- Add Modal CSS here or ensure it's in mainapp.css -->
     <style>
-        /* Basic Modal Styling (Add to mainapp.css ideally) */
+        /* Basic Modal Styling */
         .modal {
             display: none;
-            /* Hidden by default */
             position: fixed;
-            /* Stay in place */
             z-index: 1000;
-            /* Sit on top */
             left: 0;
             top: 0;
             width: 100%;
-            /* Full width */
             height: 100%;
-            /* Full height */
             overflow: auto;
-            /* Enable scroll if needed */
             background-color: rgba(0, 0, 0, 0.6);
-            /* Black w/ opacity */
             padding-top: 60px;
         }
 
         .modal-content {
             background-color: #fefefe;
             margin: 5% auto;
-            /* 5% from the top and centered */
             padding: 25px;
             border: 1px solid #888;
             width: 80%;
-            /* Could be more or less, depending on screen size */
             max-width: 600px;
-            /* Maximum width */
             border-radius: 8px;
             font-family: 'Montserrat', sans-serif;
-
-            /* --- ADD THESE LINES --- */
             max-height: 85vh;
-            /* Limit height to 85% of the viewport height */
             overflow-y: auto;
-            /* Add vertical scrollbar ONLY if content overflows */
-            /* --- END OF ADDED LINES --- */
         }
 
         .close-modal-btn {
@@ -104,19 +84,11 @@
             align-items: center;
         }
 
-        #current-setlist-items li:last-child {
-            border-bottom: none;
-        }
-
         .remove-song-btn {
             background-color: #f44336;
-            /* Red */
             color: white;
             border: none;
             padding: 5px 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
             font-size: 12px;
             cursor: pointer;
             border-radius: 4px;
@@ -130,13 +102,10 @@
         #add-song-section label {
             display: inline-block;
             min-width: 50px;
-            /* Use min-width */
             margin-right: 10px;
             vertical-align: middle;
-            /* Align label with input */
         }
 
-        /* Specific styling for search input and key select */
         #add-song-section #song-search-input,
         #add-song-section #key-select-dropdown {
             padding: 8px 12px;
@@ -145,23 +114,17 @@
             border-radius: 4px;
             border: 1px solid #ccc;
             box-sizing: border-box;
-            /* Include padding/border in width */
             vertical-align: middle;
-            /* Align with label */
         }
 
         #add-song-section #song-search-input {
             width: calc(100% - 70px);
-            /* Adjust width considering label */
         }
 
         #add-song-section #key-select-dropdown {
             width: calc(100% - 70px);
-            /* Adjust width considering label */
             max-width: 100px;
-            /* Optional: Limit key dropdown width */
         }
-
 
         #add-song-section button#add-song-to-setlist-btn {
             padding: 8px 12px;
@@ -175,37 +138,20 @@
             margin-top: 10px;
         }
 
-        /* Add Song Search Results Styling */
         #song-search-results .results-list {
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            /* Soften shadow */
             border-radius: 4px;
-            /* Can round all corners now */
             display: none;
-            /* Hidden initially */
-            /* position: absolute; <-- REMOVE */
             background-color: #f8f8f8;
-            /* Slightly off-white background */
             border: 1px solid #ccc;
-            /* max-height: 150px; <-- REMOVE */
-            /* overflow-y: auto; <-- REMOVE */
             width: 100%;
-            /* Occupy available width in the flow */
-            /* z-index: 1001;  <-- REMOVE */
-            /* left: 60px; <-- REMOVE */
             box-sizing: border-box;
             margin-top: 5px;
-            /* Add some space below the input */
             margin-bottom: 15px;
-            /* Add space before the Key dropdown */
         }
 
-        /* --- END OF MODIFICATION --- */
-
-        /* Optional: Adjust result item padding slightly */
         #song-search-results .result-item {
             padding: 10px 12px;
-            /* Slightly more padding */
             cursor: pointer;
             font-size: 14px;
             border-bottom: 1px solid #eee;
@@ -219,34 +165,29 @@
             background-color: #f0f0f0;
         }
 
-        /* Adjust input width slightly if label makes it wrap strangely */
-        #add-song-section input[type="text"]#song-search-input {
-            box-sizing: border-box;
-            /* Include padding/border in width */
-        }
-
-
-        /* Password Modal Specific Styles (Optional Additions) */
-        #password-input {
+        #password-input,
+        #login-email,
+        #login-password {
             width: 95%;
-            /* Adjust as needed */
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            /* Include padding in width */
+            margin-bottom: 15px;
         }
 
-        #password-error-msg {
+        #password-error-msg,
+        #login-error-msg {
             color: red;
             font-size: 14px;
             margin-top: 10px;
             height: 16px;
-            /* Reserve space to prevent layout shift */
         }
 
-        #submit-password-btn {
+        #submit-password-btn,
+        #login-btn,
+        .modal-btn {
             background-color: #007bff;
             color: white;
             padding: 10px 20px;
@@ -254,6 +195,93 @@
             border-radius: 4px;
             font-size: 16px;
             cursor: pointer;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* ===== BUTTONS AND EDITING STYLES ===== */
+        #setlist-management-container {
+            padding: 20px 15px;
+            text-align: center;
+        }
+
+        #setlist-management-container button {
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #setlist-management-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #open-setlist-modal-btn {
+            background-color: #4CAF50;
+        }
+
+        /* Green */
+        #login-modal-btn {
+            background-color: #008CBA;
+        }
+
+        /* Blue */
+        #logout-btn {
+            background-color: #f44336;
+        }
+
+        /* Red */
+
+        #tabletwo .edit-col {
+            display: none;
+        }
+
+        body.logged-in #tabletwo .edit-col {
+            display: table-cell;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        #edit-song-textarea {
+            width: 100%;
+            height: 50vh;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        #edit-song-modal .modal-footer {
+            text-align: right;
+        }
+
+        #edit-song-modal #save-song-btn {
+            background-color: #28a745;
+        }
+
+        #edit-song-modal #cancel-edit-btn {
+            background-color: #6c757d;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -265,57 +293,57 @@
         </div>
     </div>
 
-    <!-- Button to Open Setlist Modal (triggers password first) -->
-    <div style="padding: 15px; text-align: center;">
-        <button id="open-setlist-modal-btn"
-            style=" background-color: #4CAF50; border: none;border-radius: 5px; color: white; padding: 15px 20px; font-size: 16px;font-family: 'Montserrat', sans-serif; font-weight: 500;">Set
-            List Management</button>
+    <div id="setlist-management-container">
+        <button id="open-setlist-modal-btn">Set List Management</button>
+        <button id="login-modal-btn">Login</button>
+        <button id="logout-btn" style="display: none;">Logout</button>
     </div>
 
-    <!-- Password Modal (Initially Hidden) -->
-    <div id="password-modal" class="modal" style="display: none;">
+    <!-- Password Modal (for Setlist) -->
+    <div id="password-modal" class="modal">
         <div class="modal-content">
-            <span class="close-password-modal-btn close-modal-btn">×</span> <!-- Use common class + specific -->
+            <span class="close-password-modal-btn close-modal-btn">×</span>
             <h2>Enter Access Code</h2>
-            <p style="color: #666; font-size: 14px;">Enter the code to manage the setlist.</p>
-            <div style="margin: 20px 0;">
-                <label for="password-input" style="display: block; margin-bottom: 5px;">Code:</label>
-                <input type="password" id="password-input"> <!-- Styles moved to CSS -->
-                <p id="password-error-msg"></p> <!-- Error message placeholder -->
-            </div>
-            <button id="submit-password-btn">Submit Code</button> <!-- Styles moved to CSS -->
+            <p>Enter the code to manage the setlist.</p>
+            <input type="password" id="password-input">
+            <p id="password-error-msg"></p>
+            <button id="submit-password-btn">Submit Code</button>
         </div>
     </div>
-    <!-- --------------- -->
 
-    <!-- Setlist Modal (Initially Hidden) -->
-    <div id="setlist-modal" class="modal" style="display: none;">
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal-btn">×</span> <!-- Note: This is the setlist modal's close button -->
-            <h2>Weekend Setlist Management</h2>
+            <span class="close-login-modal-btn close-modal-btn">×</span>
+            <h2>Administrator Login</h2>
+            <div><label for="login-email">Email:</label><input type="email" id="login-email"
+                    placeholder="you@example.com"></div>
+            <div><label for="login-password">Password:</label><input type="password" id="login-password"></div>
+            <p id="login-error-msg"></p>
+            <button id="login-btn" class="modal-btn">Login</button>
+        </div>
+    </div>
 
+    <!-- Setlist Modal -->
+    <div id="setlist-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal-btn">×</span>
+            <h2>Weekend Setlist Management</h2>
             <div id="current-setlist-display">
                 <h3>Current Setlist:</h3>
                 <ul id="current-setlist-items">
-                    <!-- Populated by JavaScript -->
                     <li>Loading...</li>
                 </ul>
             </div>
-
-            <hr style="margin: 20px 0;">
-
+            <hr>
             <div id="add-song-section">
                 <h3>Add Song:</h3>
                 <div>
                     <label for="song-search-input">Song:</label>
-                    <!-- Search input and results -->
                     <input type="text" id="song-search-input" placeholder="Type to search..." autocomplete="off">
                     <div id="song-search-results" style="position: relative;">
-                        <div class="results-list">
-                            <!-- Dynamically populated -->
-                        </div>
+                        <div class="results-list"></div>
                     </div>
-                    <!-- Hidden inputs to store the actual selected song data -->
                     <input type="hidden" id="selected-song-identifier">
                     <input type="hidden" id="selected-song-display-name">
                 </div>
@@ -340,11 +368,23 @@
             </div>
         </div>
     </div>
-    <!-- --------------- -->
 
+    <!-- Edit Song Modal -->
+    <div id="edit-song-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-edit-modal-btn close-modal-btn">×</span>
+            <h2 id="edit-song-title">Edit Song</h2>
+            <textarea id="edit-song-textarea"></textarea>
+            <p id="edit-song-msg" style="height: 16px; color: green;"></p>
+            <div class="modal-footer">
+                <button id="cancel-edit-btn" class="modal-btn">Cancel</button>
+                <button id="save-song-btn" class="modal-btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Table One (Setlist) -->
     <div>
-        <!-- Table One (SONG LIST / SETLIST) - Now dynamically populated -->
         <table id="tableone">
             <caption>SONG LIST (This Weekend's Setlist)</caption>
             <thead>
@@ -355,1221 +395,30 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- This will be populated by JavaScript -->
                 <tr>
-                    <td colspan="3" style="text-align:center;">Loading setlist...</td>
+                    <td colspan="3" class="text-center">Loading setlist...</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
+    <!-- Table Two (Song Database) -->
     <div>
         <input id="myInput" onkeyup="myFunction()" placeholder="Search for a song name" type="text">
-        <!-- Table Two (SONG DATABASE) - Keep as is -->
         <table id="tabletwo">
             <caption>SONG DATABASE</caption>
             <thead>
                 <tr>
                     <td>NAME OF SONG</td>
+                    <td class="edit-col">EDIT</td>
                     <td>CHORDS</td>
                     <td>LYRICS</td>
                 </tr>
             </thead>
             <tbody>
-                <!-- START OF SONG LIST -->
                 <tr>
-                    <td>10 000 Reasons</td>
-                    <td><a href="#" data-song-name="10000-reasons" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="10000-reasons" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
+                    <td colspan="4" class="text-center">Loading song database...</td>
                 </tr>
-                <tr>
-                    <td>A Thousand Hallelujahs</td>
-                    <td><a href="#" data-song-name="a-thousand-hallelujahs" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="a-thousand-hallelujahs" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Above all</td>
-                    <td><a href="#" data-song-name="above-all" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="above-all" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>All Creation cries to you</td>
-                    <td><a href="#" data-song-name="all-creation" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="all-creation" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>All over the world</td>
-                    <td><a href="#" data-song-name="all-over-the-world" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="all-over-the-world" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>All to you - Brad Klynsmith</td>
-                    <td><a href="#" data-song-name="all-to-you-brad-klynsmith" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="all-to-you-brad-klynsmith" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>All who are thirsty</td>
-                    <td><a href="#" data-song-name="all-who-are-thirsty" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="all-who-are-thirsty" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Amazing Grace</td>
-                    <td><a href="#" data-song-name="amazing-grace" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="amazing-grace" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Angus Dei</td>
-                    <td><a href="#" data-song-name="angus-dei" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="angus-dei" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Arise and Shine</td>
-                    <td><a href="#" data-song-name="arise-and-shine" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="arise-and-shine" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>As the deer</td>
-                    <td><a href="#" data-song-name="as-the-deer" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="as-the-deer" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>As we lift up our hands</td>
-                    <td><a href="#" data-song-name="as-we-lift-up-our-hands" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="as-we-lift-up-our-hands" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>At the Cross</td>
-                    <td><a href="#" data-song-name="at-the-cross" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="at-the-cross" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Battle Belongs</td>
-                    <td><a href="#" data-song-name="battle-belongs" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="battle-belongs" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Battle Song</td>
-                    <td><a href="#" data-song-name="battle-song" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="battle-song" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Bayete Inkosi</td>
-                    <td><a href="#" data-song-name="bayete-inkosi" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="bayete-inkosi" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Be Glorified</td>
-                    <td><a href="#" data-song-name="be-glorified-by-loyiso" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="be-glorified-by-loyiso" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Be lifted high</td>
-                    <td><a href="#" data-song-name="be-lifted-high" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="be-lifted-high" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Be Still - Hillsong</td>
-                    <td><a href="#" data-song-name="be-still-hillsong" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="be-still-hillsong" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Be thou my vision</td>
-                    <td><a href="#" data-song-name="be-thou-my-vision" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="be-thou-my-vision" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Beautiful One</td>
-                    <td><a href="#" data-song-name="beautiful-one" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="beautiful-one" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Better is One Day - Matt Redman</td>
-                    <td><a href="#" data-song-name="better-is-one-day" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="better-is-one-day" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Better is One Day - Kutless</td>
-                    <td><a href="#" data-song-name="better-is-one-day-kutless" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="better-is-one-day-kutless" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Blessed be Your Name</td>
-                    <td><a href="#" data-song-name="blessed-be-your-name" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="blessed-be-your-name" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Broken Vessels</td>
-                    <td><a href="#" data-song-name="broken-vessels" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="broken-vessels" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Build my life</td>
-                    <td><a href="#" data-song-name="build-my-life" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="build-my-life" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Cannons</td>
-                    <td><a href="#" data-song-name="cannons" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="cannons" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Champion</td>
-                    <td><a href="#" data-song-name="champion" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="champion" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Come away with me</td>
-                    <td><a href="#" data-song-name="come-away-with-me" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="come-away-with-me" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Come, Holy Spirit</td>
-                    <td><a href="#" data-song-name="come-holy-spirit" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="come-holy-spirit" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Come, now is the time</td>
-                    <td><a href="#" data-song-name="come-now-is-the-time-to-worship" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="come-now-is-the-time-to-worship" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Cornerstone</td>
-                    <td><a href="#" data-song-name="cornerstone" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="cornerstone" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Cry in my heart</td>
-                    <td><a href="#" data-song-name="cry-in-my-heart" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="cry-in-my-heart" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Dancing Generation</td>
-                    <td><a href="#" data-song-name="dancing-generation" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="dancing-generation" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Deep cries out</td>
-                    <td><a href="#" data-song-name="deep-cries-out" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="deep-cries-out" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Did you feel the mountains</td>
-                    <td><a href="#" data-song-name="did-you-feel-the-mountains-tremble" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="did-you-feel-the-mountains-tremble" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Draw me close</td>
-                    <td><a href="#" data-song-name="draw-me-close" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="draw-me-close" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Ever be</td>
-                    <td><a href="#" data-song-name="ever-be" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="ever-be" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Filled with Your Glory</td>
-                    <td><a href="#" data-song-name="filled-with-your-glory" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="filled-with-your-glory" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fire fall down</td>
-                    <td><a href="#" data-song-name="fire-fall-down" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="fire-fall-down" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>For all You've Done</td>
-                    <td><a href="#" data-song-name="for-all-youve-done" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="for-all-youve-done" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Forever</td>
-                    <td><a href="#" data-song-name="forever" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="forever" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Freedom Reigns</td>
-                    <td><a href="#" data-song-name="freedom-reigns" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="freedom-reigns" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Give Thanks</td>
-                    <td><a href="#" data-song-name="give-thanks" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="give-thanks" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Glorius Day</td>
-                    <td><a href="#" data-song-name="glorius-day-desperation-band" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="glorious-day-desperation-band" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>God is Great</td>
-                    <td><a href="#" data-song-name="god-is-great" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-is-great" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>God is here</td>
-                    <td><a href="#" data-song-name="god-is-here" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-is-here" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>God of Revival</td>
-                    <td><a href="#" data-song-name="god-of-revival" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-of-revival" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>God of this city</td>
-                    <td><a href="#" data-song-name="god-of-this-city" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-of-this-city" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>God of Wonders</td>
-                    <td><a href="#" data-song-name="god-of-wonders" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-of-wonders" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>God, You're so Good</td>
-                    <td><a href="#" data-song-name="god-youre-so-good" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="god-youre-so-good" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>God's NOT dead</td>
-                    <td><a href="#" data-song-name="gods-not-dead" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="gods-not-dead" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Good good Father</td>
-                    <td><a href="#" data-song-name="good-good-father" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="good-good-father" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Goodness of God</td>
-                    <td><a href="#" data-song-name="goodness-of-god" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="goodness-of-god" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Gratitude</td>
-                    <td><a href="#" data-song-name="gratitude" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="gratitude" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Graves into gardens</td>
-                    <td><a href="#" data-song-name="graves-into-gardens" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="graves-into-gardens" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Great are You Lord</td>
-                    <td><a href="#" data-song-name="great-are-you-lord" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="great-are-you-lord" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Great in Power</td>
-                    <td><a href="#" data-song-name="great-in-power" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="great-in-power" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Hallelu</td>
-                    <td><a href="#" data-song-name="hallelu" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="hallelu" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Happy Day</td>
-                    <td><a href="#" data-song-name="happy-day" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="happy-day" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Have it all</td>
-                    <td><a href="#" data-song-name="have-it-all-brian-johnston" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="have-it-all-brian-johnston" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>He Rigns</td>
-                    <td><a href="#" data-song-name="he-reigns" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="he-reigns" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Heart of Worship</td>
-                    <td><a href="#" data-song-name="heart-of-worship" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="heart-of-worship" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Here for You</td>
-                    <td><a href="#" data-song-name="here-for-you" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="here-for-you" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Here is love</td>
-                    <td><a href="#" data-song-name="here-is-love" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="here-is-love" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Holy and anointed One</td>
-                    <td><a href="#" data-song-name="holy-and-anointed-one" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="holy-and-anointed-one" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Holy Forever</td>
-                    <td><a href="#" data-song-name="holy-forever" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="holy-forever" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Holy Spirit</td>
-                    <td><a href="#" data-song-name="holy-spirit" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="holy-spirit" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Hosana in the highest</td>
-                    <td><a href="#" data-song-name="hosana-in-the-highest" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="hosana-in-the-highest" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Hosana - Praise is Rising</td>
-                    <td><a href="#" data-song-name="hosanna-praise is rising" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="hosanna-praise is rising" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>House of The Lord</td>
-                    <td><a href="#" data-song-name="house-of-the-lord" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="house-of-the-lord" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>How Great how Great is He</td>
-                    <td><a href="#" data-song-name="how-great-how-great-is-he" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="how-great-how-great-is-he" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>How Great is our God</td>
-                    <td><a href="#" data-song-name="how-great-is-our-god" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="how-great-is-our-god" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>How great You are</td>
-                    <td><a href="#" data-song-name="how-great-you-are" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="how-great-you-are" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I am free</td>
-                    <td><a href="#" data-song-name="i-am-free" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="i-am-free" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I belong to You</td>
-                    <td><a href="#" data-song-name="i-belong-to-you" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="i-belong-to-you" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I can only Imagine</td>
-                    <td><a href="#" data-song-name="i-can-only-imagine" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="i-can-only-imagine" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I give myself away</td>
-                    <td><a href="#" data-song-name="i-give-myself-away-mcdowell" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="i-give-myself-away-mcdowell" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>I see Your Face</td>
-                    <td><a href="#" data-song-name="i-see-your-face-in every-sunrise" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="i-see-your-face" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I speak Jesus</td>
-                    <td><a href="#" data-song-name="i-speak-jesus" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="i-speak-jesus" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I stand in awe</td>
-                    <td><a href="#" data-song-name="i-stand-in-awe" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="i-stand-in-awe" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I want to scream it out</td>
-                    <td><a href="#" data-song-name="i-want-to-scream-it-out" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="i-want-to-scream-it-out" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>I will love You</td>
-                    <td><a href="#" data-song-name="i-will-love-you" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="i-will-love-you" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Indescribable</td>
-                    <td><a href="#" data-song-name="indescribable" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="indescribable" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>It is well</td>
-                    <td><a href="#" data-song-name="it-is-well" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="it-is-well" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>I've found a love</td>
-                    <td><a href="#" data-song-name="ive-found-a-love" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="ive-found-a-love" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Jabulani Africa</td>
-                    <td><a href="#" data-song-name="jabulani-africa" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="jabulani-africa" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Jehova - You are the Most High God</td>
-                    <td><a href="#" data-song-name="jehova-you-are-the-most-high" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="jehova-you-are-the-most-high" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Jesus Emmanuel</td>
-                    <td><a href="#" data-song-name="jesus-emmanuel" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="jesus-emmanuel" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>King of my heart</td>
-                    <td><a href="#" data-song-name="king-of-my-heart" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="king-of-my-heart" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>King of Kings</td>
-                    <td><a href="#" data-song-name="king-of-kings" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="king-of-kings" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Light of the world</td>
-                    <td><a href="#" data-song-name="light-of-the-world" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="light-of-the-world" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Living Hope</td>
-                    <td><a href="#" data-song-name="living-hope" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="living-hope" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Lord I come to You</td>
-                    <td><a href="#" data-song-name="lord-i-come-to-you" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="lord-i-come-to-you" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Lord let Your Glory fall</td>
-                    <td><a href="#" data-song-name="lord-let-your-glory-fall" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="lord-let-your-glory-fall" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Love you Endlessly</td>
-                    <td><a href="#" data-song-name="love-you-endlessly" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="endlessly" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Magnificent</td>
-                    <td><a href="#" data-song-name="magnificent" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="magnificent" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Majestic</td>
-                    <td><a href="#" data-song-name="majestic" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="majestic" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Majesty - Here I am</td>
-                    <td><a href="#" data-song-name="majesty-here-i-am" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="majesty-here-i-am" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>More of You</td>
-                    <td><a href="#" data-song-name="more-of-you-lord" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="more-of-you-lord" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>More than able</td>
-                    <td><a href="#" data-song-name="more-than-able" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="more-than-able" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>My Glorius</td>
-                    <td><a href="#" data-song-name="my-glorius" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="my-glorius" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Njalo Nje</td>
-                    <td><a href="#" data-song-name="njalo-nje" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="njalo-nje" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Nothing without You</td>
-                    <td><a href="#" data-song-name="nothing-without-you-dr-tumi" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="nothing-without-you-dr-tumi" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>O Praise The Name</td>
-                    <td><a href="#" data-song-name="o-praise-the-name" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="o-praise-the-name" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Oceans</td>
-                    <td><a href="#" data-song-name="oceans" data-content-type="chords" data-target="song-content">
-                            Chords</td>
-                    <td><a href="#" data-song-name="oceans" data-content-type="lyrics" data-target="song-content">
-                            Lyrics</td>
-                </tr>
-                <tr>
-                    <td>O Come to the Altar</td>
-                    <td><a href="#" data-song-name="oh-come-to-the-altar" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="oh-come-to-the-altar" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>One Name</td>
-                    <td><a href="#" data-song-name="one-name-ncmi-original" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="one-name" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>One thing Remains</td>
-                    <td><a href="#" data-song-name="one-thing-remains" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="one-thing-remains" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>One Way</td>
-                    <td><a href="#" data-song-name="one-way" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="one-way" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Open the eyes of my heart</td>
-                    <td><a href="#" data-song-name="open-the-eyes" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="open-the-eyes" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Our Father</td>
-                    <td><a href="#" data-song-name="our-father" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="our-father" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Praise - Elevation</td>
-                    <td><a href="#" data-song-name="praise-elevation" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="praise-elevation" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Praise The Father Praise The Son</td>
-                    <td><a href="#" data-song-name="praise-the-father-praise-the-son" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="praise-the-father-praise-the-son" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Praise The King</td>
-                    <td><a href="#" data-song-name="praise-the-king" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="praise-the-king" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Praise Your Name</td>
-                    <td><a href="#" data-song-name="praise-your-name" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="praise-your-name" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Raise a Hallelujah</td>
-                    <td><a href="#" data-song-name="raise-a-hallelujah" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="raise-a-hallelujah" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Raise a Shout</td>
-                    <td><a href="#" data-song-name="raise-a-shout" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="raise-a-shout" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Reckless Love</td>
-                    <td><a href="#" data-song-name="reckless-love" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="reckless-love" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Revelation song</td>
-                    <td><a href="#" data-song-name="revelation-song" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="revelation-song" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Rooftops</td>
-                    <td><a href="#" data-song-name="rooftops" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="rooftops" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>See His Love</td>
-                    <td><a href="#" data-song-name="see-his-love" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="see-his-love" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Shepherd</td>
-                    <td><a href="#" data-song-name="shepherd-amanda-cook" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="shepherd-amanda-cook" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Shout Hosana</td>
-                    <td><a href="#" data-song-name="shout-hosanna" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="shout-hosanna" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Shout to The Lord</td>
-                    <td><a href="#" data-song-name="shout-to-the-lord" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="shout-to-the-lord" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>So will I</td>
-                    <td><a href="#" data-song-name="so-will-i" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="so-will-i" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Son of God, Lord of Light</td>
-                    <td><a href="#" data-song-name="son-of-god-lord-of-light" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="son-of-god-lord-of-light" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Still - Hide me now</td>
-                    <td><a href="#" data-song-name="still-hide-me-now" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="still-hide-me-now" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Sweet Wind</td>
-                    <td><a href="#" data-song-name="sweet-wind" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="sweet-wind" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Take me in</td>
-                    <td><a href="#" data-song-name="take-me-in" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="take-me-in" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>The Blessing</td>
-                    <td><a href="#" data-song-name="the-blessing" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="the-blessing" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>The King is in the Room</td>
-                    <td><a href="#" data-song-name="the-king-is-in-the-room" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="the-king-is-in-the-room" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>The Lion and The Lamb</td>
-                    <td><a href="#" data-song-name="the-lion-and-the-lamb" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="the-lion-and-the-lamb" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>The river is here</td>
-                    <td><a href="#" data-song-name="the-river-is-here" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="the-river-is-here" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>The Sky reveals Your Glory</td>
-                    <td><a href="#" data-song-name="the-sky-reveals-your-glory" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="the-sky-reveals-your-glory" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>This is Amazing Grace</td>
-                    <td><a href="#" data-song-name="this-is-amazing-grace" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="this-is-amazing-grace" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>This is my desire</td>
-                    <td><a href="#" data-song-name="this-is-my-desire" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="this-is-my-desire" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Treasure</td>
-                    <td><a href="#" data-song-name="treasure-tree63" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="treasure-tree63" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Unfignified</td>
-                    <td><a href="#" data-song-name="undignified-matt-redman" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="undignified-matt-redman" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Unfailing Love/td>
-                    <td><a href="#" data-song-name="unfailing-love" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="unfailing-love" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Unstoppable God</td>
-                    <td><a href="#" data-song-name="unstoppable-god" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="unstoppable-god" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Voice of Thunder</td>
-                    <td><a href="#" data-song-name="voice-of-thunder" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="voice-of-thunder" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Waiting here for You</td>
-                    <td><a href="#" data-song-name="waiting-here-for-you" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="waiting-here-for-you" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Walk with me</td>
-                    <td><a href="#" data-song-name="walk-with-me" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="walk-with-me" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Water You turned into wine</td>
-                    <td><a href="#" data-song-name="water-you-turned-into-wine" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="water-you-turned-into-wine" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Way Maker</td>
-                    <td><a href="#" data-song-name="way-maker" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="way-maker" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>We are the free</td>
-                    <td><a href="#" data-song-name="we-are-the-free" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="we-are-the-free" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>We will sing sing sing</td>
-                    <td><a href="#" data-song-name="we-will-sing-sing-sing" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="we-will-sing-sing-sing" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>What a Beautiful Name</td>
-                    <td><a href="#" data-song-name="what-a-beautiful-name" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="what-a-beautiful-name" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Who You say I am</td>
-                    <td><a href="#" data-song-name="who-you-say-i-am" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="who-you-say-i-am" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Whole world in His Hands</td>
-                    <td><a href="#" data-song-name="whole-world-in-his-hands" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="whole-world-in-his-hands" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Worthy</td>
-                    <td><a href="#" data-song-name="worthy" data-content-type="chords" data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="worthy" data-content-type="lyrics" data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>Worthy is The Lamb</td>
-                    <td><a href="#" data-song-name="worthy-is-the-lamb" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="worthy-is-the-lamb" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Worthy of it all</td>
-                    <td><a href="#" data-song-name="worthy-of-it-all" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="worthy-of-it-all" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>You are Good</td>
-                    <td><a href="#" data-song-name="you-are-good" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="you-are-good" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>You are my Strength</td>
-                    <td><a href="#" data-song-name="you-are-my-strength" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="you-are-my-strength" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>You make me brave</td>
-                    <td><a href="#" data-song-name="you-make-me-brave" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="you-make-me-brave" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Your Grace is Enough</td>
-                    <td><a href="#" data-song-name="your-grace-is-enough" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="your-grace-is-enough" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Your love awakens me</td>
-                    <td><a href="#" data-song-name="your-love-awakens-me" data-content-type="chords"
-                            data-target="song-content">Chords</td>
-                    <td><a href="#" data-song-name="your-love-awakens-me" data-content-type="lyrics"
-                            data-target="song-content">Lyrics</td>
-                </tr>
-                <tr>
-                    <td>Your Love Never fails</td>
-                    <td><a href="#" data-song-name="your-love-never-fails" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="your-love-never-fails" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <tr>
-                    <td>You're Beautiful</td>
-                    <td><a href="#" data-song-name="youre-beautiful-phil-whickam" data-content-type="chords"
-                            data-target="song-content">Chords
-                    </td>
-                    <td><a href="#" data-song-name="youre-beautiful-phil-whickam" data-content-type="lyrics"
-                            data-target="song-content">Lyrics
-                    </td>
-                </tr>
-                <!-- END OF SONG LIST -->
             </tbody>
         </table>
     </div>
@@ -1581,592 +430,436 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqbmV3b2dod3llY21nbWpzeGduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MDU5ODEsImV4cCI6MjA1OTA4MTk4MX0.lzs2Ol0tUWzk0-m-gQHBRPsOjWLBKA0bhImOixFeoUY';
 
         let supabase = null;
-        if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase)
+        try
         {
-            try
-            {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log("Supabase client initialized.");
-            } catch (e)
-            {
-                console.error("Error initializing Supabase client:", e);
-                supabase = null;
-            }
-        } else
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("Supabase client initialized.");
+        } catch (e)
         {
-            console.error("Supabase URL/Key missing or client library not loaded.");
-            const openBtn = document.getElementById('open-setlist-modal-btn');
-            if (openBtn)
-            {
-                openBtn.disabled = true;
-                openBtn.textContent = "Setlist Disabled (Config Error)";
-                openBtn.style.backgroundColor = '#ccc';
-            }
+            console.error("Error initializing Supabase client:", e);
         }
 
+        // --- GLOBAL STATE ---
         let currentSetlist = [];
+        let allSongsData = [];
         const setlistLabel = 'current_weekend';
-        const CORRECT_PASSWORD = "1111"; // <<< --- Your access code --- >>>
+        const CORRECT_PASSWORD = "1111";
 
-        // --- Store all available songs from tabletwo ---
-        let allSongsData = []; // Array to hold { identifier: '...', displayName: '...' }
-
-        // --- DOM Elements ---
-        const setlistModal = document.getElementById('setlist-modal');
-        const openSetlistBtn = document.getElementById('open-setlist-modal-btn');
-        const closeSetlistModalBtn = setlistModal ? setlistModal.querySelector('.close-modal-btn') : null;
-
-        const passwordModal = document.getElementById('password-modal');
-        const closePasswordModalBtn = passwordModal ? passwordModal.querySelector('.close-password-modal-btn') : null;
-        const passwordInput = document.getElementById('password-input');
-        const submitPasswordBtn = document.getElementById('submit-password-btn');
-        const passwordErrorMsg = document.getElementById('password-error-msg');
-
-        const currentSetlistItemsUl = document.getElementById('current-setlist-items');
-        // --- Elements for song search ---
-        const songSearchInput = document.getElementById('song-search-input');
-        const songSearchResultsContainer = document.getElementById('song-search-results');
-        const resultsListDiv = songSearchResultsContainer ? songSearchResultsContainer.querySelector('.results-list') : null;
-        const selectedSongIdentifierInput = document.getElementById('selected-song-identifier');
-        const selectedSongDisplayNameInput = document.getElementById('selected-song-display-name');
-        // --- END ---
-        const keySelectDropdown = document.getElementById('key-select-dropdown');
-        const addSongBtn = document.getElementById('add-song-to-setlist-btn');
-        const tableOneBody = document.querySelector('#tableone tbody');
-        const searchInput = document.getElementById("myInput"); // For table two search
-
-        // --- Core Functions ---
-
-        async function loadSetlistFromSupabase()
-        {
-            if (!supabase || !currentSetlistItemsUl || !tableOneBody)
-            {
-                console.warn("Supabase client not ready or UI elements missing. Cannot load setlist.");
-                if (tableOneBody) tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Setlist feature unavailable.</td></tr>';
-                if (currentSetlistItemsUl) currentSetlistItemsUl.innerHTML = '<li>Setlist unavailable</li>';
-                return;
-            }
-
-            console.log("Loading setlist from Supabase...");
-            if (currentSetlistItemsUl) currentSetlistItemsUl.innerHTML = '<li>Loading...</li>';
-            if (tableOneBody) tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Loading setlist...</td></tr>';
-
-            try
-            {
-                const { data, error, status } = await supabase
-                    .from('setlists')
-                    .select('songs')
-                    .eq('label', setlistLabel)
-                    .single();
-
-                if (error)
-                {
-                    if (status === 406 || error.code === 'PGRST116')
-                    { // PGRST116: "results contain 0 rows"
-                        console.warn(`Setlist row with label "${setlistLabel}" not found. Treating as empty.`);
-                        currentSetlist = [];
-                    } else
-                    {
-                        throw error; // Rethrow other errors
-                    }
-                } else if (data && data.songs)
-                {
-                    currentSetlist = Array.isArray(data.songs) ? data.songs : []; // Ensure it's an array
-                    console.log("Setlist loaded:", currentSetlist);
-                } else
-                {
-                    currentSetlist = []; // Default to empty if data is missing or malformed
-                    console.warn("Setlist row found but 'songs' data is missing or invalid.");
-                }
-
-            } catch (error)
-            {
-                console.error('Error loading setlist:', error);
-                currentSetlist = []; // Reset on error
-                if (currentSetlistItemsUl) currentSetlistItemsUl.innerHTML = '<li>Error loading setlist.</li>';
-                if (tableOneBody) tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Error loading setlist.</td></tr>';
-            } finally
-            {
-                if (currentSetlistItemsUl) renderSetlistUI();
-                if (tableOneBody) updateTableOneWithSetlist();
-            }
-        }
-
-        async function saveSetlistToSupabase()
+        document.addEventListener('DOMContentLoaded', () =>
         {
             if (!supabase)
             {
-                alert('Cannot save setlist: Supabase connection issue.');
-                return;
-            }
-            if (!Array.isArray(currentSetlist))
-            {
-                console.error("Attempted to save non-array data as setlist. Aborting.", currentSetlist);
-                alert("Error: Invalid setlist data. Cannot save.");
-                return;
-            }
-            console.log("Saving setlist to Supabase:", currentSetlist);
-
-            try
-            {
-                const { error } = await supabase
-                    .from('setlists')
-                    .upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' });
-
-                if (error) throw error;
-                console.log('Setlist saved successfully.');
-
-            } catch (error)
-            {
-                console.error('Error saving setlist:', error);
-                alert('Failed to save setlist. Please check console.');
-            }
-        }
-
-        function renderSetlistUI()
-        {
-            if (!currentSetlistItemsUl) return;
-            currentSetlistItemsUl.innerHTML = '';
-
-            if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
-            {
-                currentSetlistItemsUl.innerHTML = '<li>Setlist is empty.</li>';
+                alert("Supabase configuration is missing. App cannot load data.");
                 return;
             }
 
-            currentSetlist.forEach((item, index) =>
+            // =================================================================
+            // SECTION 1: DOM ELEMENT DECLARATIONS
+            // =================================================================
+            const tableOneBody = document.querySelector('#tableone tbody');
+            const tableTwoBody = document.querySelector('#tabletwo tbody');
+            const passwordModal = document.getElementById('password-modal');
+            const setlistModal = document.getElementById('setlist-modal');
+            const loginModal = document.getElementById('login-modal');
+            const editSongModal = document.getElementById('edit-song-modal');
+            const loginModalBtn = document.getElementById('login-modal-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const loginBtn = document.getElementById('login-btn');
+            const loginEmailInput = document.getElementById('login-email');
+            const loginPasswordInput = document.getElementById('login-password');
+            const loginErrorMsg = document.getElementById('login-error-msg');
+            const editSongTitle = document.getElementById('edit-song-title');
+            const editSongTextarea = document.getElementById('edit-song-textarea');
+            const saveSongBtn = document.getElementById('save-song-btn');
+            const cancelEditBtn = document.getElementById('cancel-edit-btn');
+            const editSongMsg = document.getElementById('edit-song-msg');
+            const openSetlistBtn = document.getElementById('open-setlist-modal-btn');
+            const songSearchInput = document.getElementById('song-search-input');
+            const currentSetlistItemsUl = document.getElementById('current-setlist-items');
+            const closeSetlistModalBtn = setlistModal ? setlistModal.querySelector('.close-modal-btn') : null;
+            const closePasswordModalBtn = passwordModal ? passwordModal.querySelector('.close-password-modal-btn') : null;
+            const passwordInput = document.getElementById('password-input');
+            const submitPasswordBtn = document.getElementById('submit-password-btn');
+            const passwordErrorMsg = document.getElementById('password-error-msg');
+            const keySelectDropdown = document.getElementById('key-select-dropdown');
+            const addSongBtn = document.getElementById('add-song-to-setlist-btn');
+            const selectedSongIdentifierInput = document.getElementById('selected-song-identifier');
+            const selectedSongDisplayNameInput = document.getElementById('selected-song-display-name');
+            const songSearchResultsContainer = document.getElementById('song-search-results');
+            const resultsListDiv = songSearchResultsContainer ? songSearchResultsContainer.querySelector('.results-list') : null;
+
+
+            // =================================================================
+            // SECTION 2: FUNCTION DEFINITIONS
+            // =================================================================
+
+            // --- Setlist Functions ---
+            function updateTableOneWithSetlist()
             {
-                const displayName = item?.displayName ?? 'Unknown Song';
-                const key = item?.key ?? '?';
-
-                const listItem = document.createElement('li');
-                listItem.dataset.songName = item?.songName ?? '';
-
-                const span = document.createElement('span');
-                span.textContent = `${displayName} (${key})`;
-
-                const button = document.createElement('button');
-                button.className = 'remove-song-btn';
-                button.dataset.index = index;
-                button.textContent = 'Remove';
-
-                listItem.appendChild(span);
-                listItem.appendChild(button);
-                currentSetlistItemsUl.appendChild(listItem);
-            });
-        }
-
-        function updateTableOneWithSetlist()
-        {
-            if (!tableOneBody) return;
-            tableOneBody.innerHTML = '';
-
-            if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
-            {
-                tableOneBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Setlist is empty. Use "Set List Management".</td></tr>';
-                return;
-            }
-
-            currentSetlist.forEach(item =>
-            {
-                const { songName, displayName = 'Unknown Song', key = '?' } = item || {};
-
-                if (!songName)
+                if (!tableOneBody) return;
+                tableOneBody.innerHTML = '';
+                if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
                 {
-                    console.warn("Skipping setlist item due to missing songName:", item);
+                    tableOneBody.innerHTML = '<tr><td colspan="3" class="text-center">Setlist is empty. Use "Set List Management".</td></tr>';
                     return;
                 }
-
-                const row = tableOneBody.insertRow();
-
-                const cellName = row.insertCell();
-                cellName.textContent = displayName;
-
-                const cellChords = row.insertCell();
-                const chordLink = document.createElement('a');
-                chordLink.href = '#';
-                chordLink.textContent = `Chords (${key})`;
-                chordLink.dataset.songName = songName;
-                chordLink.dataset.contentType = 'chords';
-                cellChords.appendChild(chordLink);
-                cellChords.style.textAlign = 'center';
-                cellChords.style.width = '20%';
-
-
-                const cellLyrics = row.insertCell();
-                const lyricLink = document.createElement('a');
-                lyricLink.href = '#';
-                lyricLink.textContent = 'Lyrics';
-                lyricLink.dataset.songName = songName;
-                lyricLink.dataset.contentType = 'lyrics';
-                cellLyrics.appendChild(lyricLink);
-                cellLyrics.style.textAlign = 'center';
-                cellLyrics.style.width = '20%';
-            });
-        }
-
-        // --- Populate the global `allSongsData` array ---
-        function populateSongDataSource()
-        {
-            const songTable = document.getElementById('tabletwo');
-            if (!songTable) return;
-            const tableBody = songTable.querySelector('tbody');
-            if (!tableBody) return;
-            const tableRows = tableBody.querySelectorAll('tr');
-
-            allSongsData = []; // Clear previous data
-            const uniqueSongs = new Map();
-
-            tableRows.forEach(row =>
-            {
-                if (row.cells.length < 3) return;
-
-                const songNameCell = row.cells[0];
-                const chordsCell = row.cells[1];
-
-                let songFileIdentifier = '';
-                let displayName = (songNameCell.textContent || songNameCell.innerText || '').trim();
-
-                const chordLink = chordsCell.querySelector('a[data-song-name]');
-                if (chordLink)
+                currentSetlist.forEach(item =>
                 {
-                    songFileIdentifier = chordLink.dataset.songName;
-                }
-
-                if (songFileIdentifier && displayName && !uniqueSongs.has(songFileIdentifier))
-                {
-                    uniqueSongs.set(songFileIdentifier, displayName);
-                } else if (displayName && displayName !== 'NAME OF SONG' && !chordLink)
-                {
-                    console.warn(`Could not find file identifier link for: ${displayName}`);
-                }
-            });
-
-            // Sort songs alphabetically by display name before storing
-            const sortedSongs = Array.from(uniqueSongs.entries()).sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
-
-            // Store in the global array
-            allSongsData = sortedSongs.map(([identifier, name]) => ({ identifier, displayName: name }));
-            console.log("Song data source populated:", allSongsData.length, "songs");
-        }
-
-        // --- handleSongClick ---
-        async function handleSongClick(event, linkElement)
-        {
-            event.preventDefault();
-
-            const songName = linkElement.dataset.songName;
-            const contentType = linkElement.dataset.contentType;
-
-            if (!songName || !contentType)
-            {
-                console.error("Link is missing required data attributes", linkElement);
-                return;
+                    const { songName, displayName = 'Unknown Song', key = '?' } = item || {};
+                    if (!songName) return;
+                    const row = tableOneBody.insertRow();
+                    row.innerHTML = `
+                        <td>${displayName}</td>
+                        <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="chords">Chords (${key})</a></td>
+                        <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="lyrics">Lyrics</a></td>
+                    `;
+                });
             }
 
-            const primaryPath = `./assets/${contentType}/${songName}.txt`;
-            const fallbackPath = `./${contentType}/${songName}.txt`;
-            const templateURL = "./assets/master/template.html";
-
-            let songContent = '';
-            let fetchError = null;
-
-            try
+            function renderSetlistUI()
             {
-                console.log(`Attempting to fetch: ${primaryPath}`);
-                const response = await fetch(primaryPath);
-                if (!response.ok)
+                if (!currentSetlistItemsUl) return;
+                currentSetlistItemsUl.innerHTML = '';
+                if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
                 {
-                    if (response.status === 404)
+                    currentSetlistItemsUl.innerHTML = '<li>Setlist is empty.</li>';
+                    return;
+                }
+                currentSetlist.forEach((item, index) =>
+                {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<span>${item.displayName} (${item.key})</span><button class="remove-song-btn" data-index="${index}">Remove</button>`;
+                    currentSetlistItemsUl.appendChild(listItem);
+                });
+            }
+
+            async function saveSetlistToSupabase()
+            {
+                if (!supabase) return;
+                try
+                {
+                    const { error } = await supabase.from('setlists').upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' });
+                    if (error) throw error;
+                    console.log('Setlist saved successfully.');
+                } catch (error)
+                {
+                    console.error('Error saving setlist:', error);
+                    alert('Failed to save setlist.');
+                }
+            }
+
+            async function loadSetlistFromSupabase()
+            {
+                if (!supabase) return;
+                try
+                {
+                    const { data, error } = await supabase.from('setlists').select('songs').eq('label', setlistLabel).single();
+                    if (error && error.code !== 'PGRST116') throw error;
+                    currentSetlist = (data && data.songs) ? data.songs : [];
+                } catch (e) { console.error("Error loading setlist", e); }
+                updateTableOneWithSetlist();
+            }
+
+            // --- Core Data & Table Functions ---
+            async function populateSongDatabaseTable()
+            {
+                if (!supabase || !tableTwoBody) return;
+                tableTwoBody.innerHTML = '<tr><td colspan="4" class="text-center">Loading song database...</td></tr>';
+                try
+                {
+                    const { data, error } = await supabase.from('songs').select('song_identifier, display_name').order('display_name', { ascending: true });
+                    if (error) throw error;
+                    allSongsData = data.map(song => ({ identifier: song.song_identifier, displayName: song.display_name }));
+                    tableTwoBody.innerHTML = '';
+                    if (allSongsData.length === 0)
                     {
-                        console.warn(`Primary path ${primaryPath} not found, trying fallback.`);
-                        const fallbackResponse = await fetch(fallbackPath);
-                        if (!fallbackResponse.ok)
-                        {
-                            throw new Error(`Fallback fetch failed: ${fallbackResponse.status} ${fallbackResponse.statusText} for ${fallbackPath}`);
-                        }
-                        songContent = await fallbackResponse.text();
-                        console.log(`Successfully fetched from fallback: ${fallbackPath}`);
-                    } else
-                    {
-                        throw new Error(`Primary fetch failed: ${response.status} ${response.statusText} for ${primaryPath}`);
+                        tableTwoBody.innerHTML = '<tr><td colspan="4" class="text-center">No songs found in the database.</td></tr>';
+                        return;
                     }
-                } else
+                    allSongsData.forEach(song =>
+                    {
+                        const row = tableTwoBody.insertRow();
+                        row.innerHTML = `
+                            <td>${song.displayName}</td>
+                            <td class="edit-col text-center" style="width: 10%;">
+                                <a href="#" class="edit-btn" data-song-identifier="${song.identifier}" data-display-name="${song.displayName}">Edit</a>
+                            </td>
+                            <td class="text-center" style="width: 15%;">
+                                <a href="#" data-song-identifier="${song.identifier}" data-content-type="chords">Chords</a>
+                            </td>
+                            <td class="text-center" style="width: 15%;">
+                                <a href="#" data-song-identifier="${song.identifier}" data-content-type="lyrics">Lyrics</a>
+                            </td>
+                        `;
+                    });
+                    console.log("Song database table populated from Supabase.");
+                } catch (error)
                 {
-                    songContent = await response.text();
-                    console.log(`Successfully fetched from: ${primaryPath}`);
+                    console.error('Error loading song database:', error);
+                    tableTwoBody.innerHTML = '<tr><td colspan="4" class="text-center">Error loading song database.</td></tr>';
                 }
-            } catch (error)
-            {
-                console.error(`Failed to load song content for ${songName}. Error:`, error);
-                alert(`Error loading content for "${songName}": ${error.message}. Please check file paths and network.`);
-                return;
             }
 
-            let targetKey = null;
-            const parentTable = linkElement.closest('#tableone');
-            if (parentTable && Array.isArray(currentSetlist) && currentSetlist.length > 0)
+            async function handleSongClick(event, linkElement)
             {
-                const setlistItem = currentSetlist.find(item => item && item.songName === songName);
-                if (setlistItem && setlistItem.key)
-                {
-                    targetKey = setlistItem.key;
-                    console.log(`Song ${songName} clicked from setlist. Target key for template: ${targetKey}`);
-                } else
-                {
-                    console.log(`Song ${songName} clicked from setlist but not found in currentSetlist data or has no key.`);
-                }
-            } else
-            {
-                console.log(`Song ${songName} clicked from song database (tabletwo) or setlist empty/not loaded. No target key override.`);
-            }
+                event.preventDefault();
+                const songIdentifier = linkElement.dataset.songIdentifier;
+                const contentType = linkElement.dataset.contentType;
+                if (!songIdentifier || !contentType) return;
 
-            try
-            {
+                const columnName = contentType === 'chords' ? 'chords_content' : 'lyrics_content';
+                const { data, error } = await supabase.from('songs').select(columnName).eq('song_identifier', songIdentifier).single();
+                if (error || !data || !data[columnName])
+                {
+                    alert(`Error: Could not load ${contentType} for ${songIdentifier}.`);
+                    console.error("Fetch error:", error);
+                    return;
+                }
+                const songContent = data[columnName];
+                const templateURL = "./assets/master/template.html";
+                let targetKey = null;
+                if (linkElement.closest('#tableone'))
+                {
+                    const setlistItem = currentSetlist.find(item => item.songName === songIdentifier);
+                    if (setlistItem) targetKey = setlistItem.key;
+                }
                 const encodedContent = encodeURIComponent(songContent);
-                let targetURL = `${templateURL}?songName=${encodeURIComponent(songName)}&contentType=${encodeURIComponent(contentType)}&songContent=${encodedContent}`;
-
+                let targetURL = `${templateURL}?contentType=${contentType}&songContent=${encodedContent}`;
                 if (targetKey)
                 {
                     targetURL += `&targetKey=${encodeURIComponent(targetKey)}`;
                 }
-
-                if (targetURL.length > 2000)
-                {
-                    console.warn("URL length might be too long (" + targetURL.length + " chars). Consider using sessionStorage if issues arise.");
-                }
-
                 window.location.href = targetURL;
-
-            } catch (error)
-            {
-                console.error("Error constructing or navigating URL:", error);
-                alert("Error preparing song data for display. Check console.");
             }
-        }
 
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () =>
-        {
-            console.log("DOM fully loaded.");
+            // --- Authentication Functions ---
+            async function signInWithEmail()
+            {
+                loginErrorMsg.textContent = '';
+                const email = loginEmailInput.value;
+                const password = loginPasswordInput.value;
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error)
+                {
+                    loginErrorMsg.textContent = error.message;
+                } else
+                {
+                    console.log('Signed in successfully:', data.user.email);
+                    loginModal.style.display = 'none';
+                    loginPasswordInput.value = '';
+                }
+            }
 
-            populateSongDataSource();
-            loadSetlistFromSupabase(); // Initial load for table one
+            async function signOut()
+            {
+                const { error } = await supabase.auth.signOut();
+                if (error) console.error('Error signing out:', error);
+                else console.log('Signed out successfully.');
+            }
 
-            // --- Password Modal Logic ---
+            function updateAuthState(user)
+            {
+                if (user)
+                {
+                    document.body.classList.add('logged-in');
+                    loginModalBtn.style.display = 'none';
+                    logoutBtn.style.display = 'inline-block';
+                } else
+                {
+                    document.body.classList.remove('logged-in');
+                    loginModalBtn.style.display = 'inline-block';
+                    logoutBtn.style.display = 'none';
+                }
+            }
+
+            // --- Edit Song Functions ---
+            async function openEditModal(songIdentifier, displayName)
+            {
+                editSongMsg.textContent = '';
+                editSongTitle.textContent = `Edit Chords: ${displayName}`;
+                editSongTextarea.value = 'Loading...';
+                editSongModal.style.display = 'block';
+                saveSongBtn.dataset.songIdentifier = songIdentifier;
+                try
+                {
+                    const { data, error } = await supabase.from('songs').select('chords_content').eq('song_identifier', songIdentifier).single();
+                    if (error) throw error;
+                    editSongTextarea.value = data.chords_content || '';
+                } catch (error)
+                {
+                    editSongTextarea.value = 'Error loading song content.';
+                    console.error('Error fetching song for edit:', error);
+                }
+            }
+
+            async function saveSongChanges()
+            {
+                const songIdentifier = saveSongBtn.dataset.songIdentifier;
+                const newContent = editSongTextarea.value;
+                if (!songIdentifier)
+                {
+                    alert('Error: No song identifier found.'); return;
+                }
+                saveSongBtn.disabled = true;
+                saveSongBtn.textContent = 'Saving...';
+                try
+                {
+                    const { error } = await supabase.from('songs').update({ chords_content: newContent }).eq('song_identifier', songIdentifier);
+                    if (error) throw error;
+                    editSongMsg.textContent = 'Saved successfully!';
+                    setTimeout(() => { editSongModal.style.display = 'none'; }, 1500);
+                } catch (error)
+                {
+                    editSongMsg.style.color = 'red';
+                    editSongMsg.textContent = `Error: ${error.message}`;
+                    console.error('Error saving song:', error);
+                } finally
+                {
+                    saveSongBtn.disabled = false;
+                    saveSongBtn.textContent = 'Save Changes';
+                }
+            }
+
+            // --- Search Function ---
+            window.myFunction = function ()
+            {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("tabletwo");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++)
+                {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td)
+                    {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1)
+                        {
+                            tr[i].style.display = "";
+                        } else
+                        {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            };
+
+
+            // =================================================================
+            // SECTION 3: INITIAL LOAD & EVENT LISTENERS
+            // =================================================================
+
+            // --- Initial Data Load ---
+            populateSongDatabaseTable();
+            loadSetlistFromSupabase();
+
+            // --- Auth State Listener ---
+            supabase.auth.onAuthStateChange((event, session) =>
+            {
+                console.log('Auth state changed:', event);
+                updateAuthState(session ? session.user : null);
+            });
+
+            // --- Auth Button Listeners ---
+            loginModalBtn.addEventListener('click', () => { loginErrorMsg.textContent = ''; loginModal.style.display = 'block'; });
+            logoutBtn.addEventListener('click', signOut);
+            loginBtn.addEventListener('click', signInWithEmail);
+            loginPasswordInput.addEventListener('keyup', e => e.key === 'Enter' && signInWithEmail());
+
+            // --- Delegated Click Listener for ALL Song & Edit Links ---
+            document.body.addEventListener('click', (event) =>
+            {
+                const songLink = event.target.closest('a[data-song-identifier]');
+                const editLink = event.target.closest('a.edit-btn');
+                if (editLink)
+                {
+                    event.preventDefault();
+                    openEditModal(editLink.dataset.songIdentifier, editLink.dataset.displayName);
+                } else if (songLink)
+                {
+                    event.preventDefault();
+                    handleSongClick(event, songLink);
+                }
+            });
+
+            // --- Edit Modal Listeners ---
+            saveSongBtn.addEventListener('click', saveSongChanges);
+            cancelEditBtn.addEventListener('click', () => editSongModal.style.display = 'none');
+            document.querySelector('.close-edit-modal-btn').addEventListener('click', () => editSongModal.style.display = 'none');
+
+            // --- Setlist and Password Modal Listeners ---
             if (openSetlistBtn)
             {
                 openSetlistBtn.addEventListener('click', () =>
                 {
-                    if (!supabase)
-                    {
-                        alert("Setlist feature unavailable (Supabase connection failed).");
-                        return;
-                    }
-                    if (passwordModal && passwordInput && passwordErrorMsg)
+                    if (passwordModal)
                     {
                         passwordInput.value = '';
                         passwordErrorMsg.textContent = '';
                         passwordModal.style.display = 'block';
                         passwordInput.focus();
-                    } else
-                    {
-                        console.error("Password modal element(s) not found!");
                     }
                 });
             }
-            if (submitPasswordBtn && passwordInput && passwordModal && setlistModal && passwordErrorMsg)
+            if (submitPasswordBtn)
             {
                 submitPasswordBtn.addEventListener('click', () =>
                 {
-                    const enteredPassword = passwordInput.value.trim();
-                    if (enteredPassword === CORRECT_PASSWORD)
+                    if (passwordInput.value.trim() === CORRECT_PASSWORD)
                     {
                         passwordModal.style.display = 'none';
-                        passwordInput.value = '';
-                        passwordErrorMsg.textContent = '';
-                        if (setlistModal)
-                        {
-                            setlistModal.style.display = 'block';
-                            renderSetlistUI();
-                            // Clear search input when modal opens
-                            if (songSearchInput) songSearchInput.value = '';
-                            if (resultsListDiv) resultsListDiv.style.display = 'none';
-                            if (selectedSongIdentifierInput) selectedSongIdentifierInput.value = '';
-                            if (selectedSongDisplayNameInput) selectedSongDisplayNameInput.value = '';
-                        } else
-                        {
-                            console.error("Setlist modal element not found!");
-                        }
+                        setlistModal.style.display = 'block';
+                        renderSetlistUI();
                     } else
                     {
                         passwordErrorMsg.textContent = 'Incorrect code. Please try again.';
-                        passwordInput.value = '';
-                        passwordInput.focus();
                     }
                 });
-                passwordInput.addEventListener('keyup', (event) =>
-                {
-                    if (event.key === 'Enter')
-                    {
-                        event.preventDefault();
-                        submitPasswordBtn.click();
-                    }
-                });
-            } else
-            {
-                console.error("One or more elements required for password submission are missing.");
             }
-            if (closePasswordModalBtn && passwordModal && passwordInput && passwordErrorMsg)
-            {
-                closePasswordModalBtn.addEventListener('click', () =>
-                {
-                    passwordModal.style.display = 'none';
-                    passwordInput.value = '';
-                    passwordErrorMsg.textContent = '';
-                });
-            }
-
-            // --- Setlist Modal Event Listeners ---
-            if (closeSetlistModalBtn && setlistModal)
-            {
-                closeSetlistModalBtn.addEventListener('click', () =>
-                {
-                    setlistModal.style.display = 'none';
-                    updateTableOneWithSetlist();
-                });
-            }
-
-            // --- Close *any* modal if clicking outside ---
-            window.addEventListener('click', (event) =>
-            {
-                if (event.target == setlistModal && setlistModal)
-                {
-                    setlistModal.style.display = 'none';
-                    updateTableOneWithSetlist();
-                } else if (event.target == passwordModal && passwordModal)
-                {
-                    passwordModal.style.display = 'none';
-                    if (passwordInput) passwordInput.value = '';
-                    if (passwordErrorMsg) passwordErrorMsg.textContent = '';
-                }
-                // --- Hide search results if clicking outside the search area ---
-                if (songSearchInput && resultsListDiv && !songSearchInput.contains(event.target) && !resultsListDiv.contains(event.target))
-                {
-                    resultsListDiv.style.display = 'none';
-                }
-            });
-
-
-            // --- Song Search Input Logic ---
-            if (songSearchInput && resultsListDiv && selectedSongIdentifierInput && selectedSongDisplayNameInput)
+            if (songSearchInput)
             {
                 songSearchInput.addEventListener('input', () =>
                 {
                     const searchTerm = songSearchInput.value.trim().toLowerCase();
-                    resultsListDiv.innerHTML = ''; // Clear previous results
-                    // Clear hidden selection if user types again
+                    resultsListDiv.innerHTML = '';
                     selectedSongIdentifierInput.value = '';
                     selectedSongDisplayNameInput.value = '';
-
-
-                    if (searchTerm.length < 1)
-                    { // Don't search on empty string
-                        resultsListDiv.style.display = 'none';
-                        return;
-                    }
-
-                    const matchedSongs = allSongsData.filter(song =>
-                        song.displayName.toLowerCase().includes(searchTerm)
-                    );
-
+                    if (searchTerm.length < 1) { resultsListDiv.style.display = 'none'; return; }
+                    const matchedSongs = allSongsData.filter(song => song.displayName.toLowerCase().includes(searchTerm));
                     if (matchedSongs.length > 0)
                     {
                         matchedSongs.forEach(song =>
                         {
                             const itemDiv = document.createElement('div');
-                            itemDiv.classList.add('result-item');
+                            itemDiv.className = 'result-item';
                             itemDiv.textContent = song.displayName;
-                            itemDiv.dataset.identifier = song.identifier;
-                            itemDiv.dataset.displayName = song.displayName; // Store both
                             itemDiv.addEventListener('click', () =>
                             {
-                                // User clicked a result
-                                songSearchInput.value = song.displayName; // Fill input with selection
-                                selectedSongIdentifierInput.value = song.identifier; // Store identifier
-                                selectedSongDisplayNameInput.value = song.displayName; // Store name
-                                resultsListDiv.style.display = 'none'; // Hide results
-                                resultsListDiv.innerHTML = ''; // Clear results content
-                                console.log("Selected song:", song.identifier);
+                                songSearchInput.value = song.displayName;
+                                selectedSongIdentifierInput.value = song.identifier;
+                                selectedSongDisplayNameInput.value = song.displayName;
+                                resultsListDiv.style.display = 'none';
                             });
                             resultsListDiv.appendChild(itemDiv);
                         });
-                        resultsListDiv.style.display = 'block'; // Show results container
-                    } else
-                    {
-                        resultsListDiv.style.display = 'none'; // Hide if no results
-                    }
-                });
-
-                // Hide results if input is cleared completely
-                songSearchInput.addEventListener('keyup', (e) =>
-                {
-                    if (songSearchInput.value.trim() === '')
-                    {
-                        resultsListDiv.style.display = 'none';
-                        selectedSongIdentifierInput.value = '';
-                        selectedSongDisplayNameInput.value = '';
-                    }
+                        resultsListDiv.style.display = 'block';
+                    } else { resultsListDiv.style.display = 'none'; }
                 });
             }
-
-            // --- Add Song Button Listener ---
             if (addSongBtn)
             {
                 addSongBtn.addEventListener('click', async () =>
                 {
-                    // Use the hidden inputs now
                     const songFileIdentifier = selectedSongIdentifierInput.value;
                     const displayName = selectedSongDisplayNameInput.value;
-                    const selectedKey = keySelectDropdown.value;
-
-                    // --- VALIDATION ---
-                    if (!songFileIdentifier || !displayName)
-                    {
-                        alert('Please search for a song and select it from the list.');
-                        return;
-                    }
-                    // --- END VALIDATION ---
-
-
-                    if (!Array.isArray(currentSetlist)) currentSetlist = [];
-
-                    const exists = currentSetlist.some(item => item && item.songName === songFileIdentifier);
-                    if (exists)
-                    {
-                        alert(`"${displayName}" is already in the setlist.`);
-                        return;
-                    }
-
-                    currentSetlist.push({
-                        songName: songFileIdentifier,
-                        displayName: displayName,
-                        key: selectedKey
-                    });
-
+                    if (!songFileIdentifier || !displayName) { alert('Please search for a song and select it from the list.'); return; }
+                    currentSetlist.push({ songName: songFileIdentifier, displayName: displayName, key: keySelectDropdown.value });
                     renderSetlistUI();
                     await saveSetlistToSupabase();
-
-                    // Reset the search input and hidden fields
                     songSearchInput.value = '';
-                    selectedSongIdentifierInput.value = '';
-                    selectedSongDisplayNameInput.value = '';
-                    keySelectDropdown.selectedIndex = 0;
-                    if (resultsListDiv) resultsListDiv.style.display = 'none'; // Hide results list
                 });
             }
-
-            // --- Remove Song Button Listener ---
             if (currentSetlistItemsUl)
             {
                 currentSetlistItemsUl.addEventListener('click', async (event) =>
@@ -2174,70 +867,39 @@
                     if (event.target.classList.contains('remove-song-btn'))
                     {
                         const indexToRemove = parseInt(event.target.dataset.index, 10);
-                        if (!Array.isArray(currentSetlist)) currentSetlist = [];
-
-                        if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < currentSetlist.length)
-                        {
-                            const removedItem = currentSetlist.splice(indexToRemove, 1);
-                            console.log("Removed:", removedItem[0]?.displayName ?? 'item');
-                            renderSetlistUI();
-                            await saveSetlistToSupabase();
-                        } else
-                        {
-                            console.error("Invalid index for removal:", event.target.dataset.index);
-                        }
+                        currentSetlist.splice(indexToRemove, 1);
+                        renderSetlistUI();
+                        await saveSetlistToSupabase();
                     }
                 });
             }
 
-            // --- Delegated Click Listener for ALL Song Links ---
-            document.body.addEventListener('click', (event) =>
+            // --- General Modal Close Listeners ---
+            document.querySelector('.close-login-modal-btn').addEventListener('click', () => loginModal.style.display = 'none');
+            if (closePasswordModalBtn) closePasswordModalBtn.addEventListener('click', () => passwordModal.style.display = 'none');
+            if (closeSetlistModalBtn)
             {
-                const link = event.target.closest('a[data-song-name]');
-                if (link)
+                closeSetlistModalBtn.addEventListener('click', () =>
                 {
-                    const parentTable = link.closest('#tableone, #tabletwo');
-                    if (parentTable)
-                    {
-                        event.preventDefault();
-                        handleSongClick(event, link);
-                    }
+                    setlistModal.style.display = 'none';
+                    updateTableOneWithSetlist();
+                });
+            }
+            window.addEventListener('click', (event) =>
+            {
+                if (event.target == loginModal) loginModal.style.display = 'none';
+                if (event.target == editSongModal) editSongModal.style.display = 'none';
+                if (event.target == passwordModal) passwordModal.style.display = 'none';
+                if (event.target == setlistModal)
+                {
+                    setlistModal.style.display = 'none';
+                    updateTableOneWithSetlist();
                 }
             });
-
-            // --- Search function setup for Table Two ---
-            if (searchInput)
-            {
-                window.myFunction = function ()
-                { // Keep accessible globally
-                    var input, filter, table, tr, td, i, txtValue;
-                    input = document.getElementById("myInput");
-                    filter = input.value.toUpperCase();
-                    table = document.getElementById("tabletwo");
-                    tr = table.getElementsByTagName("tr");
-
-                    for (i = 1; i < tr.length; i++)
-                    { // Start i from 1 to skip header
-                        td = tr[i].getElementsByTagName("td")[0];
-                        if (td)
-                        {
-                            txtValue = td.textContent || td.innerText;
-                            if (txtValue.toUpperCase().indexOf(filter) > -1)
-                            {
-                                tr[i].style.display = "";
-                            } else
-                            {
-                                tr[i].style.display = "none";
-                            }
-                        }
-                    }
-                };
-            }
 
             console.log("Initial setup complete.");
         });
     </script>
-
 </body>
 
 </html>

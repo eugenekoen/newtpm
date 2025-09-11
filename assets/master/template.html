@@ -2,76 +2,77 @@
 <html lang="en">
 
 <head>
-  <!-- Additional Important Items -->
-  <meta charset="utf-8" />
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=2.0, user-scalable=yes" /> -->
-  <meta name="viewport" content="width=device-width, initial-scale=0.75" />
-  <!-- -------------------------- -->
-
-  <!-- THESE ARE MY LINKS TO ALL STYLESHEETS JS & JQUERY -->
-  <link rel="shortcut icon" href="./../../style/images/LOGO.jpg" />
-  <link rel="stylesheet" type="text/css" href="./../../style/song.css">
-  <link rel="stylesheet" type="text/css" href="./../../style/jquery.transposer.css">
-  <!-- ------------------------------------------------- -->
-
-  <!-- Links to Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,500,500i,600" rel="stylesheet">
-  <!-- -------------- -->
-
-  <!-- Scripts -->
-  <script type="text/javascript" src="../jquery/jquery.min.js"></script>
-  <script type="text/javascript" src="../jquery/jquery.transposer.js"></script>
-  <!-- ------ -->
-
-  <title>Template</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.75" />
+    <link rel="shortcut icon" href="./../../style/images/LOGO.jpg" />
+    <link rel="stylesheet" type="text/css" href="./../../style/song.css">
+    <link rel="stylesheet" type="text/css" href="./../../style/jquery.transposer.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,500,500i,600" rel="stylesheet">
+    <script type="text/javascript" src="../jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery/jquery.transposer.js"></script>
+    <title>Song</title>
 </head>
 
 <body>
-  <pre id="songContent" data-key="A">
-
+    <pre id="songContent">
+    <!-- Content will be injected here by script -->
   </pre>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var params = new URLSearchParams(window.location.search);
-      var songName = params.get('songName');
-      var contentType = params.get('contentType');
-      var songContent = params.get('songContent');
 
-      if (songName && contentType && songContent) {
-        var preElement = document.getElementById('songContent');
-        if (preElement) {
-          // Split the song content by line breaks
-          let lines = songContent.split('\n');
+    <script>
+        document.addEventListener('DOMContentLoaded', function ()
+        {
+            const params = new URLSearchParams(window.location.search);
+            const songContent = params.get('songContent');
+            const targetKey = params.get('targetKey'); // For setlist transposition
+            const preElement = document.getElementById('songContent');
 
-          // Remove the first line (assuming it contains the key)
-          var key = lines.shift().trim();
+            if (songContent && preElement)
+            {
+                // Decode the content passed in the URL
+                let decodedContent = decodeURIComponent(songContent);
+                let lines = decodedContent.split('\n');
 
-          // Set the text content of the pre element
-          preElement.textContent = lines.join('\n');
+                // The first non-empty line is assumed to be the key.
+                let key = "C"; // Default key
+                let title = "Song";
+                let contentStartIndex = 0;
 
-          // Set the data-key attribute
-          preElement.setAttribute('data-key', key);
+                for (let i = 0; i < lines.length; i++)
+                {
+                    const trimmedLine = lines[i].trim();
+                    if (trimmedLine !== '')
+                    {
+                        // If it's a valid key (A-G, maybe with b or #), use it.
+                        if (/^[A-G][b#]?$/.test(trimmedLine))
+                        {
+                            key = trimmedLine;
+                            contentStartIndex = i + 1;
+                        } else
+                        {
+                            // Otherwise, the first non-empty line is the title.
+                            title = trimmedLine;
+                            contentStartIndex = i; // The content includes the title line
+                        }
+                        break; // We've found the first piece of info, stop looking.
+                    }
+                }
 
-          // Set the document title to the first line of the remaining song content
-          document.title = lines[0].trim();
-        } else {
-          console.error("No <pre> tag found in the template.");
-        }
-      } else {
-        console.error("Missing song parameters in the URL.");
-      }
-    });
-  </script>
+                // Join the rest of the lines to form the main content
+                preElement.textContent = lines.slice(contentStartIndex).join('\n');
 
+                // Use the setlist key if provided, otherwise use the key from the file content
+                const finalKey = targetKey || key;
+                preElement.setAttribute('data-key', finalKey);
 
+                document.title = title;
 
-
-
-
-
-
-
-
+            } else
+            {
+                console.error("Missing songContent parameter in the URL.");
+                preElement.textContent = "Error: Song content not found.";
+            }
+        });
+    </script>
 </body>
 
 </html>
