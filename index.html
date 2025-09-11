@@ -283,6 +283,40 @@
             background-color: #6c757d;
             margin-right: 10px;
         }
+
+        /* New color for the Add Song button */
+        #add-song-btn {
+            background-color: #f0ad4e;
+            /* A nice contrasting orange */
+        }
+
+        /* Logic to show the button only when logged in */
+        body.logged-in #add-song-btn {
+            display: inline-block;
+        }
+
+        /* Styling for the new modal inputs */
+        #add-song-modal input[type="text"],
+        #add-song-modal textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        #add-song-modal #save-new-song-btn {
+            background-color: #28a745;
+            /* Green for save */
+        }
+
+        #add-song-modal #cancel-add-btn {
+            background-color: #6c757d;
+            /* Gray for cancel */
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -296,6 +330,7 @@
     <div id="setlist-management-container">
         <button id="open-setlist-modal-btn">Set List Management</button>
         <button id="login-modal-btn">Login</button>
+        <button id="add-song-btn" style="display: none;">Add New Song</button>
         <button id="logout-btn" style="display: none;">Logout</button>
     </div>
 
@@ -383,6 +418,37 @@
         </div>
     </div>
 
+    <div id="add-song-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-add-modal-btn close-modal-btn">×</span>
+            <h2>Add a New Song</h2>
+
+            <div>
+                <label for="new-song-display-name">Song Title:</label>
+                <input type="text" id="new-song-display-name" placeholder="e.g., What A Beautiful Name">
+            </div>
+
+            <div>
+                <label for="new-song-identifier">File Identifier:</label>
+                <input type="text" id="new-song-identifier" placeholder="e.g., what-a-beautiful-name">
+                <p style="font-size: 12px; color: #666; margin-top: -10px;">(Required. Use lowercase letters and
+                    hyphens-for-spaces only).</p>
+            </div>
+
+            <div>
+                <label for="new-song-chords">Chords:</label>
+                <textarea id="new-song-chords" style="height: 30vh; width: 100%; font-family: monospace;"></textarea>
+            </div>
+
+            <p id="add-song-error-msg" style="height: 16px; color: red;"></p>
+
+            <div class="modal-footer">
+                <button id="cancel-add-btn" class="modal-btn">Cancel</button>
+                <button id="save-new-song-btn" class="modal-btn">Save New Song</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Table One (Setlist) -->
     <div>
         <table id="tableone">
@@ -444,6 +510,12 @@
         let allSongsData = [];
         const setlistLabel = 'current_weekend';
         const CORRECT_PASSWORD = "1111";
+        const SONG_TEMPLATE = `[KEY]
+SONG NAME
+=========
+================================================
+PASTE SONG HERE (with 2 spacings on left)
+================================================`;
 
         document.addEventListener('DOMContentLoaded', () =>
         {
@@ -453,15 +525,14 @@
                 return;
             }
 
-            // =================================================================
-            // SECTION 1: DOM ELEMENT DECLARATIONS
-            // =================================================================
+            // --- SECTION 1: DOM ELEMENT DECLARATIONS ---
             const tableOneBody = document.querySelector('#tableone tbody');
             const tableTwoBody = document.querySelector('#tabletwo tbody');
             const passwordModal = document.getElementById('password-modal');
             const setlistModal = document.getElementById('setlist-modal');
             const loginModal = document.getElementById('login-modal');
             const editSongModal = document.getElementById('edit-song-modal');
+            const addSongModal = document.getElementById('add-song-modal');
             const loginModalBtn = document.getElementById('login-modal-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const loginBtn = document.getElementById('login-btn');
@@ -476,22 +547,26 @@
             const openSetlistBtn = document.getElementById('open-setlist-modal-btn');
             const songSearchInput = document.getElementById('song-search-input');
             const currentSetlistItemsUl = document.getElementById('current-setlist-items');
-            const closeSetlistModalBtn = setlistModal ? setlistModal.querySelector('.close-modal-btn') : null;
-            const closePasswordModalBtn = passwordModal ? passwordModal.querySelector('.close-password-modal-btn') : null;
+            const closeSetlistModalBtn = setlistModal?.querySelector('.close-modal-btn');
+            const closePasswordModalBtn = passwordModal?.querySelector('.close-password-modal-btn');
             const passwordInput = document.getElementById('password-input');
             const submitPasswordBtn = document.getElementById('submit-password-btn');
             const passwordErrorMsg = document.getElementById('password-error-msg');
             const keySelectDropdown = document.getElementById('key-select-dropdown');
-            const addSongBtn = document.getElementById('add-song-to-setlist-btn');
+            const addSongToSetlistBtn = document.getElementById('add-song-to-setlist-btn');
             const selectedSongIdentifierInput = document.getElementById('selected-song-identifier');
             const selectedSongDisplayNameInput = document.getElementById('selected-song-display-name');
             const songSearchResultsContainer = document.getElementById('song-search-results');
-            const resultsListDiv = songSearchResultsContainer ? songSearchResultsContainer.querySelector('.results-list') : null;
+            const resultsListDiv = songSearchResultsContainer?.querySelector('.results-list');
+            const addSongBtnTrigger = document.getElementById('add-song-btn');
+            const saveNewSongBtn = document.getElementById('save-new-song-btn');
+            const cancelAddBtn = document.getElementById('cancel-add-btn');
+            const newSongDisplayNameInput = document.getElementById('new-song-display-name');
+            const newSongIdentifierInput = document.getElementById('new-song-identifier');
+            const newSongChordsTextarea = document.getElementById('new-song-chords');
+            const addSongErrorMsg = document.getElementById('add-song-error-msg');
 
-
-            // =================================================================
-            // SECTION 2: FUNCTION DEFINITIONS
-            // =================================================================
+            // --- SECTION 2: FUNCTION DEFINITIONS ---
 
             // --- Setlist Functions ---
             function updateTableOneWithSetlist()
@@ -592,7 +667,6 @@
                             </td>
                         `;
                     });
-                    console.log("Song database table populated from Supabase.");
                 } catch (error)
                 {
                     console.error('Error loading song database:', error);
@@ -644,7 +718,6 @@
                     loginErrorMsg.textContent = error.message;
                 } else
                 {
-                    console.log('Signed in successfully:', data.user.email);
                     loginModal.style.display = 'none';
                     loginPasswordInput.value = '';
                 }
@@ -654,7 +727,6 @@
             {
                 const { error } = await supabase.auth.signOut();
                 if (error) console.error('Error signing out:', error);
-                else console.log('Signed out successfully.');
             }
 
             function updateAuthState(user)
@@ -664,14 +736,15 @@
                     document.body.classList.add('logged-in');
                     loginModalBtn.style.display = 'none';
                     logoutBtn.style.display = 'inline-block';
+                    addSongBtnTrigger.style.display = 'inline-block'; // This line shows the button
                 } else
                 {
                     document.body.classList.remove('logged-in');
                     loginModalBtn.style.display = 'inline-block';
                     logoutBtn.style.display = 'none';
+                    addSongBtnTrigger.style.display = 'none'; // This line hides the button
                 }
             }
-
             // --- Edit Song Functions ---
             async function openEditModal(songIdentifier, displayName)
             {
@@ -696,10 +769,7 @@
             {
                 const songIdentifier = saveSongBtn.dataset.songIdentifier;
                 const newContent = editSongTextarea.value;
-                if (!songIdentifier)
-                {
-                    alert('Error: No song identifier found.'); return;
-                }
+                if (!songIdentifier) { alert('Error: No song identifier found.'); return; }
                 saveSongBtn.disabled = true;
                 saveSongBtn.textContent = 'Saving...';
                 try
@@ -712,11 +782,64 @@
                 {
                     editSongMsg.style.color = 'red';
                     editSongMsg.textContent = `Error: ${error.message}`;
-                    console.error('Error saving song:', error);
                 } finally
                 {
                     saveSongBtn.disabled = false;
                     saveSongBtn.textContent = 'Save Changes';
+                }
+            }
+
+            // --- Add Song Functions ---
+            function openAddSongModal()
+            {
+                addSongErrorMsg.textContent = '';
+                newSongDisplayNameInput.value = '';
+                newSongIdentifierInput.value = '';
+                newSongChordsTextarea.value = SONG_TEMPLATE;
+                addSongModal.style.display = 'block';
+                newSongDisplayNameInput.focus();
+            }
+
+            async function saveNewSong()
+            {
+                const displayName = newSongDisplayNameInput.value.trim();
+                const identifier = newSongIdentifierInput.value.trim().toLowerCase();
+                const chordsContent = newSongChordsTextarea.value;
+                if (!displayName || !identifier)
+                {
+                    addSongErrorMsg.textContent = 'Song Title and Identifier are required.';
+                    return;
+                }
+                if (!/^[a-z0-9-]+$/.test(identifier))
+                {
+                    addSongErrorMsg.textContent = 'Identifier can only contain lowercase letters, numbers, and hyphens.';
+                    return;
+                }
+                saveNewSongBtn.disabled = true;
+                saveNewSongBtn.textContent = 'Saving...';
+                addSongErrorMsg.textContent = '';
+                try
+                {
+                    const { error } = await supabase.from('songs').insert([{
+                        song_identifier: identifier,
+                        display_name: displayName,
+                        chords_content: chordsContent,
+                        lyrics_content: '' // Start with empty lyrics
+                    }]);
+                    if (error)
+                    {
+                        if (error.code === '23505') { throw new Error(`Identifier '${identifier}' is already taken.`); }
+                        throw error;
+                    }
+                    addSongModal.style.display = 'none';
+                    await populateSongDatabaseTable(); // Refresh the list!
+                } catch (error)
+                {
+                    addSongErrorMsg.textContent = `Error: ${error.message}`;
+                } finally
+                {
+                    saveNewSongBtn.disabled = false;
+                    saveNewSongBtn.textContent = 'Save New Song';
                 }
             }
 
@@ -734,97 +857,45 @@
                     if (td)
                     {
                         txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1)
-                        {
-                            tr[i].style.display = "";
-                        } else
-                        {
-                            tr[i].style.display = "none";
-                        }
+                        tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
                     }
                 }
             };
 
-
-            // =================================================================
-            // SECTION 3: INITIAL LOAD & EVENT LISTENERS
-            // =================================================================
-
-            // --- Initial Data Load ---
+            // --- SECTION 3: INITIAL LOAD & EVENT LISTENERS ---
             populateSongDatabaseTable();
             loadSetlistFromSupabase();
+            supabase.auth.onAuthStateChange((event, session) => { updateAuthState(session?.user); });
 
-            // --- Auth State Listener ---
-            supabase.auth.onAuthStateChange((event, session) =>
-            {
-                console.log('Auth state changed:', event);
-                updateAuthState(session ? session.user : null);
-            });
-
-            // --- Auth Button Listeners ---
+            // --- Main Action Button Listeners ---
             loginModalBtn.addEventListener('click', () => { loginErrorMsg.textContent = ''; loginModal.style.display = 'block'; });
             logoutBtn.addEventListener('click', signOut);
             loginBtn.addEventListener('click', signInWithEmail);
             loginPasswordInput.addEventListener('keyup', e => e.key === 'Enter' && signInWithEmail());
+            addSongBtnTrigger.addEventListener('click', openAddSongModal);
 
-            // --- Delegated Click Listener for ALL Song & Edit Links ---
+            // --- Delegated Click Listener for Table Links ---
             document.body.addEventListener('click', (event) =>
             {
                 const songLink = event.target.closest('a[data-song-identifier]');
                 const editLink = event.target.closest('a.edit-btn');
-                if (editLink)
-                {
-                    event.preventDefault();
-                    openEditModal(editLink.dataset.songIdentifier, editLink.dataset.displayName);
-                } else if (songLink)
-                {
-                    event.preventDefault();
-                    handleSongClick(event, songLink);
-                }
+                if (editLink) { event.preventDefault(); openEditModal(editLink.dataset.songIdentifier, editLink.dataset.displayName); }
+                else if (songLink) { event.preventDefault(); handleSongClick(event, songLink); }
             });
 
-            // --- Edit Modal Listeners ---
+            // --- Listeners for Modals ---
             saveSongBtn.addEventListener('click', saveSongChanges);
             cancelEditBtn.addEventListener('click', () => editSongModal.style.display = 'none');
-            document.querySelector('.close-edit-modal-btn').addEventListener('click', () => editSongModal.style.display = 'none');
-
-            // --- Setlist and Password Modal Listeners ---
-            if (openSetlistBtn)
-            {
-                openSetlistBtn.addEventListener('click', () =>
-                {
-                    if (passwordModal)
-                    {
-                        passwordInput.value = '';
-                        passwordErrorMsg.textContent = '';
-                        passwordModal.style.display = 'block';
-                        passwordInput.focus();
-                    }
-                });
-            }
-            if (submitPasswordBtn)
-            {
-                submitPasswordBtn.addEventListener('click', () =>
-                {
-                    if (passwordInput.value.trim() === CORRECT_PASSWORD)
-                    {
-                        passwordModal.style.display = 'none';
-                        setlistModal.style.display = 'block';
-                        renderSetlistUI();
-                    } else
-                    {
-                        passwordErrorMsg.textContent = 'Incorrect code. Please try again.';
-                    }
-                });
-            }
+            saveNewSongBtn.addEventListener('click', saveNewSong);
+            cancelAddBtn.addEventListener('click', () => addSongModal.style.display = 'none');
+            if (openSetlistBtn) { openSetlistBtn.addEventListener('click', () => { if (passwordModal) { passwordInput.value = ''; passwordErrorMsg.textContent = ''; passwordModal.style.display = 'block'; passwordInput.focus(); } }); }
+            if (submitPasswordBtn) { submitPasswordBtn.addEventListener('click', () => { if (passwordInput.value.trim() === CORRECT_PASSWORD) { passwordModal.style.display = 'none'; setlistModal.style.display = 'block'; renderSetlistUI(); } else { passwordErrorMsg.textContent = 'Incorrect code.'; } }); }
             if (songSearchInput)
             {
                 songSearchInput.addEventListener('input', () =>
                 {
                     const searchTerm = songSearchInput.value.trim().toLowerCase();
-                    resultsListDiv.innerHTML = '';
-                    selectedSongIdentifierInput.value = '';
-                    selectedSongDisplayNameInput.value = '';
+                    resultsListDiv.innerHTML = ''; selectedSongIdentifierInput.value = ''; selectedSongDisplayNameInput.value = '';
                     if (searchTerm.length < 1) { resultsListDiv.style.display = 'none'; return; }
                     const matchedSongs = allSongsData.filter(song => song.displayName.toLowerCase().includes(searchTerm));
                     if (matchedSongs.length > 0)
@@ -832,72 +903,32 @@
                         matchedSongs.forEach(song =>
                         {
                             const itemDiv = document.createElement('div');
-                            itemDiv.className = 'result-item';
-                            itemDiv.textContent = song.displayName;
-                            itemDiv.addEventListener('click', () =>
-                            {
-                                songSearchInput.value = song.displayName;
-                                selectedSongIdentifierInput.value = song.identifier;
-                                selectedSongDisplayNameInput.value = song.displayName;
-                                resultsListDiv.style.display = 'none';
-                            });
+                            itemDiv.className = 'result-item'; itemDiv.textContent = song.displayName;
+                            itemDiv.addEventListener('click', () => { songSearchInput.value = song.displayName; selectedSongIdentifierInput.value = song.identifier; selectedSongDisplayNameInput.value = song.displayName; resultsListDiv.style.display = 'none'; });
                             resultsListDiv.appendChild(itemDiv);
                         });
                         resultsListDiv.style.display = 'block';
                     } else { resultsListDiv.style.display = 'none'; }
                 });
             }
-            if (addSongBtn)
-            {
-                addSongBtn.addEventListener('click', async () =>
-                {
-                    const songFileIdentifier = selectedSongIdentifierInput.value;
-                    const displayName = selectedSongDisplayNameInput.value;
-                    if (!songFileIdentifier || !displayName) { alert('Please search for a song and select it from the list.'); return; }
-                    currentSetlist.push({ songName: songFileIdentifier, displayName: displayName, key: keySelectDropdown.value });
-                    renderSetlistUI();
-                    await saveSetlistToSupabase();
-                    songSearchInput.value = '';
-                });
-            }
-            if (currentSetlistItemsUl)
-            {
-                currentSetlistItemsUl.addEventListener('click', async (event) =>
-                {
-                    if (event.target.classList.contains('remove-song-btn'))
-                    {
-                        const indexToRemove = parseInt(event.target.dataset.index, 10);
-                        currentSetlist.splice(indexToRemove, 1);
-                        renderSetlistUI();
-                        await saveSetlistToSupabase();
-                    }
-                });
-            }
+            if (addSongToSetlistBtn) { addSongToSetlistBtn.addEventListener('click', async () => { const songFileIdentifier = selectedSongIdentifierInput.value, displayName = selectedSongDisplayNameInput.value; if (!songFileIdentifier || !displayName) { alert('Please search for a song and select it from the list.'); return; } currentSetlist.push({ songName: songFileIdentifier, displayName: displayName, key: keySelectDropdown.value }); renderSetlistUI(); await saveSetlistToSupabase(); songSearchInput.value = ''; }); }
+            if (currentSetlistItemsUl) { currentSetlistItemsUl.addEventListener('click', async (event) => { if (event.target.classList.contains('remove-song-btn')) { const indexToRemove = parseInt(event.target.dataset.index, 10); currentSetlist.splice(indexToRemove, 1); renderSetlistUI(); await saveSetlistToSupabase(); } }); }
 
             // --- General Modal Close Listeners ---
             document.querySelector('.close-login-modal-btn').addEventListener('click', () => loginModal.style.display = 'none');
+            document.querySelector('.close-edit-modal-btn').addEventListener('click', () => editSongModal.style.display = 'none');
+            document.querySelector('.close-add-modal-btn').addEventListener('click', () => addSongModal.style.display = 'none');
             if (closePasswordModalBtn) closePasswordModalBtn.addEventListener('click', () => passwordModal.style.display = 'none');
-            if (closeSetlistModalBtn)
-            {
-                closeSetlistModalBtn.addEventListener('click', () =>
-                {
-                    setlistModal.style.display = 'none';
-                    updateTableOneWithSetlist();
-                });
-            }
+            if (closeSetlistModalBtn) { closeSetlistModalBtn.addEventListener('click', () => { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }); }
+
             window.addEventListener('click', (event) =>
             {
                 if (event.target == loginModal) loginModal.style.display = 'none';
                 if (event.target == editSongModal) editSongModal.style.display = 'none';
                 if (event.target == passwordModal) passwordModal.style.display = 'none';
-                if (event.target == setlistModal)
-                {
-                    setlistModal.style.display = 'none';
-                    updateTableOneWithSetlist();
-                }
+                if (event.target == setlistModal) { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }
+                if (event.target == addSongModal) addSongModal.style.display = 'none';
             });
-
-            console.log("Initial setup complete.");
         });
     </script>
 </body>
