@@ -8,6 +8,9 @@
     <link rel="stylesheet" type="text/css" href="./../../style/song.css">
     <link rel="stylesheet" type="text/css" href="./../../style/jquery.transposer.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,500,500i,600" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script type="text/javascript" src="../jquery/jquery.min.js"></script>
     <script type="text/javascript" src="../jquery/jquery.transposer.js"></script>
     <title>Song</title>
@@ -19,22 +22,63 @@
   </pre>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function ()
+        const SUPABASE_URL = 'https://hjnewoghwyecmgmjsxgn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqbmV3b2dod3llY21nbWpzeGduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MDU5ODEsImV4cCI6MjA1OTA4MTk4MX0.lzs2Ol0tUWzk0-m-gQHBRPsOjWLBKA0bhImOixFeoUY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener('DOMContentLoaded', async function ()
         {
-            const params = new URLSearchParams(window.location.search);
-            const songContent = params.get('songContent');
-            const targetKey = params.get('targetKey'); // For setlist transposition
             const preElement = document.getElementById('songContent');
+            preElement.textContent = "Loading song...";
 
-            if (songContent && preElement)
+            const params = new URLSearchParams(window.location.search);
+            const songIdentifier = params.get('song');
+            const contentType = params.get('contentType');
+            const targetKey = params.get('targetKey');
+            const shouldHideTranspose = params.get('hideTranspose');
+
+            if (!songIdentifier || !contentType)
             {
-                // Decode the content passed in the URL
-                let decodedContent = decodeURIComponent(songContent);
-                let lines = decodedContent.split('\n');
+                console.error("Missing song identifier or content type in the URL.");
+                preElement.textContent = "Error: Song not specified in the URL.";
+                return;
+            }
 
-                // The first non-empty line is assumed to be the key.
+            if (shouldHideTranspose === 'true')
+            {
+                const style = document.createElement('style');
+                style.innerHTML = '.transpose-keys { display: none !important; }';
+                document.head.appendChild(style);
+            }
+
+            try
+            {
+                const columnName = contentType === 'chords' ? 'chords_content' : 'lyrics_content';
+
+                // --- MODIFICATION 1: Request 'display_name' along with the content ---
+                const { data, error } = await supabase
+                    .from('songs')
+                    .select(`${columnName}, display_name`) // Ask for both columns
+                    .eq('song_identifier', songIdentifier)
+                    .single();
+
+                if (error) throw error;
+
+                if (!data || !data[columnName])
+                {
+                    preElement.textContent = `Error: Could not find ${contentType} for song '${songIdentifier}'.`;
+                    return;
+                }
+
+                // --- MODIFICATION 2: Set the document title using the fetched display_name ---
+                // We do this right away, replacing the old title-parsing logic.
+                document.title = data.display_name || "Song";
+
+                let songContent = data[columnName];
+                let lines = songContent.split('\n');
+
+                // This logic now ONLY needs to find the key for the transposer, not the title.
                 let key = "C"; // Default key
-                let title = "Song";
                 let contentStartIndex = 0;
 
                 for (let i = 0; i < lines.length; i++)
@@ -42,34 +86,33 @@
                     const trimmedLine = lines[i].trim();
                     if (trimmedLine !== '')
                     {
-                        // If it's a valid key (A-G, maybe with b or #), use it.
+                        // Check if the first non-empty line is a key
                         if (/^[A-G][b#]?$/.test(trimmedLine))
                         {
                             key = trimmedLine;
-                            contentStartIndex = i + 1;
+                            contentStartIndex = i + 1; // Content starts after key
                         } else
                         {
-                            // Otherwise, the first non-empty line is the title.
-                            title = trimmedLine;
-                            contentStartIndex = i; // The content includes the title line
+                            // If not a key, this line is the start of the content
+                            contentStartIndex = i;
                         }
-                        break; // We've found the first piece of info, stop looking.
+                        break; // Stop after processing the first non-empty line
                     }
                 }
 
-                // Join the rest of the lines to form the main content
                 preElement.textContent = lines.slice(contentStartIndex).join('\n');
 
-                // Use the setlist key if provided, otherwise use the key from the file content
                 const finalKey = targetKey || key;
                 preElement.setAttribute('data-key', finalKey);
 
-                document.title = title;
+                // The document title is already set above, so the old line here is removed.
 
-            } else
+                $('#songContent').transpose();
+
+            } catch (err)
             {
-                console.error("Missing songContent parameter in the URL.");
-                preElement.textContent = "Error: Song content not found.";
+                console.error("Error fetching song content:", err);
+                preElement.textContent = `Error: Failed to load song data. Please check the console for details.`;
             }
         });
     </script>

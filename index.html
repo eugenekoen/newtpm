@@ -437,7 +437,12 @@
 
             <div>
                 <label for="new-song-chords">Chords:</label>
-                <textarea id="new-song-chords" style="height: 30vh; width: 100%; font-family: monospace;"></textarea>
+                <textarea id="new-song-chords" style="height: 20vh; width: 100%; font-family: monospace;"></textarea>
+            </div>
+
+            <div>
+                <label for="new-song-lyrics">Lyrics:</label>
+                <textarea id="new-song-lyrics" style="height: 20vh; width: 100%; font-family: monospace;"></textarea>
             </div>
 
             <p id="add-song-error-msg" style="height: 16px; color: red;"></p>
@@ -564,6 +569,7 @@ PASTE SONG HERE (with 2 spacings on left)
             const newSongDisplayNameInput = document.getElementById('new-song-display-name');
             const newSongIdentifierInput = document.getElementById('new-song-identifier');
             const newSongChordsTextarea = document.getElementById('new-song-chords');
+            const newSongLyricsTextarea = document.getElementById('new-song-lyrics');
             const addSongErrorMsg = document.getElementById('add-song-error-msg');
 
             // --- SECTION 2: FUNCTION DEFINITIONS ---
@@ -678,31 +684,31 @@ PASTE SONG HERE (with 2 spacings on left)
             {
                 event.preventDefault();
                 const songIdentifier = linkElement.dataset.songIdentifier;
-                const contentType = linkElement.dataset.contentType;
+                const contentType = linkElement.dataset.contentType; // 'chords' or 'lyrics'
                 if (!songIdentifier || !contentType) return;
 
-                const columnName = contentType === 'chords' ? 'chords_content' : 'lyrics_content';
-                const { data, error } = await supabase.from('songs').select(columnName).eq('song_identifier', songIdentifier).single();
-                if (error || !data || !data[columnName])
-                {
-                    alert(`Error: Could not load ${contentType} for ${songIdentifier}.`);
-                    console.error("Fetch error:", error);
-                    return;
-                }
-                const songContent = data[columnName];
                 const templateURL = "./assets/master/template.html";
-                let targetKey = null;
+
+                // Start building the new, shorter URL
+                let targetURL = `${templateURL}?song=${encodeURIComponent(songIdentifier)}&contentType=${encodeURIComponent(contentType)}`;
+
+                // If it's a song from the setlist (Table One), add the specific key
                 if (linkElement.closest('#tableone'))
                 {
                     const setlistItem = currentSetlist.find(item => item.songName === songIdentifier);
-                    if (setlistItem) targetKey = setlistItem.key;
+                    if (setlistItem && setlistItem.key)
+                    {
+                        targetURL += `&targetKey=${encodeURIComponent(setlistItem.key)}`;
+                    }
                 }
-                const encodedContent = encodeURIComponent(songContent);
-                let targetURL = `${templateURL}?contentType=${contentType}&songContent=${encodedContent}`;
-                if (targetKey)
+
+                // If it's a lyrics link, add the parameter to hide the transpose bar
+                if (contentType === 'lyrics')
                 {
-                    targetURL += `&targetKey=${encodeURIComponent(targetKey)}`;
+                    targetURL += `&hideTranspose=true`;
                 }
+
+                // Redirect to the new URL. The template.html page will now handle fetching the data.
                 window.location.href = targetURL;
             }
 
@@ -796,6 +802,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 newSongDisplayNameInput.value = '';
                 newSongIdentifierInput.value = '';
                 newSongChordsTextarea.value = SONG_TEMPLATE;
+                newSongLyricsTextarea.value = '';
                 addSongModal.style.display = 'block';
                 newSongDisplayNameInput.focus();
             }
@@ -805,6 +812,8 @@ PASTE SONG HERE (with 2 spacings on left)
                 const displayName = newSongDisplayNameInput.value.trim();
                 const identifier = newSongIdentifierInput.value.trim().toLowerCase();
                 const chordsContent = newSongChordsTextarea.value;
+                const lyricsContent = newSongLyricsTextarea.value;
+
                 if (!displayName || !identifier)
                 {
                     addSongErrorMsg.textContent = 'Song Title and Identifier are required.';
@@ -824,7 +833,7 @@ PASTE SONG HERE (with 2 spacings on left)
                         song_identifier: identifier,
                         display_name: displayName,
                         chords_content: chordsContent,
-                        lyrics_content: '' // Start with empty lyrics
+                        lyrics_content: lyricsContent
                     }]);
                     if (error)
                     {
