@@ -689,26 +689,21 @@ PASTE SONG HERE (with 2 spacings on left)
 
                 const templateURL = "./assets/master/template.html";
 
-                // Start building the new, shorter URL
+                // --- THIS IS THE MODIFIED PART ---
+                // We build the URL WITHOUT the 'targetKey'.
+                // This ensures the song page ALWAYS loads in its default key.
                 let targetURL = `${templateURL}?song=${encodeURIComponent(songIdentifier)}&contentType=${encodeURIComponent(contentType)}`;
 
-                // If it's a song from the setlist (Table One), add the specific key
-                if (linkElement.closest('#tableone'))
-                {
-                    const setlistItem = currentSetlist.find(item => item.songName === songIdentifier);
-                    if (setlistItem && setlistItem.key)
-                    {
-                        targetURL += `&targetKey=${encodeURIComponent(setlistItem.key)}`;
-                    }
-                }
+                // The key selected in the setlist is now purely a visual label on the main page
+                // and is never passed to the song template.
 
-                // If it's a lyrics link, add the parameter to hide the transpose bar
+                // If it's a lyrics link, add the parameter to hide the transpose bar.
                 if (contentType === 'lyrics')
                 {
                     targetURL += `&hideTranspose=true`;
                 }
 
-                // Redirect to the new URL. The template.html page will now handle fetching the data.
+                // Redirect to the new URL.
                 window.location.href = targetURL;
             }
 
