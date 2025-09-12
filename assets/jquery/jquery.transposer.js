@@ -1,35 +1,8 @@
-function myFunction() {
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("tabletwo");
-    tr = table.getElementsByTagName("tr");
+(function ($)
+{
 
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
-
-$(function () {
-    $("pre").transpose();
-
-    // Add an ID to the <pre> element for easy targeting
-    const preElement = document.getElementById('song-lyrics');
-});
-
-(function ($) {
-
-    $.fn.transpose = function (options) {
+    $.fn.transpose = function (options)
+    {
         var opts = $.extend({}, $.fn.transpose.defaults, options);
 
         var currentKey = null;
@@ -54,37 +27,47 @@ $(function () {
             { name: 'G#', value: 0, type: 'S' }
         ];
 
-        var getKeyByName = function (name) {
-            if (name.charAt(name.length - 1) == "m") {
+        var getKeyByName = function (name)
+        {
+            if (name.charAt(name.length - 1) == "m")
+            {
                 name = name.substring(0, name.length - 1);
             }
-            for (var i = 0; i < keys.length; i++) {
-                if (name == keys[i].name) {
+            for (var i = 0; i < keys.length; i++)
+            {
+                if (name == keys[i].name)
+                {
                     return keys[i];
                 }
             }
         };
 
-        var getChordRoot = function (input) {
+        var getChordRoot = function (input)
+        {
             if (input.length > 1 && (input.charAt(1) == "b" || input.charAt(1) == "#"))
                 return input.substr(0, 2);
             else
                 return input.substr(0, 1);
         };
 
-        var getNewKey = function (oldKey, delta, targetKey) {
+        var getNewKey = function (oldKey, delta, targetKey)
+        {
             var keyValue = getKeyByName(oldKey).value + delta;
 
-            if (keyValue > 11) {
+            if (keyValue > 11)
+            {
                 keyValue -= 12;
-            } else if (keyValue < 0) {
+            } else if (keyValue < 0)
+            {
                 keyValue += 12;
             }
 
             var i = 0;
-            if (keyValue == 0 || keyValue == 2 || keyValue == 5 || keyValue == 7 || keyValue == 10) {
+            if (keyValue == 0 || keyValue == 2 || keyValue == 5 || keyValue == 7 || keyValue == 10)
+            {
                 // Return the Flat or Sharp Key
-                switch (targetKey.name) {
+                switch (targetKey.name)
+                {
                     case "A":
                     case "A#":
                     case "B":
@@ -96,31 +79,40 @@ $(function () {
                     case "F#":
                     case "G":
                     case "G#":
-                        for (; i < keys.length; i++) {
-                            if (keys[i].value == keyValue && keys[i].type == "S") {
+                        for (; i < keys.length; i++)
+                        {
+                            if (keys[i].value == keyValue && keys[i].type == "S")
+                            {
                                 return keys[i];
                             }
                         }
                     default:
-                        for (; i < keys.length; i++) {
-                            if (keys[i].value == keyValue && keys[i].type == "F") {
+                        for (; i < keys.length; i++)
+                        {
+                            if (keys[i].value == keyValue && keys[i].type == "F")
+                            {
                                 return keys[i];
                             }
                         }
                 }
             }
-            else {
+            else
+            {
                 // Return the Natural Key
-                for (; i < keys.length; i++) {
-                    if (keys[i].value == keyValue) {
+                for (; i < keys.length; i++)
+                {
+                    if (keys[i].value == keyValue)
+                    {
                         return keys[i];
                     }
                 }
             }
         };
 
-        var getChordType = function (key) {
-            switch (key.charAt(key.length - 1)) {
+        var getChordType = function (key)
+        {
+            switch (key.charAt(key.length - 1))
+            {
                 case "b":
                     return "F";
                 case "#":
@@ -130,7 +122,8 @@ $(function () {
             }
         };
 
-        var getDelta = function (oldIndex, newIndex) {
+        var getDelta = function (oldIndex, newIndex)
+        {
             if (oldIndex > newIndex)
                 return 0 - (oldIndex - newIndex);
             else if (oldIndex < newIndex)
@@ -139,23 +132,27 @@ $(function () {
                 return 0;
         };
 
-        var transposeSong = function (target, key) {
+        var transposeSong = function (target, key)
+        {
             var newKey = getKeyByName(key);
 
-            if (currentKey.name == newKey.name) {
+            if (currentKey.name == newKey.name)
+            {
                 return;
             }
 
             var delta = getDelta(currentKey.value, newKey.value);
 
-            $("span.c", target).each(function (i, el) {
+            $("span.c", target).each(function (i, el)
+            {
                 transposeChord(el, delta, newKey);
             });
 
             currentKey = newKey;
         };
 
-        var transposeChord = function (selector, delta, targetKey) {
+        var transposeChord = function (selector, delta, targetKey)
+        {
             var el = $(selector);
             var oldChord = el.text();
             var oldChordRoot = getChordRoot(oldChord);
@@ -164,13 +161,15 @@ $(function () {
             el.text(newChord);
 
             var sib = el[0].nextSibling;
-            if (sib && sib.nodeType == 3 && sib.nodeValue.length > 0 && sib.nodeValue.charAt(0) != "/") {
+            if (sib && sib.nodeType == 3 && sib.nodeValue.length > 0 && sib.nodeValue.charAt(0) != "/")
+            {
                 var wsLength = getNewWhiteSpaceLength(oldChord.length, newChord.length, sib.nodeValue.length);
                 sib.nodeValue = makeString(" ", wsLength);
             }
         };
 
-        var getNewWhiteSpaceLength = function (a, b, c) {
+        var getNewWhiteSpaceLength = function (a, b, c)
+        {
             if (a > b)
                 return (c + (a - b));
             else if (a < b)
@@ -179,36 +178,43 @@ $(function () {
                 return c;
         };
 
-        var makeString = function (s, repeat) {
+        var makeString = function (s, repeat)
+        {
             var o = [];
             for (var i = 0; i < repeat; i++) o.push(s);
             return o.join("");
         }
 
-        var isChordLine = function (input) {
+        var isChordLine = function (input)
+        {
             var tokens = input.replace(/\s+/, " ").split(" ");
 
             // Try to find tokens that aren't chords
             // if we find one we know that this line is not a 'chord' line.
-            for (var i = 0; i < tokens.length; i++) {
+            for (var i = 0; i < tokens.length; i++)
+            {
                 if (!$.trim(tokens[i]).length == 0 && !tokens[i].match(opts.chordRegex))
                     return false;
             }
             return true;
         };
 
-        var wrapChords = function (input) {
+        var wrapChords = function (input)
+        {
             return input.replace(opts.chordReplaceRegex, "<span class='c'>$1</span>");
         };
 
-        return this.each(function () {
+        return this.each(function ()
+        {
 
             var startKey = $(this).attr("data-key");
-            if (!startKey || $.trim(startKey) == "") {
+            if (!startKey || $.trim(startKey) == "")
+            {
                 startKey = opts.key;
             }
 
-            if (!startKey || $.trim(startKey) == "") {
+            if (!startKey || $.trim(startKey) == "")
+            {
                 throw ("Starting key not defined.");
                 return this;
             }
@@ -217,7 +223,8 @@ $(function () {
 
             // Build transpose links ===========================================
             var keyLinks = [];
-            $(keys).each(function (i, key) {
+            $(keys).each(function (i, key)
+            {
                 if (currentKey.name == key.name)
                     keyLinks.push("<a href='#' class='selected'>" + key.name + "</a>");
                 else
@@ -228,7 +235,8 @@ $(function () {
             var $this = $(this);
             var keysHtml = $("<div class='transpose-keys'></div>");
             keysHtml.html(keyLinks.join(""));
-            $("a", keysHtml).click(function (e) {
+            $("a", keysHtml).click(function (e)
+            {
                 e.preventDefault();
                 transposeSong($this, $(this).text());
                 $(".transpose-keys a").removeClass("selected");
@@ -242,7 +250,8 @@ $(function () {
             var lines = $(this).text().split(/\r\n|\n/g);
             var line, tmp = "";
 
-            for (var i = 0; i < lines.length; i++) {
+            for (var i = 0; i < lines.length; i++)
+            {
                 line = lines[i];
 
                 if (isChordLine(line))

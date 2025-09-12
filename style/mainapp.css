@@ -1,3 +1,4 @@
+/* ===== GENERAL BODY & NAVIGATION ===== */
 body {
     margin: 0;
     padding: 0;
@@ -5,6 +6,7 @@ body {
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #navigation {
@@ -15,25 +17,26 @@ body {
 }
 
 #textdiv {
-    font-family: 'Montserrat', sans-serif;
     font-size: 25px;
     font-weight: 500;
     text-align: center;
+    padding: 10px 0;
 }
 
-
+/* ===== TABLES ===== */
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 15px;
-    font-family: 'Montserrat', sans-serif;
 }
 
 caption {
     color: white;
     text-align: left;
-    padding: 8px;
+    padding: 10px;
     background-color: rgba(30, 168, 210, 0.295);
+    font-size: 18px;
+    font-weight: 500;
 }
 
 thead {
@@ -58,12 +61,19 @@ table tbody td {
 table a {
     text-decoration: none;
     color: aqua;
+    font-weight: 500;
+}
+
+table a:hover {
+    text-decoration: underline;
 }
 
 table td:nth-child(2),
-table td:nth-child(3) {
+table td:nth-child(3),
+table td:nth-child(4) {
+    /* Adjusted to include lyrics column */
     text-align: center;
-    width: 20%;
+    width: 15%;
 }
 
 tr:nth-child(even) {
@@ -74,7 +84,8 @@ tr:nth-child(odd) {
     background-color: #f2f2f200;
 }
 
-input {
+/* ===== INPUTS & BUTTONS ===== */
+input[type="text"]#myInput {
     margin-top: 20px;
     margin-bottom: 10px;
     height: 30px;
@@ -84,8 +95,238 @@ input {
     font-family: 'Montserrat', sans-serif;
     background-color: honeydew;
     width: 300px;
+    padding: 0 10px;
 }
 
-.clickable {
+#setlist-management-container {
+    padding: 20px 15px;
+    text-align: center;
+}
+
+#setlist-management-container button {
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
     cursor: pointer;
+    margin: 0 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#setlist-management-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#open-setlist-modal-btn {
+    background-color: #4CAF50;
+}
+
+/* Green */
+#login-modal-btn {
+    background-color: #008CBA;
+}
+
+/* Blue */
+#logout-btn {
+    background-color: #f44336;
+}
+
+/* Red */
+#add-song-btn {
+    background-color: #f0ad4e;
+}
+
+/* Orange */
+
+/* ===== MODAL STYLES (MOVED FROM INDEX.HTML) ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 25px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    max-height: 85vh;
+    overflow-y: auto;
+    color: #333;
+    /* Added for better text readability */
+}
+
+.close-modal-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.close-modal-btn:hover,
+.close-modal-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal Specific Inputs and Buttons */
+.modal-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="password"],
+.modal-content input[type="email"],
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+#password-error-msg,
+#login-error-msg,
+#add-song-error-msg,
+#edit-song-msg {
+    color: red;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    height: 16px;
+}
+
+#edit-song-msg {
+    color: green;
+}
+
+/* Setlist Modal */
+#current-setlist-items {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 10px;
+}
+
+#current-setlist-items li {
+    padding: 8px 5px;
+    border-bottom: 1px dashed #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.remove-song-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 15px;
+}
+
+/* Song Search in Modal */
+#song-search-results .results-list {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    display: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: -10px;
+    position: absolute;
+    z-index: 1001;
+}
+
+#song-search-results .result-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+#song-search-results .result-item:last-child {
+    border-bottom: none;
+}
+
+#song-search-results .result-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Edit/Add Song Modals */
+#edit-song-textarea,
+#add-song-modal textarea {
+    width: 100%;
+    height: 40vh;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#edit-song-modal .modal-footer,
+#add-song-modal .modal-footer {
+    text-align: right;
+    margin-top: 15px;
+}
+
+#save-song-btn,
+#save-new-song-btn {
+    background-color: #28a745;
+}
+
+#cancel-edit-btn,
+#cancel-add-btn {
+    background-color: #6c757d;
+    margin-right: 10px;
+}
+
+/* ===== VISIBILITY LOGIC ===== */
+#tabletwo .edit-col {
+    display: none;
+}
+
+body.logged-in #tabletwo .edit-col {
+    display: table-cell;
+}
+
+body.logged-in #add-song-btn {
+    display: inline-block;
 }
