@@ -1,3 +1,13 @@
+/*!
+ * jQuery Chord Transposer plugin v1.0
+ * http://codegavin.com/projects/transposer
+ *
+ * Copyright 2010, Jesse Gavin
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://codegavin.com/license
+ *
+ * Date: Sat Jun 26 21:27:00 2010 -0600
+ */
 (function ($)
 {
 
