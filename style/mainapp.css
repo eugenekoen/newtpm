@@ -292,10 +292,10 @@ input[type="text"]#myInput {
 }
 
 /* Edit/Add Song Modals */
-#edit-song-textarea,
+#edit-song-modal textarea,
 #add-song-modal textarea {
     width: 100%;
-    height: 40vh;
+    height: 25vh;
     font-family: monospace;
     font-size: 14px;
     line-height: 1.5;

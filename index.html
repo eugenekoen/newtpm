@@ -114,7 +114,14 @@
         <div class="modal-content">
             <span class="close-edit-modal-btn close-modal-btn">×</span>
             <h2 id="edit-song-title">Edit Song</h2>
-            <textarea id="edit-song-textarea"></textarea>
+            <div>
+                <label for="edit-song-textarea">Chords:</label>
+                <textarea id="edit-song-textarea"></textarea>
+            </div>
+            <div>
+                <label for="edit-song-lyrics-textarea">Lyrics:</label>
+                <textarea id="edit-song-lyrics-textarea"></textarea>
+            </div>
             <p id="edit-song-msg" style="height: 16px; color: green;"></p>
             <div class="modal-footer">
                 <button id="cancel-edit-btn" class="modal-btn">Cancel</button>
@@ -251,6 +258,7 @@ PASTE SONG HERE (with 2 spacings on left)
             const loginErrorMsg = document.getElementById('login-error-msg');
             const editSongTitle = document.getElementById('edit-song-title');
             const editSongTextarea = document.getElementById('edit-song-textarea');
+            const editSongLyricsTextarea = document.getElementById('edit-song-lyrics-textarea');
             const saveSongBtn = document.getElementById('save-song-btn');
             const cancelEditBtn = document.getElementById('cancel-edit-btn');
             const editSongMsg = document.getElementById('edit-song-msg');
@@ -455,18 +463,21 @@ PASTE SONG HERE (with 2 spacings on left)
             async function openEditModal(songIdentifier, displayName)
             {
                 editSongMsg.textContent = '';
-                editSongTitle.textContent = `Edit Chords: ${displayName}`;
+                editSongTitle.textContent = `Edit Song: ${displayName}`;
                 editSongTextarea.value = 'Loading...';
+                editSongLyricsTextarea.value = 'Loading...';
                 editSongModal.style.display = 'block';
                 saveSongBtn.dataset.songIdentifier = songIdentifier;
                 try
                 {
-                    const { data, error } = await supabase.from('songs').select('chords_content').eq('song_identifier', songIdentifier).single();
+                    const { data, error } = await supabase.from('songs').select('chords_content, lyrics_content').eq('song_identifier', songIdentifier).single();
                     if (error) throw error;
                     editSongTextarea.value = data.chords_content || '';
+                    editSongLyricsTextarea.value = data.lyrics_content || '';
                 } catch (error)
                 {
                     editSongTextarea.value = 'Error loading song content.';
+                    editSongLyricsTextarea.value = 'Error loading lyrics content.';
                     console.error('Error fetching song for edit:', error);
                 }
             }
@@ -474,13 +485,17 @@ PASTE SONG HERE (with 2 spacings on left)
             async function saveSongChanges()
             {
                 const songIdentifier = saveSongBtn.dataset.songIdentifier;
-                const newContent = editSongTextarea.value;
+                const newChordsContent = editSongTextarea.value;
+                const newLyricsContent = editSongLyricsTextarea.value;
                 if (!songIdentifier) { alert('Error: No song identifier found.'); return; }
                 saveSongBtn.disabled = true;
                 saveSongBtn.textContent = 'Saving...';
                 try
                 {
-                    const { error } = await supabase.from('songs').update({ chords_content: newContent }).eq('song_identifier', songIdentifier);
+                    const { error } = await supabase.from('songs').update({
+                        chords_content: newChordsContent,
+                        lyrics_content: newLyricsContent
+                    }).eq('song_identifier', songIdentifier);
                     if (error) throw error;
                     editSongMsg.textContent = 'Saved successfully!';
                     setTimeout(() => { editSongModal.style.display = 'none'; }, 1500);
@@ -633,10 +648,8 @@ PASTE SONG HERE (with 2 spacings on left)
             window.addEventListener('click', (event) =>
             {
                 if (event.target == loginModal) loginModal.style.display = 'none';
-                if (event.target == editSongModal) editSongModal.style.display = 'none';
                 if (event.target == passwordModal) passwordModal.style.display = 'none';
                 if (event.target == setlistModal) { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }
-                if (event.target == addSongModal) addSongModal.style.display = 'none';
             });
         });
     </script>
