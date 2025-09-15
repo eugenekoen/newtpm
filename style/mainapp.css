@@ -121,26 +121,26 @@ input[type="text"]#myInput {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-#open-setlist-modal-btn {
+/* MODIFICATION: Style for new Manage Setlist button */
+#manage-setlist-btn {
     background-color: #4CAF50;
+    /* Green */
 }
 
-/* Green */
 #login-modal-btn {
     background-color: #008CBA;
+    /* Blue */
 }
 
-/* Blue */
 #logout-btn {
     background-color: #f44336;
+    /* Red */
 }
 
-/* Red */
 #add-song-btn {
     background-color: #f0ad4e;
+    /* Orange */
 }
-
-/* Orange */
 
 /* ===== MODAL STYLES (MOVED FROM INDEX.HTML) ===== */
 .modal {

@@ -32,24 +32,15 @@
         </div>
     </div>
 
+    <!-- MODIFICATION: Button layout changed. Old setlist button removed, new one added and hidden by default. -->
     <div id="setlist-management-container">
-        <button id="open-setlist-modal-btn">Set List Management</button>
         <button id="login-modal-btn">Login</button>
+        <button id="manage-setlist-btn" style="display: none;">Manage Setlist</button>
         <button id="add-song-btn" style="display: none;">Add New Song</button>
         <button id="logout-btn" style="display: none;">Logout</button>
     </div>
 
-    <!-- Password Modal (for Setlist) -->
-    <div id="password-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-password-modal-btn close-modal-btn">×</span>
-            <h2>Enter Access Code</h2>
-            <p>Enter the code to manage the setlist.</p>
-            <input type="password" id="password-input">
-            <p id="password-error-msg"></p>
-            <button id="submit-password-btn">Submit Code</button>
-        </div>
-    </div>
+    <!-- MODIFICATION: Password Modal has been completely removed. -->
 
     <!-- Login Modal -->
     <div id="login-modal" class="modal">
@@ -64,7 +55,7 @@
         </div>
     </div>
 
-    <!-- Setlist Modal -->
+    <!-- Setlist Modal (Now opened directly after login) -->
     <div id="setlist-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal-btn">×</span>
@@ -226,7 +217,6 @@
         let currentSetlist = [];
         let allSongsData = [];
         const setlistLabel = 'current_weekend';
-        const CORRECT_PASSWORD = "1111";
         const SONG_TEMPLATE = `[KEY]
 SONG NAME
 =========
@@ -245,7 +235,6 @@ PASTE SONG HERE (with 2 spacings on left)
             // --- SECTION 1: DOM ELEMENT DECLARATIONS ---
             const tableOneBody = document.querySelector('#tableone tbody');
             const tableTwoBody = document.querySelector('#tabletwo tbody');
-            const passwordModal = document.getElementById('password-modal');
             const setlistModal = document.getElementById('setlist-modal');
             const loginModal = document.getElementById('login-modal');
             const editSongModal = document.getElementById('edit-song-modal');
@@ -262,14 +251,9 @@ PASTE SONG HERE (with 2 spacings on left)
             const saveSongBtn = document.getElementById('save-song-btn');
             const cancelEditBtn = document.getElementById('cancel-edit-btn');
             const editSongMsg = document.getElementById('edit-song-msg');
-            const openSetlistBtn = document.getElementById('open-setlist-modal-btn');
             const songSearchInput = document.getElementById('song-search-input');
             const currentSetlistItemsUl = document.getElementById('current-setlist-items');
             const closeSetlistModalBtn = setlistModal?.querySelector('.close-modal-btn');
-            const closePasswordModalBtn = passwordModal?.querySelector('.close-password-modal-btn');
-            const passwordInput = document.getElementById('password-input');
-            const submitPasswordBtn = document.getElementById('submit-password-btn');
-            const passwordErrorMsg = document.getElementById('password-error-msg');
             const keySelectDropdown = document.getElementById('key-select-dropdown');
             const addSongToSetlistBtn = document.getElementById('add-song-to-setlist-btn');
             const selectedSongIdentifierInput = document.getElementById('selected-song-identifier');
@@ -285,6 +269,11 @@ PASTE SONG HERE (with 2 spacings on left)
             const newSongLyricsTextarea = document.getElementById('new-song-lyrics');
             const addSongErrorMsg = document.getElementById('add-song-error-msg');
 
+            // MODIFICATION: New button declared
+            const manageSetlistBtn = document.getElementById('manage-setlist-btn');
+
+            // MODIFICATION: All declarations for the password modal have been removed.
+
             // --- SECTION 2: FUNCTION DEFINITIONS ---
 
             // --- Setlist Functions ---
@@ -294,7 +283,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 tableOneBody.innerHTML = '';
                 if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
                 {
-                    tableOneBody.innerHTML = '<tr><td colspan="3" class="text-center">Setlist is empty. Use "Set List Management".</td></tr>';
+                    tableOneBody.innerHTML = '<tr><td colspan="3" class="text-center">Setlist is empty. Log in to manage the setlist.</td></tr>';
                     return;
                 }
                 currentSetlist.forEach(item =>
@@ -397,26 +386,17 @@ PASTE SONG HERE (with 2 spacings on left)
             {
                 event.preventDefault();
                 const songIdentifier = linkElement.dataset.songIdentifier;
-                const contentType = linkElement.dataset.contentType; // 'chords' or 'lyrics'
+                const contentType = linkElement.dataset.contentType;
                 if (!songIdentifier || !contentType) return;
 
                 const templateURL = "./assets/master/template.html";
-
-                // --- THIS IS THE MODIFIED PART ---
-                // We build the URL WITHOUT the 'targetKey'.
-                // This ensures the song page ALWAYS loads in its default key.
                 let targetURL = `${templateURL}?song=${encodeURIComponent(songIdentifier)}&contentType=${encodeURIComponent(contentType)}`;
 
-                // The key selected in the setlist is now purely a visual label on the main page
-                // and is never passed to the song template.
-
-                // If it's a lyrics link, add the parameter to hide the transpose bar.
                 if (contentType === 'lyrics')
                 {
                     targetURL += `&hideTranspose=true`;
                 }
 
-                // Redirect to the new URL.
                 window.location.href = targetURL;
             }
 
@@ -443,6 +423,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 if (error) console.error('Error signing out:', error);
             }
 
+            // MODIFICATION: updateAuthState now controls the new manageSetlistBtn
             function updateAuthState(user)
             {
                 if (user)
@@ -450,15 +431,18 @@ PASTE SONG HERE (with 2 spacings on left)
                     document.body.classList.add('logged-in');
                     loginModalBtn.style.display = 'none';
                     logoutBtn.style.display = 'inline-block';
-                    addSongBtnTrigger.style.display = 'inline-block'; // This line shows the button
+                    addSongBtnTrigger.style.display = 'inline-block';
+                    manageSetlistBtn.style.display = 'inline-block'; // Show the button
                 } else
                 {
                     document.body.classList.remove('logged-in');
                     loginModalBtn.style.display = 'inline-block';
                     logoutBtn.style.display = 'none';
-                    addSongBtnTrigger.style.display = 'none'; // This line hides the button
+                    addSongBtnTrigger.style.display = 'none';
+                    manageSetlistBtn.style.display = 'none'; // Hide the button
                 }
             }
+
             // --- Edit Song Functions ---
             async function openEditModal(songIdentifier, displayName)
             {
@@ -556,7 +540,7 @@ PASTE SONG HERE (with 2 spacings on left)
                         throw error;
                     }
                     addSongModal.style.display = 'none';
-                    await populateSongDatabaseTable(); // Refresh the list!
+                    await populateSongDatabaseTable();
                 } catch (error)
                 {
                     addSongErrorMsg.textContent = `Error: ${error.message}`;
@@ -598,6 +582,13 @@ PASTE SONG HERE (with 2 spacings on left)
             loginPasswordInput.addEventListener('keyup', e => e.key === 'Enter' && signInWithEmail());
             addSongBtnTrigger.addEventListener('click', openAddSongModal);
 
+            // MODIFICATION: New event listener for the manage setlist button
+            manageSetlistBtn.addEventListener('click', () =>
+            {
+                setlistModal.style.display = 'block';
+                renderSetlistUI();
+            });
+
             // --- Delegated Click Listener for Table Links ---
             document.body.addEventListener('click', (event) =>
             {
@@ -612,8 +603,9 @@ PASTE SONG HERE (with 2 spacings on left)
             cancelEditBtn.addEventListener('click', () => editSongModal.style.display = 'none');
             saveNewSongBtn.addEventListener('click', saveNewSong);
             cancelAddBtn.addEventListener('click', () => addSongModal.style.display = 'none');
-            if (openSetlistBtn) { openSetlistBtn.addEventListener('click', () => { if (passwordModal) { passwordInput.value = ''; passwordErrorMsg.textContent = ''; passwordModal.style.display = 'block'; passwordInput.focus(); } }); }
-            if (submitPasswordBtn) { submitPasswordBtn.addEventListener('click', () => { if (passwordInput.value.trim() === CORRECT_PASSWORD) { passwordModal.style.display = 'none'; setlistModal.style.display = 'block'; renderSetlistUI(); } else { passwordErrorMsg.textContent = 'Incorrect code.'; } }); }
+
+            // MODIFICATION: Removed password modal logic
+
             if (songSearchInput)
             {
                 songSearchInput.addEventListener('input', () =>
@@ -642,13 +634,11 @@ PASTE SONG HERE (with 2 spacings on left)
             document.querySelector('.close-login-modal-btn').addEventListener('click', () => loginModal.style.display = 'none');
             document.querySelector('.close-edit-modal-btn').addEventListener('click', () => editSongModal.style.display = 'none');
             document.querySelector('.close-add-modal-btn').addEventListener('click', () => addSongModal.style.display = 'none');
-            if (closePasswordModalBtn) closePasswordModalBtn.addEventListener('click', () => passwordModal.style.display = 'none');
             if (closeSetlistModalBtn) { closeSetlistModalBtn.addEventListener('click', () => { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }); }
 
             window.addEventListener('click', (event) =>
             {
                 if (event.target == loginModal) loginModal.style.display = 'none';
-                if (event.target == passwordModal) passwordModal.style.display = 'none';
                 if (event.target == setlistModal) { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }
             });
         });
