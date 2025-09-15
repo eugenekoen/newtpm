@@ -32,15 +32,30 @@
         </div>
     </div>
 
-    <!-- MODIFICATION: Button layout changed. Old setlist button removed, new one added and hidden by default. -->
     <div id="setlist-management-container">
+        <!-- New Sign Up Button -->
+        <button id="signup-modal-btn">Sign Up</button>
         <button id="login-modal-btn">Login</button>
         <button id="manage-setlist-btn" style="display: none;">Manage Setlist</button>
         <button id="add-song-btn" style="display: none;">Add New Song</button>
+        <button id="user-management-btn" style="display: none;">User Management</button>
         <button id="logout-btn" style="display: none;">Logout</button>
     </div>
 
-    <!-- MODIFICATION: Password Modal has been completely removed. -->
+    <!-- New Sign Up Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-signup-modal-btn close-modal-btn">×</span>
+            <h2>Create an Account</h2>
+            <div><label for="signup-name">Full Name:</label><input type="text" id="signup-name" placeholder="John Doe">
+            </div>
+            <div><label for="signup-email">Email:</label><input type="email" id="signup-email"
+                    placeholder="you@example.com"></div>
+            <div><label for="signup-password">Password:</label><input type="password" id="signup-password"></div>
+            <p id="signup-msg" style="height: auto;"></p>
+            <button id="signup-btn" class="modal-btn">Sign Up</button>
+        </div>
+    </div>
 
     <!-- Login Modal -->
     <div id="login-modal" class="modal">
@@ -55,7 +70,7 @@
         </div>
     </div>
 
-    <!-- Setlist Modal (Now opened directly after login) -->
+    <!-- Setlist Modal -->
     <div id="setlist-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal-btn">×</span>
@@ -100,6 +115,33 @@
         </div>
     </div>
 
+    <!-- User Management Modal -->
+    <div id="user-management-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close-user-management-modal-btn close-modal-btn">×</span>
+            <h2>User Management</h2>
+            <p id="user-management-msg" class="feedback-msg"></p>
+            <!-- Note: The "Add User" section has been removed as users now sign themselves up. -->
+            <h3>Existing Users</h3>
+            <div class="table-container">
+                <table id="user-list-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Edit Song Modal -->
     <div id="edit-song-modal" class="modal">
         <div class="modal-content">
@@ -121,6 +163,7 @@
         </div>
     </div>
 
+    <!-- Add Song Modal -->
     <div id="add-song-modal" class="modal">
         <div class="modal-content">
             <span class="close-add-modal-btn close-modal-btn">×</span>
@@ -216,6 +259,7 @@
         // --- GLOBAL STATE ---
         let currentSetlist = [];
         let allSongsData = [];
+        let currentUserRole = null;
         const setlistLabel = 'current_weekend';
         const SONG_TEMPLATE = `[KEY]
 SONG NAME
@@ -237,14 +281,21 @@ PASTE SONG HERE (with 2 spacings on left)
             const tableTwoBody = document.querySelector('#tabletwo tbody');
             const setlistModal = document.getElementById('setlist-modal');
             const loginModal = document.getElementById('login-modal');
+            const signupModal = document.getElementById('signup-modal'); // New
             const editSongModal = document.getElementById('edit-song-modal');
             const addSongModal = document.getElementById('add-song-modal');
             const loginModalBtn = document.getElementById('login-modal-btn');
+            const signupModalBtn = document.getElementById('signup-modal-btn'); // New
             const logoutBtn = document.getElementById('logout-btn');
             const loginBtn = document.getElementById('login-btn');
             const loginEmailInput = document.getElementById('login-email');
             const loginPasswordInput = document.getElementById('login-password');
             const loginErrorMsg = document.getElementById('login-error-msg');
+            const signupBtn = document.getElementById('signup-btn'); // New
+            const signupNameInput = document.getElementById('signup-name'); // New
+            const signupEmailInput = document.getElementById('signup-email'); // New
+            const signupPasswordInput = document.getElementById('signup-password'); // New
+            const signupMsg = document.getElementById('signup-msg'); // New
             const editSongTitle = document.getElementById('edit-song-title');
             const editSongTextarea = document.getElementById('edit-song-textarea');
             const editSongLyricsTextarea = document.getElementById('edit-song-lyrics-textarea');
@@ -268,13 +319,85 @@ PASTE SONG HERE (with 2 spacings on left)
             const newSongChordsTextarea = document.getElementById('new-song-chords');
             const newSongLyricsTextarea = document.getElementById('new-song-lyrics');
             const addSongErrorMsg = document.getElementById('add-song-error-msg');
-
-            // MODIFICATION: New button declared
             const manageSetlistBtn = document.getElementById('manage-setlist-btn');
+            const userManagementBtn = document.getElementById('user-management-btn');
+            const userManagementModal = document.getElementById('user-management-modal');
+            const userListTableBody = document.querySelector('#user-list-table tbody');
+            const userManagementMsg = document.getElementById('user-management-msg');
+            const closeUserManagementModalBtn = userManagementModal.querySelector('.close-user-management-modal-btn');
 
-            // MODIFICATION: All declarations for the password modal have been removed.
 
             // --- SECTION 2: FUNCTION DEFINITIONS ---
+
+            // --- User Management & Role Functions ---
+            async function fetchUserRole(userId)
+            {
+                if (!userId) return 'User';
+                try
+                {
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .select('role')
+                        .eq('id', userId)
+                        .single();
+                    if (error) throw error;
+                    return data ? data.role : 'User';
+                } catch (error)
+                {
+                    console.error("Error fetching user role:", error);
+                    return 'User';
+                }
+            }
+
+            async function populateUserManagementModal()
+            {
+                userListTableBody.innerHTML = '<tr><td colspan="3">Loading users...</td></tr>';
+                try
+                {
+                    const { data: profiles, error } = await supabase
+                        .from('profiles')
+                        .select('id, email, role, full_name');
+
+                    if (error) throw error;
+
+                    if (!profiles || profiles.length === 0)
+                    {
+                        userListTableBody.innerHTML = '<tr><td colspan="3">No users found</td></tr>';
+                        return;
+                    }
+
+                    userListTableBody.innerHTML = '';
+                    const { data: { user: currentUser } } = await supabase.auth.getUser();
+
+                    profiles.forEach(profile =>
+                    {
+                        const isCurrentUser = profile.id === currentUser?.id;
+                        const row = userListTableBody.insertRow();
+                        row.innerHTML = `
+                <td>${profile.full_name || profile.email || 'N/A'}</td>
+                <td>
+                    <select class="role-select" data-user-id="${profile.id}" ${isCurrentUser ? 'disabled' : ''}>
+                        <option value="Unallocated" ${profile.role === 'Unallocated' ? 'selected' : ''}>Unallocated</option>
+                        <option value="User" ${profile.role === 'User' ? 'selected' : ''}>User</option>
+                        <option value="Admin" ${profile.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                    </select>
+                </td>
+            `;
+                    });
+
+                } catch (error)
+                {
+                    userListTableBody.innerHTML = `<tr><td colspan="3">Error loading users: ${error.message}</td></tr>`;
+                    console.error("Error fetching user list:", error);
+                }
+            }
+
+            function showUserManagementMessage(message, isError = false)
+            {
+                userManagementMsg.textContent = message;
+                userManagementMsg.style.color = isError ? 'red' : 'green';
+                setTimeout(() => { userManagementMsg.textContent = ''; }, 4000);
+            }
 
             // --- Setlist Functions ---
             function updateTableOneWithSetlist()
@@ -423,25 +546,99 @@ PASTE SONG HERE (with 2 spacings on left)
                 if (error) console.error('Error signing out:', error);
             }
 
-            // MODIFICATION: updateAuthState now controls the new manageSetlistBtn
-            function updateAuthState(user)
+            // --- MODIFIED FUNCTION ---
+            async function updateAuthState(user)
             {
+                document.body.classList.toggle('logged-in', !!user);
+
                 if (user)
                 {
-                    document.body.classList.add('logged-in');
+                    // State when a user IS logged in
                     loginModalBtn.style.display = 'none';
+                    signupModalBtn.style.display = 'none';
                     logoutBtn.style.display = 'inline-block';
-                    addSongBtnTrigger.style.display = 'inline-block';
-                    manageSetlistBtn.style.display = 'inline-block'; // Show the button
+
+                    currentUserRole = await fetchUserRole(user.id);
+
+                    // Only show management buttons if the role is not "Unallocated"
+                    if (currentUserRole === 'User' || currentUserRole === 'Admin')
+                    {
+                        manageSetlistBtn.style.display = 'inline-block';
+                        addSongBtnTrigger.style.display = 'inline-block';
+                    }
+
+                    if (currentUserRole === 'Admin')
+                    {
+                        userManagementBtn.style.display = 'inline-block';
+                    } else
+                    {
+                        userManagementBtn.style.display = 'none';
+                    }
+
                 } else
                 {
-                    document.body.classList.remove('logged-in');
+                    // State when a user IS NOT logged in
                     loginModalBtn.style.display = 'inline-block';
+                    signupModalBtn.style.display = 'inline-block';
                     logoutBtn.style.display = 'none';
+
+                    currentUserRole = null;
+                    manageSetlistBtn.style.display = 'none';
                     addSongBtnTrigger.style.display = 'none';
-                    manageSetlistBtn.style.display = 'none'; // Hide the button
+                    userManagementBtn.style.display = 'none';
                 }
             }
+
+
+            // --- New Sign Up Logic ---
+            async function signUpUser()
+            {
+                signupMsg.textContent = '';
+                signupMsg.classList.remove('success');
+
+                const name = signupNameInput.value;
+                const email = signupEmailInput.value;
+                const password = signupPasswordInput.value;
+
+                if (!name || !email || !password)
+                {
+                    signupMsg.textContent = 'Please fill out all fields.';
+                    return;
+                }
+
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name
+                        }
+                    }
+                });
+
+                if (error)
+                {
+                    signupMsg.textContent = error.message;
+                } else
+                {
+                    // Sign up successful, now sign them out immediately.
+                    await supabase.auth.signOut();
+
+                    signupMsg.textContent = "Thank you for signing up! An administrator will review your account and allocate your role shortly.";
+                    signupMsg.classList.add('success');
+                    signupNameInput.value = '';
+                    signupEmailInput.value = '';
+                    signupPasswordInput.value = '';
+
+                    setTimeout(() =>
+                    {
+                        signupModal.style.display = 'none';
+                        signupMsg.textContent = '';
+                        signupMsg.classList.remove('success');
+                    }, 5000); // Close modal after 5 seconds
+                }
+            }
+
 
             // --- Edit Song Functions ---
             async function openEditModal(songIdentifier, displayName)
@@ -576,26 +773,86 @@ PASTE SONG HERE (with 2 spacings on left)
             supabase.auth.onAuthStateChange((event, session) => { updateAuthState(session?.user); });
 
             // --- Main Action Button Listeners ---
+            signupModalBtn.addEventListener('click', () => { signupMsg.textContent = ''; signupModal.style.display = 'block'; });
             loginModalBtn.addEventListener('click', () => { loginErrorMsg.textContent = ''; loginModal.style.display = 'block'; });
             logoutBtn.addEventListener('click', signOut);
             loginBtn.addEventListener('click', signInWithEmail);
             loginPasswordInput.addEventListener('keyup', e => e.key === 'Enter' && signInWithEmail());
-            addSongBtnTrigger.addEventListener('click', openAddSongModal);
+            signupBtn.addEventListener('click', signUpUser);
+            signupPasswordInput.addEventListener('keyup', e => e.key === 'Enter' && signUpUser());
 
-            // MODIFICATION: New event listener for the manage setlist button
-            manageSetlistBtn.addEventListener('click', () =>
+            addSongBtnTrigger.addEventListener('click', openAddSongModal);
+            manageSetlistBtn.addEventListener('click', () => { setlistModal.style.display = 'block'; renderSetlistUI(); });
+
+            // --- User Management Listeners ---
+            userManagementBtn.addEventListener('click', () =>
             {
-                setlistModal.style.display = 'block';
-                renderSetlistUI();
+                userManagementModal.style.display = 'block';
+                populateUserManagementModal();
             });
+
+            userListTableBody.addEventListener('change', async (event) =>
+            {
+                if (event.target.classList.contains('role-select'))
+                {
+                    const userId = event.target.dataset.userId;
+                    const newRole = event.target.value;
+
+                    const { error } = await supabase
+                        .from('profiles')
+                        .update({ role: newRole })
+                        .eq('id', userId);
+
+                    if (error)
+                    {
+                        showUserManagementMessage(`Error updating role: ${error.message}`, true);
+                    } else
+                    {
+                        showUserManagementMessage(`Successfully updated role.`);
+                    }
+                }
+            });
+
+            userListTableBody.addEventListener('click', async (event) =>
+            {
+                if (event.target.classList.contains('delete-user-btn'))
+                {
+                    const userId = event.target.dataset.userId;
+                    if (confirm('Are you sure you want to permanently delete this user? This cannot be undone.'))
+                    {
+                        // NOTE: This will fail if called by a non-admin user. It requires a service_role key.
+                        // This part still requires an admin to be logged in and is a privileged action.
+                        // You may need an Edge Function for non-admins to delete themselves, but for admin-only deletion, this is okay.
+                        const { data, error } = await supabase.auth.admin.deleteUser(userId);
+
+                        if (error)
+                        {
+                            showUserManagementMessage(`Error deleting user: ${error.message}`, true);
+                        } else
+                        {
+                            showUserManagementMessage('User deleted successfully.');
+                            populateUserManagementModal(); // Refresh the list
+                        }
+                    }
+                }
+            });
+
 
             // --- Delegated Click Listener for Table Links ---
             document.body.addEventListener('click', (event) =>
             {
                 const songLink = event.target.closest('a[data-song-identifier]');
                 const editLink = event.target.closest('a.edit-btn');
-                if (editLink) { event.preventDefault(); openEditModal(editLink.dataset.songIdentifier, editLink.dataset.displayName); }
-                else if (songLink) { event.preventDefault(); handleSongClick(event, songLink); }
+                if (editLink && (currentUserRole === 'Admin' || currentUserRole === 'User'))
+                {
+                    event.preventDefault();
+                    openEditModal(editLink.dataset.songIdentifier, editLink.dataset.displayName);
+                }
+                else if (songLink)
+                {
+                    event.preventDefault();
+                    handleSongClick(event, songLink);
+                }
             });
 
             // --- Listeners for Modals ---
@@ -603,8 +860,6 @@ PASTE SONG HERE (with 2 spacings on left)
             cancelEditBtn.addEventListener('click', () => editSongModal.style.display = 'none');
             saveNewSongBtn.addEventListener('click', saveNewSong);
             cancelAddBtn.addEventListener('click', () => addSongModal.style.display = 'none');
-
-            // MODIFICATION: Removed password modal logic
 
             if (songSearchInput)
             {
@@ -632,14 +887,19 @@ PASTE SONG HERE (with 2 spacings on left)
 
             // --- General Modal Close Listeners ---
             document.querySelector('.close-login-modal-btn').addEventListener('click', () => loginModal.style.display = 'none');
+            document.querySelector('.close-signup-modal-btn').addEventListener('click', () => signupModal.style.display = 'none');
             document.querySelector('.close-edit-modal-btn').addEventListener('click', () => editSongModal.style.display = 'none');
             document.querySelector('.close-add-modal-btn').addEventListener('click', () => addSongModal.style.display = 'none');
             if (closeSetlistModalBtn) { closeSetlistModalBtn.addEventListener('click', () => { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }); }
+            closeUserManagementModalBtn.addEventListener('click', () => userManagementModal.style.display = 'none');
+
 
             window.addEventListener('click', (event) =>
             {
                 if (event.target == loginModal) loginModal.style.display = 'none';
+                if (event.target == signupModal) signupModal.style.display = 'none';
                 if (event.target == setlistModal) { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }
+                if (event.target == userManagementModal) userManagementModal.style.display = 'none';
             });
         });
     </script>

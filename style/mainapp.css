@@ -127,6 +127,12 @@ input[type="text"]#myInput {
     /* Green */
 }
 
+/* New Sign Up Button Style */
+#signup-modal-btn {
+    background-color: #9c27b0;
+    /* Purple */
+}
+
 #login-modal-btn {
     background-color: #008CBA;
     /* Blue */
@@ -220,13 +226,21 @@ input[type="text"]#myInput {
 #password-error-msg,
 #login-error-msg,
 #add-song-error-msg,
-#edit-song-msg {
+#edit-song-msg,
+#signup-msg {
     color: red;
     font-size: 14px;
     margin-top: -10px;
     margin-bottom: 10px;
     height: 16px;
 }
+
+/* Style for success messages */
+#edit-song-msg,
+#signup-msg.success {
+    color: green;
+}
+
 
 #edit-song-msg {
     color: green;
@@ -329,4 +343,232 @@ body.logged-in #tabletwo .edit-col {
 
 body.logged-in #add-song-btn {
     display: inline-block;
+}
+
+/* Hide login/signup when logged in */
+body.logged-in #login-modal-btn,
+body.logged-in #signup-modal-btn {
+    display: none;
+}
+
+/* Hide logout when logged out */
+body:not(.logged-in) #logout-btn {
+    display: none;
+}
+
+
+/* ===== USER MANAGEMENT STYLES (REFINED) ===== */
+
+/* New Button Color */
+#user-management-btn {
+    background-color: #6f42c1;
+    /* A nice purple */
+}
+
+/* Make the User Management modal wider and styled to match the app theme */
+.modal-content.large {
+    max-width: 800px;
+    background-color: rgba(10, 25, 41, 0.95);
+    /* Dark, semi-transparent background */
+    backdrop-filter: blur(5px);
+    /* Frosted glass effect */
+    border-radius: 8px;
+    border: 1px solid rgba(76, 175, 79, 0.5);
+    /* Greenish border from theme */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-top: 4px solid #4CAF50;
+    /* Green accent from the theme */
+    color: #f0f0f0;
+    /* Light text color for readability */
+}
+
+/* Theming the modal's titles */
+#user-management-modal h2,
+#user-management-modal h3 {
+    color: #ffffff;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(76, 175, 79, 0.5);
+    font-weight: 500;
+}
+
+#user-management-modal h3 {
+    font-size: 1.1em;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+/* Container for the user list table */
+.table-container {
+    max-height: 40vh;
+    overflow-y: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* User list table styling */
+#user-list-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#user-list-table th,
+#user-list-table td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(76, 175, 79, 0.4);
+    vertical-align: middle;
+}
+
+#user-list-table th {
+    background-color: #4CAF50;
+    /* Match main table header */
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Set a specific width for the Role column */
+#user-list-table th:nth-child(2),
+#user-list-table td:nth-child(2) {
+    width: 180px;
+}
+
+#user-list-table td {
+    color: aqua;
+    /* Match main table text color */
+}
+
+/* Alternating row colors for readability */
+#user-list-table tbody tr:nth-child(even) {
+    background-color: #1cb9be21;
+    /* Match main table */
+}
+
+#user-list-table tbody tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+/* Hover effect for rows */
+#user-list-table tbody tr:hover {
+    background-color: rgba(76, 175, 79, 0.3);
+    /* Greenish hover */
+}
+
+/* Styling for the 'Add New User' section */
+.add-user-section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.add-user-section>* {
+    flex-grow: 1;
+}
+
+.add-user-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* Inputs and Selects within the modal */
+#user-management-modal input[type="email"],
+#user-management-modal select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid rgba(76, 175, 79, 0.6);
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#user-management-modal select {
+    cursor: pointer;
+}
+
+#user-management-modal input[type="email"]:focus,
+#user-management-modal select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 79, 0.5);
+}
+
+/* Style the invite button */
+#invite-user-btn {
+    background-color: #f0ad4e;
+    /* Orange from theme */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex-grow: 0.5;
+    /* Make button not as wide */
+    align-self: flex-end;
+    /* Align with bottom of inputs */
+    margin-bottom: 0;
+    /* Override default modal input margin */
+}
+
+#invite-user-btn:hover {
+    background-color: #ec9b3b;
+}
+
+/* Feedback message styling */
+#user-management-msg {
+    height: 20px;
+    font-weight: 500;
+    margin-top: 15px;
+    text-align: center;
+}
+
+#user-management-msg.error {
+    color: #f44336;
+    /* Red from theme */
+}
+
+#user-management-msg.success {
+    color: #4CAF50;
+    /* Green from theme */
+}
+
+/* Role select dropdown in the table */
+.role-select {
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(76, 175, 79, 0.6);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.role-select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: rgba(50, 50, 50, 0.5);
+}
+
+.feedback-msg {
+    height: 20px;
+    font-weight: 500;
+    margin-bottom: 10px;
 }
