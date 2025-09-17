@@ -612,10 +612,11 @@ body:not(.logged-in) #logout-btn {
     color: #333;
 }
 
-/* NEW: The song name span should take up the available space */
 .song-name {
     flex-grow: 1;
     /* Pushes the remove button to the far right */
+    text-align: left;
+    /*  <-- ADD THIS LINE */
 }
 
 .remove-song-btn {
