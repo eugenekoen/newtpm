@@ -401,12 +401,13 @@ body:not(.logged-in) #logout-btn {
     margin-bottom: 10px;
 }
 
-/* Container for the user list table */
 .table-container {
     max-height: 40vh;
     overflow-y: auto;
     border-radius: 5px;
     margin-top: 10px;
+    border: 1px solid rgba(76, 175, 79, 0.4);
+    /* Added a border to frame the table */
 }
 
 /* User list table styling */
@@ -418,7 +419,8 @@ body:not(.logged-in) #logout-btn {
 #user-list-table th,
 #user-list-table td {
     text-align: left;
-    padding: 12px 15px;
+    padding: 8px 15px;
+    /* Reduced vertical padding for more compact rows */
     border-bottom: 1px solid rgba(76, 175, 79, 0.4);
     vertical-align: middle;
 }
