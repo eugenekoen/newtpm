@@ -107,12 +107,15 @@ input[type="text"]#myInput {
     border: none;
     border-radius: 5px;
     color: white;
-    padding: 15px 20px;
-    font-size: 16px;
+    padding: 12px 18px;
+    /* Reduced padding */
+    font-size: 14px;
+    /* Reduced font size */
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     cursor: pointer;
-    margin: 0 8px;
+    margin: 5px;
+    /* Added small vertical margin for wrapping */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -612,6 +615,7 @@ body:not(.logged-in) #logout-btn {
     color: #333;
 }
 
+/* NEW: The song name span should take up the available space */
 .song-name {
     flex-grow: 1;
     /* Pushes the remove button to the far right */
@@ -638,4 +642,55 @@ body:not(.logged-in) #logout-btn {
     box-shadow: 0 4px 12px rgba(0, 80, 150, 0.2);
     transform: scale(1.02);
     /* Lifts the item slightly */
+}
+
+/* ===== RESPONSIVE LAYOUT FOR BUTTONS ===== */
+@media (max-width: 768px) {
+
+    #setlist-management-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* Creates a 2-column grid */
+        gap: 12px;
+        /* Sets the space between buttons */
+
+        /* Optional: Constrain width and center the grid on mobile */
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    #setlist-management-container button {
+        margin: 0;
+        /* The 'gap' property now handles spacing */
+        width: 100%;
+        /* Makes buttons fill their grid cell */
+        padding: 15px 10px;
+        /* Adjust padding for better look on mobile */
+    }
+
+    /* This rule targets the 5th button (User Management for Admins)
+       and ensures it starts in the first column of the third row,
+       leaving the non-admin view clean. */
+    #user-management-btn {
+        grid-column: 1 / 2;
+    }
+
+    /* --- Styles for Add Song Modal on Mobile --- */
+    #add-song-modal .modal-content {
+        width: 95%;
+        /* Make modal almost full width */
+        max-width: none;
+        /* Remove the desktop max-width limit */
+        margin: 20px auto;
+        /* Adjust top/bottom margin */
+        padding: 15px;
+        /* Slightly reduce padding on smaller screens */
+    }
+
+    #add-song-modal textarea {
+        height: 35vh;
+        /* Increase height (approx 2-3 lines more than before) */
+        font-size: 13px;
+        /* Make font one size smaller */
+    }
 }
