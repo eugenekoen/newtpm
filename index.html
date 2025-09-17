@@ -422,6 +422,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 });
             }
 
+            // --- MODIFIED FUNCTION for drag-and-drop with handle ---
             function renderSetlistUI()
             {
                 if (!currentSetlistItemsUl) return;
@@ -434,10 +435,22 @@ PASTE SONG HERE (with 2 spacings on left)
                 currentSetlist.forEach((item, index) =>
                 {
                     const listItem = document.createElement('li');
-                    listItem.innerHTML = `<span>${item.displayName} (${item.key})</span><button class="remove-song-btn" data-index="${index}">Remove</button>`;
+                    listItem.setAttribute('draggable', 'true');
+                    listItem.dataset.index = index;
+                    // Added a drag handle with an SVG icon
+                    listItem.innerHTML = `
+                        <span class="drag-handle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M2 5.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                            </svg>
+                        </span>
+                        <span class="song-name">${item.displayName} (${item.key})</span>
+                        <button class="remove-song-btn" data-index="${index}">Remove</button>
+                    `;
                     currentSetlistItemsUl.appendChild(listItem);
                 });
             }
+
 
             async function saveSetlistToSupabase()
             {
@@ -883,7 +896,84 @@ PASTE SONG HERE (with 2 spacings on left)
                 });
             }
             if (addSongToSetlistBtn) { addSongToSetlistBtn.addEventListener('click', async () => { const songFileIdentifier = selectedSongIdentifierInput.value, displayName = selectedSongDisplayNameInput.value; if (!songFileIdentifier || !displayName) { alert('Please search for a song and select it from the list.'); return; } currentSetlist.push({ songName: songFileIdentifier, displayName: displayName, key: keySelectDropdown.value }); renderSetlistUI(); await saveSetlistToSupabase(); songSearchInput.value = ''; }); }
-            if (currentSetlistItemsUl) { currentSetlistItemsUl.addEventListener('click', async (event) => { if (event.target.classList.contains('remove-song-btn')) { const indexToRemove = parseInt(event.target.dataset.index, 10); currentSetlist.splice(indexToRemove, 1); renderSetlistUI(); await saveSetlistToSupabase(); } }); }
+
+            // --- Setlist Item Listeners (Remove Button and Drag-Drop) ---
+            if (currentSetlistItemsUl)
+            {
+                // Listener for remove button
+                currentSetlistItemsUl.addEventListener('click', async (event) => { if (event.target.classList.contains('remove-song-btn')) { const indexToRemove = parseInt(event.target.dataset.index, 10); currentSetlist.splice(indexToRemove, 1); renderSetlistUI(); await saveSetlistToSupabase(); } });
+
+                // --- Drag and Drop for Setlist Reordering ---
+                const getDragAfterElement = (container, y) =>
+                {
+                    const draggableElements = [...container.querySelectorAll('li[draggable="true"]:not(.dragging)')];
+
+                    return draggableElements.reduce((closest, child) =>
+                    {
+                        const box = child.getBoundingClientRect();
+                        const offset = y - box.top - box.height / 2;
+                        if (offset < 0 && offset > closest.offset)
+                        {
+                            return { offset: offset, element: child };
+                        } else
+                        {
+                            return closest;
+                        }
+                    }, { offset: Number.NEGATIVE_INFINITY }).element;
+                };
+
+                currentSetlistItemsUl.addEventListener('dragstart', e =>
+                {
+                    const listItem = e.target.closest('li[draggable="true"]');
+                    if (listItem)
+                    {
+                        // A brief timeout allows the browser to capture the drag image before we modify the element's style
+                        setTimeout(() =>
+                        {
+                            listItem.classList.add('dragging');
+                        }, 0);
+                    }
+                });
+
+                currentSetlistItemsUl.addEventListener('dragover', e =>
+                {
+                    e.preventDefault(); // Necessary to allow dropping
+                    const afterElement = getDragAfterElement(currentSetlistItemsUl, e.clientY);
+                    const draggingElement = currentSetlistItemsUl.querySelector('.dragging');
+
+                    if (draggingElement)
+                    {
+                        if (afterElement == null)
+                        {
+                            currentSetlistItemsUl.appendChild(draggingElement);
+                        } else
+                        {
+                            currentSetlistItemsUl.insertBefore(draggingElement, afterElement);
+                        }
+                    }
+                });
+
+                currentSetlistItemsUl.addEventListener('dragend', async (e) =>
+                {
+                    const draggingElement = currentSetlistItemsUl.querySelector('.dragging');
+                    if (draggingElement)
+                    {
+                        draggingElement.classList.remove('dragging');
+
+                        // Rebuild the currentSetlist array based on the new DOM order
+                        const newOrderedIndices = Array.from(currentSetlistItemsUl.querySelectorAll('li')).map(li => parseInt(li.dataset.index));
+                        const newOrderedSetlist = newOrderedIndices.map(originalIndex => currentSetlist[originalIndex]);
+
+                        // Update the global state with the new order
+                        currentSetlist = newOrderedSetlist;
+
+                        // Re-render the UI to update the data-index attributes for the next drag operation
+                        renderSetlistUI();
+                        // Persist the new order to the database
+                        await saveSetlistToSupabase();
+                    }
+                });
+            }
 
             // --- General Modal Close Listeners ---
             document.querySelector('.close-login-modal-btn').addEventListener('click', () => loginModal.style.display = 'none');

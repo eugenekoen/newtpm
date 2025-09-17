@@ -572,3 +572,69 @@ body:not(.logged-in) #logout-btn {
     font-weight: 500;
     margin-bottom: 10px;
 }
+
+#current-setlist-items {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    max-height: 250px;
+    /* Increased height slightly */
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 10px;
+}
+
+/* NEW: Style for each song item as a distinct 'box' */
+#current-setlist-items li {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+    /* Spacing between items */
+    user-select: none;
+    /* Prevents text selection during drag */
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* NEW: Style for the drag handle */
+.drag-handle {
+    display: flex;
+    align-items: center;
+    padding-right: 12px;
+    cursor: move;
+    color: #888;
+}
+
+.drag-handle:hover {
+    color: #333;
+}
+
+/* NEW: The song name span should take up the available space */
+.song-name {
+    flex-grow: 1;
+    /* Pushes the remove button to the far right */
+}
+
+.remove-song-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 15px;
+}
+
+/* NEW: Enhanced style for the item being dragged */
+#current-setlist-items li.dragging {
+    opacity: 0.9;
+    background: #e7f3ff;
+    border-color: #9acffa;
+    box-shadow: 0 4px 12px rgba(0, 80, 150, 0.2);
+    transform: scale(1.02);
+    /* Lifts the item slightly */
+}
