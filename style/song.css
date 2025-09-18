@@ -100,4 +100,8 @@ span.c {
     .transpose-keys {
         display: none;
     }
+
+    body {
+        background-color: white;
+    }
 }
