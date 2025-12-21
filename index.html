@@ -246,10 +246,10 @@
         const SUPABASE_URL = 'https://hjnewoghwyecmgmjsxgn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqbmV3b2dod3llY21nbWpzeGduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MDU5ODEsImV4cCI6MjA1OTA4MTk4MX0.lzs2Ol0tUWzk0-m-gQHBRPsOjWLBKA0bhImOixFeoUY';
 
-        let supabase = null;
+        let supabaseClient = null;
         try
         {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log("Supabase client initialized.");
         } catch (e)
         {
@@ -270,7 +270,7 @@ PASTE SONG HERE (with 2 spacings on left)
 
         document.addEventListener('DOMContentLoaded', () =>
         {
-            if (!supabase)
+            if (!supabaseClient)
             {
                 alert("Supabase configuration is missing. App cannot load data.");
                 return;
@@ -335,7 +335,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 if (!userId) return 'User';
                 try
                 {
-                    const { data, error } = await supabase
+                    const { data, error } = await supabaseClient
                         .from('profiles')
                         .select('role')
                         .eq('id', userId)
@@ -354,7 +354,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 userListTableBody.innerHTML = '<tr><td colspan="3">Loading users...</td></tr>';
                 try
                 {
-                    const { data: profiles, error } = await supabase
+                    const { data: profiles, error } = await supabaseClient
                         .from('profiles')
                         .select('id, email, role, full_name');
 
@@ -367,7 +367,7 @@ PASTE SONG HERE (with 2 spacings on left)
                     }
 
                     userListTableBody.innerHTML = '';
-                    const { data: { user: currentUser } } = await supabase.auth.getUser();
+                    const { data: { user: currentUser } } = await supabaseClient.auth.getUser();
 
                     profiles.forEach(profile =>
                     {
@@ -454,10 +454,10 @@ PASTE SONG HERE (with 2 spacings on left)
 
             async function saveSetlistToSupabase()
             {
-                if (!supabase) return;
+                if (!supabaseClient) return;
                 try
                 {
-                    const { error } = await supabase.from('setlists').upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' });
+                    const { error } = await supabaseClient.from('setlists').upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' });
                     if (error) throw error;
                     console.log('Setlist saved successfully.');
                 } catch (error)
@@ -469,10 +469,10 @@ PASTE SONG HERE (with 2 spacings on left)
 
             async function loadSetlistFromSupabase()
             {
-                if (!supabase) return;
+                if (!supabaseClient) return;
                 try
                 {
-                    const { data, error } = await supabase.from('setlists').select('songs').eq('label', setlistLabel).single();
+                    const { data, error } = await supabaseClient.from('setlists').select('songs').eq('label', setlistLabel).single();
                     if (error && error.code !== 'PGRST116') throw error;
                     currentSetlist = (data && data.songs) ? data.songs : [];
                 } catch (e) { console.error("Error loading setlist", e); }
@@ -482,11 +482,11 @@ PASTE SONG HERE (with 2 spacings on left)
             // --- Core Data & Table Functions ---
             async function populateSongDatabaseTable()
             {
-                if (!supabase || !tableTwoBody) return;
+                if (!supabaseClient || !tableTwoBody) return;
                 tableTwoBody.innerHTML = '<tr><td colspan="4" class="text-center">Loading song database...</td></tr>';
                 try
                 {
-                    const { data, error } = await supabase.from('songs').select('song_identifier, display_name').order('display_name', { ascending: true });
+                    const { data, error } = await supabaseClient.from('songs').select('song_identifier, display_name').order('display_name', { ascending: true });
                     if (error) throw error;
                     allSongsData = data.map(song => ({ identifier: song.song_identifier, displayName: song.display_name }));
                     tableTwoBody.innerHTML = '';
@@ -542,7 +542,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 loginErrorMsg.textContent = '';
                 const email = loginEmailInput.value;
                 const password = loginPasswordInput.value;
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error)
                 {
                     loginErrorMsg.textContent = error.message;
@@ -555,7 +555,7 @@ PASTE SONG HERE (with 2 spacings on left)
 
             async function signOut()
             {
-                const { error } = await supabase.auth.signOut();
+                const { error } = await supabaseClient.auth.signOut();
                 if (error) console.error('Error signing out:', error);
             }
 
@@ -619,7 +619,7 @@ PASTE SONG HERE (with 2 spacings on left)
                     return;
                 }
 
-                const { data, error } = await supabase.auth.signUp({
+                const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password,
                     options: {
@@ -635,7 +635,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 } else
                 {
                     // Sign up successful, now sign them out immediately.
-                    await supabase.auth.signOut();
+                    await supabaseClient.auth.signOut();
 
                     signupMsg.textContent = "Thank you for signing up! An administrator will review your account and allocate your role shortly.";
                     signupMsg.classList.add('success');
@@ -664,7 +664,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 saveSongBtn.dataset.songIdentifier = songIdentifier;
                 try
                 {
-                    const { data, error } = await supabase.from('songs').select('chords_content, lyrics_content').eq('song_identifier', songIdentifier).single();
+                    const { data, error } = await supabaseClient.from('songs').select('chords_content, lyrics_content').eq('song_identifier', songIdentifier).single();
                     if (error) throw error;
                     editSongTextarea.value = data.chords_content || '';
                     editSongLyricsTextarea.value = data.lyrics_content || '';
@@ -686,7 +686,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 saveSongBtn.textContent = 'Saving...';
                 try
                 {
-                    const { error } = await supabase.from('songs').update({
+                    const { error } = await supabaseClient.from('songs').update({
                         chords_content: newChordsContent,
                         lyrics_content: newLyricsContent
                     }).eq('song_identifier', songIdentifier);
@@ -738,7 +738,7 @@ PASTE SONG HERE (with 2 spacings on left)
                 addSongErrorMsg.textContent = '';
                 try
                 {
-                    const { error } = await supabase.from('songs').insert([{
+                    const { error } = await supabaseClient.from('songs').insert([{
                         song_identifier: identifier,
                         display_name: displayName,
                         chords_content: chordsContent,
@@ -783,7 +783,7 @@ PASTE SONG HERE (with 2 spacings on left)
             // --- SECTION 3: INITIAL LOAD & EVENT LISTENERS ---
             populateSongDatabaseTable();
             loadSetlistFromSupabase();
-            supabase.auth.onAuthStateChange((event, session) => { updateAuthState(session?.user); });
+            supabaseClient.auth.onAuthStateChange((event, session) => { updateAuthState(session?.user); });
 
             // --- Main Action Button Listeners ---
             signupModalBtn.addEventListener('click', () => { signupMsg.textContent = ''; signupModal.style.display = 'block'; });
@@ -811,7 +811,7 @@ PASTE SONG HERE (with 2 spacings on left)
                     const userId = event.target.dataset.userId;
                     const newRole = event.target.value;
 
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('profiles')
                         .update({ role: newRole })
                         .eq('id', userId);
@@ -836,7 +836,7 @@ PASTE SONG HERE (with 2 spacings on left)
                         // NOTE: This will fail if called by a non-admin user. It requires a service_role key.
                         // This part still requires an admin to be logged in and is a privileged action.
                         // You may need an Edge Function for non-admins to delete themselves, but for admin-only deletion, this is okay.
-                        const { data, error } = await supabase.auth.admin.deleteUser(userId);
+                        const { data, error } = await supabaseClient.auth.admin.deleteUser(userId);
 
                         if (error)
                         {
