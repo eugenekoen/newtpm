@@ -28,7 +28,7 @@
     <script>
         const SUPABASE_URL = 'https://hjnewoghwyecmgmjsxgn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqbmV3b2dod3llY21nbWpzeGduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MDU5ODEsImV4cCI6MjA1OTA4MTk4MX0.lzs2Ol0tUWzk0-m-gQHBRPsOjWLBKA0bhImOixFeoUY';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.addEventListener('DOMContentLoaded', async function ()
         {
@@ -60,7 +60,7 @@
                 const columnName = contentType === 'chords' ? 'chords_content' : 'lyrics_content';
 
                 // --- MODIFICATION 1: Request 'display_name' along with the content ---
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('songs')
                     .select(`${columnName}, display_name`) // Ask for both columns
                     .eq('song_identifier', songIdentifier)
