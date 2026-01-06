@@ -696,3 +696,118 @@ body:not(.logged-in) #logout-btn {
         /* Make font one size smaller */
     }
 }
+
+/* ===== ENHANCED MOBILE MODAL RESPONSIVENESS ===== */
+@media (max-width: 600px) {
+    .modal {
+        padding-top: 20px;
+        /* Reduced from 60px for better modal positioning */
+    }
+
+    .modal-content {
+        width: 95%;
+        /* Use more screen space */
+        max-width: none;
+        /* Remove desktop max-width constraint */
+        margin: 10px auto;
+        /* Tighter top/bottom spacing */
+        padding: 15px;
+        /* Reduced from 25px */
+        max-height: 90vh;
+        /* Increased from 85vh */
+    }
+
+    .modal-content textarea {
+        height: 40vh;
+        /* More consistent sizing for mobile */
+        font-size: 16px;
+        /* Prevents browser auto-zoom on input focus (iOS) */
+    }
+
+    .modal-footer {
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        margin-top: 15px;
+    }
+
+    .modal-footer button {
+        flex: 1;
+        /* Equal button widths */
+        padding: 12px 10px;
+    }
+
+    #edit-song-modal textarea,
+    #add-song-modal textarea {
+        height: 40vh;
+    }
+
+    #setlist-modal .modal-content {
+        padding: 15px;
+    }
+
+    #current-setlist-items {
+        max-height: 40vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 12px;
+        margin: 5px auto;
+    }
+
+    .modal-content input[type="text"],
+    .modal-content input[type="password"],
+    .modal-content input[type="email"],
+    .modal-content select,
+    .modal-content textarea {
+        font-size: 16px;
+        /* Prevents iOS zoom on focus */
+    }
+
+    .modal-content textarea {
+        height: 45vh;
+        /* Slightly larger for better usability */
+    }
+
+    .modal-footer {
+        flex-direction: column;
+        /* Stack buttons vertically on tiny screens */
+        gap: 8px;
+    }
+
+    .modal-footer button {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .modal-btn {
+        width: 100%;
+        padding: 12px;
+    }
+
+    #setlist-management-container button {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+
+    #current-setlist-items li {
+        padding: 8px;
+        margin-bottom: 6px;
+    }
+
+    .drag-handle {
+        padding-right: 8px;
+    }
+
+    .song-name {
+        font-size: 14px;
+    }
+
+    .remove-song-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        margin-left: 8px;
+    }
+}

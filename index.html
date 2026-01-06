@@ -23,6 +23,14 @@
     <script type="text/javascript" src="./assets/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="./assets/jquery/jquery.transposer.js"></script>
 
+    <!-- Modular JavaScript -->
+    <script type="text/javascript" src="./assets/js/supabaseClient.js"></script>
+    <script type="text/javascript" src="./assets/js/auth.js"></script>
+    <script type="text/javascript" src="./assets/js/songs.js"></script>
+    <script type="text/javascript" src="./assets/js/setlist.js"></script>
+    <script type="text/javascript" src="./assets/js/ui.js"></script>
+    <script type="text/javascript" src="./assets/js/init.js"></script>
+
 </head>
 
 <body>
@@ -34,50 +42,55 @@
 
     <div id="setlist-management-container">
         <!-- New Sign Up Button -->
-        <button id="signup-modal-btn">Sign Up</button>
-        <button id="login-modal-btn">Login</button>
-        <button id="manage-setlist-btn" style="display: none;">Manage Setlist</button>
-        <button id="add-song-btn" style="display: none;">Add New Song</button>
-        <button id="user-management-btn" style="display: none;">User Management</button>
-        <button id="logout-btn" style="display: none;">Logout</button>
+        <button id="signup-modal-btn" aria-label="Open sign up dialog">Sign Up</button>
+        <button id="login-modal-btn" aria-label="Open login dialog">Login</button>
+        <button id="manage-setlist-btn" style="display: none;" aria-label="Manage weekend setlist">Manage
+            Setlist</button>
+        <button id="add-song-btn" style="display: none;" aria-label="Add a new song to database">Add New Song</button>
+        <button id="user-management-btn" style="display: none;" aria-label="Manage user roles and permissions">User
+            Management</button>
+        <button id="logout-btn" style="display: none;" aria-label="Log out of account">Logout</button>
     </div>
 
     <!-- New Sign Up Modal -->
-    <div id="signup-modal" class="modal">
+    <div id="signup-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="signup-modal-title">
         <div class="modal-content">
-            <span class="close-signup-modal-btn close-modal-btn">×</span>
-            <h2>Create an Account</h2>
-            <div><label for="signup-name">Full Name:</label><input type="text" id="signup-name" placeholder="John Doe">
+            <span class="close-signup-modal-btn close-modal-btn" aria-label="Close sign up dialog">×</span>
+            <h2 id="signup-modal-title">Create an Account</h2>
+            <div><label for="signup-name">Full Name:</label><input type="text" id="signup-name" placeholder="John Doe"
+                    aria-required="true">
             </div>
             <div><label for="signup-email">Email:</label><input type="email" id="signup-email"
-                    placeholder="you@example.com"></div>
-            <div><label for="signup-password">Password:</label><input type="password" id="signup-password"></div>
-            <p id="signup-msg" style="height: auto;"></p>
-            <button id="signup-btn" class="modal-btn">Sign Up</button>
+                    placeholder="you@example.com" aria-required="true"></div>
+            <div><label for="signup-password">Password:</label><input type="password" id="signup-password"
+                    aria-required="true"></div>
+            <p id="signup-msg" style="height: auto;" role="status"></p>
+            <button id="signup-btn" class="modal-btn" aria-label="Submit sign up form">Sign Up</button>
         </div>
     </div>
 
     <!-- Login Modal -->
-    <div id="login-modal" class="modal">
+    <div id="login-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="login-modal-title">
         <div class="modal-content">
-            <span class="close-login-modal-btn close-modal-btn">×</span>
-            <h2>Administrator Login</h2>
+            <span class="close-login-modal-btn close-modal-btn" aria-label="Close login dialog">×</span>
+            <h2 id="login-modal-title">Administrator Login</h2>
             <div><label for="login-email">Email:</label><input type="email" id="login-email"
-                    placeholder="you@example.com"></div>
-            <div><label for="login-password">Password:</label><input type="password" id="login-password"></div>
-            <p id="login-error-msg"></p>
-            <button id="login-btn" class="modal-btn">Login</button>
+                    placeholder="you@example.com" aria-required="true"></div>
+            <div><label for="login-password">Password:</label><input type="password" id="login-password"
+                    aria-required="true"></div>
+            <p id="login-error-msg" role="alert"></p>
+            <button id="login-btn" class="modal-btn" aria-label="Submit login form">Login</button>
         </div>
     </div>
 
     <!-- Setlist Modal -->
-    <div id="setlist-modal" class="modal">
+    <div id="setlist-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="setlist-modal-title">
         <div class="modal-content">
-            <span class="close-modal-btn">×</span>
-            <h2>Weekend Setlist Management</h2>
+            <span class="close-modal-btn" aria-label="Close setlist management dialog">×</span>
+            <h2 id="setlist-modal-title">Weekend Setlist Management</h2>
             <div id="current-setlist-display">
                 <h3>Current Setlist:</h3>
-                <ul id="current-setlist-items">
+                <ul id="current-setlist-items" aria-label="Current setlist items">
                     <li>Loading...</li>
                 </ul>
             </div>
@@ -86,8 +99,10 @@
                 <h3>Add Song:</h3>
                 <div>
                     <label for="song-search-input">Song:</label>
-                    <input type="text" id="song-search-input" placeholder="Type to search..." autocomplete="off">
-                    <div id="song-search-results" style="position: relative;">
+                    <input type="text" id="song-search-input" placeholder="Type to search..." autocomplete="off"
+                        aria-label="Search for songs to add">
+                    <div id="song-search-results" style="position: relative;" role="region" aria-live="polite"
+                        aria-label="Search results">
                         <div class="results-list"></div>
                     </div>
                     <input type="hidden" id="selected-song-identifier">
@@ -95,7 +110,7 @@
                 </div>
                 <div>
                     <label for="key-select-dropdown">Key:</label>
-                    <select id="key-select-dropdown">
+                    <select id="key-select-dropdown" aria-label="Select key for song">
                         <option value="C">C</option>
                         <option value="Db">Db</option>
                         <option value="D">D</option>
@@ -116,15 +131,16 @@
     </div>
 
     <!-- User Management Modal -->
-    <div id="user-management-modal" class="modal">
+    <div id="user-management-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="user-mgmt-title">
         <div class="modal-content large">
-            <span class="close-user-management-modal-btn close-modal-btn">×</span>
-            <h2>User Management</h2>
-            <p id="user-management-msg" class="feedback-msg"></p>
+            <span class="close-user-management-modal-btn close-modal-btn"
+                aria-label="Close user management dialog">×</span>
+            <h2 id="user-mgmt-title">User Management</h2>
+            <p id="user-management-msg" class="feedback-msg" role="status"></p>
             <!-- Note: The "Add User" section has been removed as users now sign themselves up. -->
             <h3>Existing Users</h3>
             <div class="table-container">
-                <table id="user-list-table">
+                <table id="user-list-table" aria-label="List of users and their roles">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -143,59 +159,67 @@
 
 
     <!-- Edit Song Modal -->
-    <div id="edit-song-modal" class="modal">
+    <div id="edit-song-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="edit-song-title">
         <div class="modal-content">
-            <span class="close-edit-modal-btn close-modal-btn">×</span>
+            <span class="close-edit-modal-btn close-modal-btn" aria-label="Close edit song dialog">×</span>
             <h2 id="edit-song-title">Edit Song</h2>
             <div>
                 <label for="edit-song-textarea">Chords:</label>
-                <textarea id="edit-song-textarea"></textarea>
+                <textarea id="edit-song-textarea" aria-label="Edit song chords"></textarea>
             </div>
             <div>
                 <label for="edit-song-lyrics-textarea">Lyrics:</label>
-                <textarea id="edit-song-lyrics-textarea"></textarea>
+                <textarea id="edit-song-lyrics-textarea" aria-label="Edit song lyrics"></textarea>
             </div>
-            <p id="edit-song-msg" style="height: 16px; color: green;"></p>
+            <p id="edit-song-msg" style="height: 16px; color: green;" role="status"></p>
             <div class="modal-footer">
-                <button id="cancel-edit-btn" class="modal-btn">Cancel</button>
-                <button id="save-song-btn" class="modal-btn">Save Changes</button>
+                <button id="cancel-edit-btn" class="modal-btn" aria-label="Cancel edit">Cancel</button>
+                <button id="save-song-btn" class="modal-btn" aria-label="Save song changes">Save Changes</button>
+                <button id="delete-song-btn" class="modal-btn" style="background-color: #f44336; margin-left: auto;"
+                    aria-label="Delete this song permanently">Delete Song</button>
             </div>
         </div>
     </div>
 
     <!-- Add Song Modal -->
-    <div id="add-song-modal" class="modal">
+    <div id="add-song-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="add-song-title">
         <div class="modal-content">
-            <span class="close-add-modal-btn close-modal-btn">×</span>
-            <h2>Add a New Song</h2>
+            <span class="close-add-modal-btn close-modal-btn" aria-label="Close add song dialog">×</span>
+            <h2 id="add-song-title">Add a New Song</h2>
 
             <div>
                 <label for="new-song-display-name">Song Title:</label>
-                <input type="text" id="new-song-display-name" placeholder="e.g., What A Beautiful Name">
+                <input type="text" id="new-song-display-name" placeholder="e.g., What A Beautiful Name"
+                    aria-required="true">
             </div>
 
             <div>
                 <label for="new-song-identifier">File Identifier:</label>
-                <input type="text" id="new-song-identifier" placeholder="e.g., what-a-beautiful-name">
-                <p style="font-size: 12px; color: #666; margin-top: -10px;">(Required. Use lowercase letters and
+                <input type="text" id="new-song-identifier" placeholder="e.g., what-a-beautiful-name"
+                    aria-required="true" aria-describedby="identifier-help">
+                <p style="font-size: 12px; color: #666; margin-top: -10px;" id="identifier-help">(Required. Use
+                    lowercase letters and
                     hyphens-for-spaces only).</p>
             </div>
 
             <div>
                 <label for="new-song-chords">Chords:</label>
-                <textarea id="new-song-chords" style="height: 20vh; width: 100%; font-family: monospace;"></textarea>
+                <textarea id="new-song-chords" style="height: 20vh; width: 100%; font-family: monospace;"
+                    aria-label="Enter song chords"></textarea>
             </div>
 
             <div>
                 <label for="new-song-lyrics">Lyrics:</label>
-                <textarea id="new-song-lyrics" style="height: 20vh; width: 100%; font-family: monospace;"></textarea>
+                <textarea id="new-song-lyrics" style="height: 20vh; width: 100%; font-family: monospace;"
+                    aria-label="Enter song lyrics"></textarea>
             </div>
 
-            <p id="add-song-error-msg" style="height: 16px; color: red;"></p>
+            <p id="add-song-error-msg" style="height: 16px; color: red;" role="alert"></p>
 
             <div class="modal-footer">
-                <button id="cancel-add-btn" class="modal-btn">Cancel</button>
-                <button id="save-new-song-btn" class="modal-btn">Save New Song</button>
+                <button id="cancel-add-btn" class="modal-btn" aria-label="Cancel adding song">Cancel</button>
+                <button id="save-new-song-btn" class="modal-btn" aria-label="Save new song to database">Save New
+                    Song</button>
             </div>
         </div>
     </div>
@@ -240,759 +264,6 @@
         </table>
     </div>
 
-    <!-- Combined JavaScript -->
-    <script>
-        // --- SUPABASE INTEGRATION ---
-        const SUPABASE_URL = 'https://hjnewoghwyecmgmjsxgn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqbmV3b2dod3llY21nbWpzeGduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MDU5ODEsImV4cCI6MjA1OTA4MTk4MX0.lzs2Ol0tUWzk0-m-gQHBRPsOjWLBKA0bhImOixFeoUY';
-
-        let supabaseClient = null;
-        try
-        {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log("Supabase client initialized.");
-        } catch (e)
-        {
-            console.error("Error initializing Supabase client:", e);
-        }
-
-        // --- GLOBAL STATE ---
-        let currentSetlist = [];
-        let allSongsData = [];
-        let currentUserRole = null;
-        const setlistLabel = 'current_weekend';
-        const SONG_TEMPLATE = `[KEY]
-SONG NAME
-=========
-================================================
-PASTE SONG HERE (with 2 spacings on left)
-================================================`;
-
-        document.addEventListener('DOMContentLoaded', () =>
-        {
-            if (!supabaseClient)
-            {
-                alert("Supabase configuration is missing. App cannot load data.");
-                return;
-            }
-
-            // --- SECTION 1: DOM ELEMENT DECLARATIONS ---
-            const tableOneBody = document.querySelector('#tableone tbody');
-            const tableTwoBody = document.querySelector('#tabletwo tbody');
-            const setlistModal = document.getElementById('setlist-modal');
-            const loginModal = document.getElementById('login-modal');
-            const signupModal = document.getElementById('signup-modal'); // New
-            const editSongModal = document.getElementById('edit-song-modal');
-            const addSongModal = document.getElementById('add-song-modal');
-            const loginModalBtn = document.getElementById('login-modal-btn');
-            const signupModalBtn = document.getElementById('signup-modal-btn'); // New
-            const logoutBtn = document.getElementById('logout-btn');
-            const loginBtn = document.getElementById('login-btn');
-            const loginEmailInput = document.getElementById('login-email');
-            const loginPasswordInput = document.getElementById('login-password');
-            const loginErrorMsg = document.getElementById('login-error-msg');
-            const signupBtn = document.getElementById('signup-btn'); // New
-            const signupNameInput = document.getElementById('signup-name'); // New
-            const signupEmailInput = document.getElementById('signup-email'); // New
-            const signupPasswordInput = document.getElementById('signup-password'); // New
-            const signupMsg = document.getElementById('signup-msg'); // New
-            const editSongTitle = document.getElementById('edit-song-title');
-            const editSongTextarea = document.getElementById('edit-song-textarea');
-            const editSongLyricsTextarea = document.getElementById('edit-song-lyrics-textarea');
-            const saveSongBtn = document.getElementById('save-song-btn');
-            const cancelEditBtn = document.getElementById('cancel-edit-btn');
-            const editSongMsg = document.getElementById('edit-song-msg');
-            const songSearchInput = document.getElementById('song-search-input');
-            const currentSetlistItemsUl = document.getElementById('current-setlist-items');
-            const closeSetlistModalBtn = setlistModal?.querySelector('.close-modal-btn');
-            const keySelectDropdown = document.getElementById('key-select-dropdown');
-            const addSongToSetlistBtn = document.getElementById('add-song-to-setlist-btn');
-            const selectedSongIdentifierInput = document.getElementById('selected-song-identifier');
-            const selectedSongDisplayNameInput = document.getElementById('selected-song-display-name');
-            const songSearchResultsContainer = document.getElementById('song-search-results');
-            const resultsListDiv = songSearchResultsContainer?.querySelector('.results-list');
-            const addSongBtnTrigger = document.getElementById('add-song-btn');
-            const saveNewSongBtn = document.getElementById('save-new-song-btn');
-            const cancelAddBtn = document.getElementById('cancel-add-btn');
-            const newSongDisplayNameInput = document.getElementById('new-song-display-name');
-            const newSongIdentifierInput = document.getElementById('new-song-identifier');
-            const newSongChordsTextarea = document.getElementById('new-song-chords');
-            const newSongLyricsTextarea = document.getElementById('new-song-lyrics');
-            const addSongErrorMsg = document.getElementById('add-song-error-msg');
-            const manageSetlistBtn = document.getElementById('manage-setlist-btn');
-            const userManagementBtn = document.getElementById('user-management-btn');
-            const userManagementModal = document.getElementById('user-management-modal');
-            const userListTableBody = document.querySelector('#user-list-table tbody');
-            const userManagementMsg = document.getElementById('user-management-msg');
-            const closeUserManagementModalBtn = userManagementModal.querySelector('.close-user-management-modal-btn');
-
-
-            // --- SECTION 2: FUNCTION DEFINITIONS ---
-
-            // --- User Management & Role Functions ---
-            async function fetchUserRole(userId)
-            {
-                if (!userId) return 'User';
-                try
-                {
-                    const { data, error } = await supabaseClient
-                        .from('profiles')
-                        .select('role')
-                        .eq('id', userId)
-                        .single();
-                    if (error) throw error;
-                    return data ? data.role : 'User';
-                } catch (error)
-                {
-                    console.error("Error fetching user role:", error);
-                    return 'User';
-                }
-            }
-
-            async function populateUserManagementModal()
-            {
-                userListTableBody.innerHTML = '<tr><td colspan="3">Loading users...</td></tr>';
-                try
-                {
-                    const { data: profiles, error } = await supabaseClient
-                        .from('profiles')
-                        .select('id, email, role, full_name');
-
-                    if (error) throw error;
-
-                    if (!profiles || profiles.length === 0)
-                    {
-                        userListTableBody.innerHTML = '<tr><td colspan="3">No users found</td></tr>';
-                        return;
-                    }
-
-                    userListTableBody.innerHTML = '';
-                    const { data: { user: currentUser } } = await supabaseClient.auth.getUser();
-
-                    profiles.forEach(profile =>
-                    {
-                        const isCurrentUser = profile.id === currentUser?.id;
-                        const row = userListTableBody.insertRow();
-                        row.innerHTML = `
-                <td>${profile.full_name || profile.email || 'N/A'}</td>
-                <td>
-                    <select class="role-select" data-user-id="${profile.id}" ${isCurrentUser ? 'disabled' : ''}>
-                        <option value="Unallocated" ${profile.role === 'Unallocated' ? 'selected' : ''}>Unallocated</option>
-                        <option value="User" ${profile.role === 'User' ? 'selected' : ''}>User</option>
-                        <option value="Admin" ${profile.role === 'Admin' ? 'selected' : ''}>Admin</option>
-                    </select>
-                </td>
-            `;
-                    });
-
-                } catch (error)
-                {
-                    userListTableBody.innerHTML = `<tr><td colspan="3">Error loading users: ${error.message}</td></tr>`;
-                    console.error("Error fetching user list:", error);
-                }
-            }
-
-            function showUserManagementMessage(message, isError = false)
-            {
-                userManagementMsg.textContent = message;
-                userManagementMsg.style.color = isError ? 'red' : 'green';
-                setTimeout(() => { userManagementMsg.textContent = ''; }, 4000);
-            }
-
-            // --- Setlist Functions ---
-            function updateTableOneWithSetlist()
-            {
-                if (!tableOneBody) return;
-                tableOneBody.innerHTML = '';
-                if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
-                {
-                    tableOneBody.innerHTML = '<tr><td colspan="3" class="text-center">Setlist is empty. Log in to manage the setlist.</td></tr>';
-                    return;
-                }
-                currentSetlist.forEach(item =>
-                {
-                    const { songName, displayName = 'Unknown Song', key = '?' } = item || {};
-                    if (!songName) return;
-                    const row = tableOneBody.insertRow();
-                    row.innerHTML = `
-                        <td>${displayName}</td>
-                        <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="chords">Chords (${key})</a></td>
-                        <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="lyrics">Lyrics</a></td>
-                    `;
-                });
-            }
-
-            // --- MODIFIED FUNCTION for drag-and-drop with handle ---
-            function renderSetlistUI()
-            {
-                if (!currentSetlistItemsUl) return;
-                currentSetlistItemsUl.innerHTML = '';
-                if (!Array.isArray(currentSetlist) || currentSetlist.length === 0)
-                {
-                    currentSetlistItemsUl.innerHTML = '<li>Setlist is empty.</li>';
-                    return;
-                }
-                currentSetlist.forEach((item, index) =>
-                {
-                    const listItem = document.createElement('li');
-                    listItem.setAttribute('draggable', 'true');
-                    listItem.dataset.index = index;
-                    // Added a drag handle with an SVG icon
-                    listItem.innerHTML = `
-                        <span class="drag-handle">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M2 5.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-                            </svg>
-                        </span>
-                        <span class="song-name">${item.displayName} (${item.key})</span>
-                        <button class="remove-song-btn" data-index="${index}">Remove</button>
-                    `;
-                    currentSetlistItemsUl.appendChild(listItem);
-                });
-            }
-
-
-            async function saveSetlistToSupabase()
-            {
-                if (!supabaseClient) return;
-                try
-                {
-                    const { error } = await supabaseClient.from('setlists').upsert({ label: setlistLabel, songs: currentSetlist }, { onConflict: 'label' });
-                    if (error) throw error;
-                    console.log('Setlist saved successfully.');
-                } catch (error)
-                {
-                    console.error('Error saving setlist:', error);
-                    alert('Failed to save setlist.');
-                }
-            }
-
-            async function loadSetlistFromSupabase()
-            {
-                if (!supabaseClient) return;
-                try
-                {
-                    const { data, error } = await supabaseClient.from('setlists').select('songs').eq('label', setlistLabel).single();
-                    if (error && error.code !== 'PGRST116') throw error;
-                    currentSetlist = (data && data.songs) ? data.songs : [];
-                } catch (e) { console.error("Error loading setlist", e); }
-                updateTableOneWithSetlist();
-            }
-
-            // --- Core Data & Table Functions ---
-            async function populateSongDatabaseTable()
-            {
-                if (!supabaseClient || !tableTwoBody) return;
-                tableTwoBody.innerHTML = '<tr><td colspan="4" class="text-center">Loading song database...</td></tr>';
-                try
-                {
-                    const { data, error } = await supabaseClient.from('songs').select('song_identifier, display_name').order('display_name', { ascending: true });
-                    if (error) throw error;
-                    allSongsData = data.map(song => ({ identifier: song.song_identifier, displayName: song.display_name }));
-                    tableTwoBody.innerHTML = '';
-                    if (allSongsData.length === 0)
-                    {
-                        tableTwoBody.innerHTML = '<tr><td colspan="4" class="text-center">No songs found in the database.</td></tr>';
-                        return;
-                    }
-                    allSongsData.forEach(song =>
-                    {
-                        const row = tableTwoBody.insertRow();
-                        row.innerHTML = `
-                            <td>${song.displayName}</td>
-                            <td class="edit-col text-center" style="width: 10%;">
-                                <a href="#" class="edit-btn" data-song-identifier="${song.identifier}" data-display-name="${song.displayName}">Edit</a>
-                            </td>
-                            <td class="text-center" style="width: 15%;">
-                                <a href="#" data-song-identifier="${song.identifier}" data-content-type="chords">Chords</a>
-                            </td>
-                            <td class="text-center" style="width: 15%;">
-                                <a href="#" data-song-identifier="${song.identifier}" data-content-type="lyrics">Lyrics</a>
-                            </td>
-                        `;
-                    });
-                } catch (error)
-                {
-                    console.error('Error loading song database:', error);
-                    tableTwoBody.innerHTML = '<tr><td colspan="4" class="text-center">Error loading song database.</td></tr>';
-                }
-            }
-
-            async function handleSongClick(event, linkElement)
-            {
-                event.preventDefault();
-                const songIdentifier = linkElement.dataset.songIdentifier;
-                const contentType = linkElement.dataset.contentType;
-                if (!songIdentifier || !contentType) return;
-
-                const templateURL = "./assets/master/template.html";
-                let targetURL = `${templateURL}?song=${encodeURIComponent(songIdentifier)}&contentType=${encodeURIComponent(contentType)}`;
-
-                if (contentType === 'lyrics')
-                {
-                    targetURL += `&hideTranspose=true`;
-                }
-
-                window.location.href = targetURL;
-            }
-
-            // --- Authentication Functions ---
-            async function signInWithEmail()
-            {
-                loginErrorMsg.textContent = '';
-                const email = loginEmailInput.value;
-                const password = loginPasswordInput.value;
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error)
-                {
-                    loginErrorMsg.textContent = error.message;
-                } else
-                {
-                    loginModal.style.display = 'none';
-                    loginPasswordInput.value = '';
-                }
-            }
-
-            async function signOut()
-            {
-                const { error } = await supabaseClient.auth.signOut();
-                if (error) console.error('Error signing out:', error);
-            }
-
-            // --- MODIFIED FUNCTION ---
-            async function updateAuthState(user)
-            {
-                document.body.classList.toggle('logged-in', !!user);
-
-                if (user)
-                {
-                    // State when a user IS logged in
-                    loginModalBtn.style.display = 'none';
-                    signupModalBtn.style.display = 'none';
-                    logoutBtn.style.display = 'inline-block';
-
-                    currentUserRole = await fetchUserRole(user.id);
-
-                    // Only show management buttons if the role is not "Unallocated"
-                    if (currentUserRole === 'User' || currentUserRole === 'Admin')
-                    {
-                        manageSetlistBtn.style.display = 'inline-block';
-                        addSongBtnTrigger.style.display = 'inline-block';
-                    }
-
-                    if (currentUserRole === 'Admin')
-                    {
-                        userManagementBtn.style.display = 'inline-block';
-                    } else
-                    {
-                        userManagementBtn.style.display = 'none';
-                    }
-
-                } else
-                {
-                    // State when a user IS NOT logged in
-                    loginModalBtn.style.display = 'inline-block';
-                    signupModalBtn.style.display = 'inline-block';
-                    logoutBtn.style.display = 'none';
-
-                    currentUserRole = null;
-                    manageSetlistBtn.style.display = 'none';
-                    addSongBtnTrigger.style.display = 'none';
-                    userManagementBtn.style.display = 'none';
-                }
-            }
-
-
-            // --- New Sign Up Logic ---
-            async function signUpUser()
-            {
-                signupMsg.textContent = '';
-                signupMsg.classList.remove('success');
-
-                const name = signupNameInput.value;
-                const email = signupEmailInput.value;
-                const password = signupPasswordInput.value;
-
-                if (!name || !email || !password)
-                {
-                    signupMsg.textContent = 'Please fill out all fields.';
-                    return;
-                }
-
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: name
-                        }
-                    }
-                });
-
-                if (error)
-                {
-                    signupMsg.textContent = error.message;
-                } else
-                {
-                    // Sign up successful, now sign them out immediately.
-                    await supabaseClient.auth.signOut();
-
-                    signupMsg.textContent = "Thank you for signing up! An administrator will review your account and allocate your role shortly.";
-                    signupMsg.classList.add('success');
-                    signupNameInput.value = '';
-                    signupEmailInput.value = '';
-                    signupPasswordInput.value = '';
-
-                    setTimeout(() =>
-                    {
-                        signupModal.style.display = 'none';
-                        signupMsg.textContent = '';
-                        signupMsg.classList.remove('success');
-                    }, 5000); // Close modal after 5 seconds
-                }
-            }
-
-
-            // --- Edit Song Functions ---
-            async function openEditModal(songIdentifier, displayName)
-            {
-                editSongMsg.textContent = '';
-                editSongTitle.textContent = `Edit Song: ${displayName}`;
-                editSongTextarea.value = 'Loading...';
-                editSongLyricsTextarea.value = 'Loading...';
-                editSongModal.style.display = 'block';
-                saveSongBtn.dataset.songIdentifier = songIdentifier;
-                try
-                {
-                    const { data, error } = await supabaseClient.from('songs').select('chords_content, lyrics_content').eq('song_identifier', songIdentifier).single();
-                    if (error) throw error;
-                    editSongTextarea.value = data.chords_content || '';
-                    editSongLyricsTextarea.value = data.lyrics_content || '';
-                } catch (error)
-                {
-                    editSongTextarea.value = 'Error loading song content.';
-                    editSongLyricsTextarea.value = 'Error loading lyrics content.';
-                    console.error('Error fetching song for edit:', error);
-                }
-            }
-
-            async function saveSongChanges()
-            {
-                const songIdentifier = saveSongBtn.dataset.songIdentifier;
-                const newChordsContent = editSongTextarea.value;
-                const newLyricsContent = editSongLyricsTextarea.value;
-                if (!songIdentifier) { alert('Error: No song identifier found.'); return; }
-                saveSongBtn.disabled = true;
-                saveSongBtn.textContent = 'Saving...';
-                try
-                {
-                    const { error } = await supabaseClient.from('songs').update({
-                        chords_content: newChordsContent,
-                        lyrics_content: newLyricsContent
-                    }).eq('song_identifier', songIdentifier);
-                    if (error) throw error;
-                    editSongMsg.textContent = 'Saved successfully!';
-                    setTimeout(() => { editSongModal.style.display = 'none'; }, 1500);
-                } catch (error)
-                {
-                    editSongMsg.style.color = 'red';
-                    editSongMsg.textContent = `Error: ${error.message}`;
-                } finally
-                {
-                    saveSongBtn.disabled = false;
-                    saveSongBtn.textContent = 'Save Changes';
-                }
-            }
-
-            // --- Add Song Functions ---
-            function openAddSongModal()
-            {
-                addSongErrorMsg.textContent = '';
-                newSongDisplayNameInput.value = '';
-                newSongIdentifierInput.value = '';
-                newSongChordsTextarea.value = SONG_TEMPLATE;
-                newSongLyricsTextarea.value = '';
-                addSongModal.style.display = 'block';
-                newSongDisplayNameInput.focus();
-            }
-
-            async function saveNewSong()
-            {
-                const displayName = newSongDisplayNameInput.value.trim();
-                const identifier = newSongIdentifierInput.value.trim().toLowerCase();
-                const chordsContent = newSongChordsTextarea.value;
-                const lyricsContent = newSongLyricsTextarea.value;
-
-                if (!displayName || !identifier)
-                {
-                    addSongErrorMsg.textContent = 'Song Title and Identifier are required.';
-                    return;
-                }
-                if (!/^[a-z0-9-]+$/.test(identifier))
-                {
-                    addSongErrorMsg.textContent = 'Identifier can only contain lowercase letters, numbers, and hyphens.';
-                    return;
-                }
-                saveNewSongBtn.disabled = true;
-                saveNewSongBtn.textContent = 'Saving...';
-                addSongErrorMsg.textContent = '';
-                try
-                {
-                    const { error } = await supabaseClient.from('songs').insert([{
-                        song_identifier: identifier,
-                        display_name: displayName,
-                        chords_content: chordsContent,
-                        lyrics_content: lyricsContent
-                    }]);
-                    if (error)
-                    {
-                        if (error.code === '23505') { throw new Error(`Identifier '${identifier}' is already taken.`); }
-                        throw error;
-                    }
-                    addSongModal.style.display = 'none';
-                    await populateSongDatabaseTable();
-                } catch (error)
-                {
-                    addSongErrorMsg.textContent = `Error: ${error.message}`;
-                } finally
-                {
-                    saveNewSongBtn.disabled = false;
-                    saveNewSongBtn.textContent = 'Save New Song';
-                }
-            }
-
-            // --- Search Function ---
-            window.myFunction = function ()
-            {
-                var input, filter, table, tr, td, i, txtValue;
-                input = document.getElementById("myInput");
-                filter = input.value.toUpperCase();
-                table = document.getElementById("tabletwo");
-                tr = table.getElementsByTagName("tr");
-                for (i = 0; i < tr.length; i++)
-                {
-                    td = tr[i].getElementsByTagName("td")[0];
-                    if (td)
-                    {
-                        txtValue = td.textContent || td.innerText;
-                        tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-                    }
-                }
-            };
-
-            // --- SECTION 3: INITIAL LOAD & EVENT LISTENERS ---
-            populateSongDatabaseTable();
-            loadSetlistFromSupabase();
-            supabaseClient.auth.onAuthStateChange((event, session) => { updateAuthState(session?.user); });
-
-            // --- Main Action Button Listeners ---
-            signupModalBtn.addEventListener('click', () => { signupMsg.textContent = ''; signupModal.style.display = 'block'; });
-            loginModalBtn.addEventListener('click', () => { loginErrorMsg.textContent = ''; loginModal.style.display = 'block'; });
-            logoutBtn.addEventListener('click', signOut);
-            loginBtn.addEventListener('click', signInWithEmail);
-            loginPasswordInput.addEventListener('keyup', e => e.key === 'Enter' && signInWithEmail());
-            signupBtn.addEventListener('click', signUpUser);
-            signupPasswordInput.addEventListener('keyup', e => e.key === 'Enter' && signUpUser());
-
-            addSongBtnTrigger.addEventListener('click', openAddSongModal);
-            manageSetlistBtn.addEventListener('click', () => { setlistModal.style.display = 'block'; renderSetlistUI(); });
-
-            // --- User Management Listeners ---
-            userManagementBtn.addEventListener('click', () =>
-            {
-                userManagementModal.style.display = 'block';
-                populateUserManagementModal();
-            });
-
-            userListTableBody.addEventListener('change', async (event) =>
-            {
-                if (event.target.classList.contains('role-select'))
-                {
-                    const userId = event.target.dataset.userId;
-                    const newRole = event.target.value;
-
-                    const { error } = await supabaseClient
-                        .from('profiles')
-                        .update({ role: newRole })
-                        .eq('id', userId);
-
-                    if (error)
-                    {
-                        showUserManagementMessage(`Error updating role: ${error.message}`, true);
-                    } else
-                    {
-                        showUserManagementMessage(`Successfully updated role.`);
-                    }
-                }
-            });
-
-            userListTableBody.addEventListener('click', async (event) =>
-            {
-                if (event.target.classList.contains('delete-user-btn'))
-                {
-                    const userId = event.target.dataset.userId;
-                    if (confirm('Are you sure you want to permanently delete this user? This cannot be undone.'))
-                    {
-                        // NOTE: This will fail if called by a non-admin user. It requires a service_role key.
-                        // This part still requires an admin to be logged in and is a privileged action.
-                        // You may need an Edge Function for non-admins to delete themselves, but for admin-only deletion, this is okay.
-                        const { data, error } = await supabaseClient.auth.admin.deleteUser(userId);
-
-                        if (error)
-                        {
-                            showUserManagementMessage(`Error deleting user: ${error.message}`, true);
-                        } else
-                        {
-                            showUserManagementMessage('User deleted successfully.');
-                            populateUserManagementModal(); // Refresh the list
-                        }
-                    }
-                }
-            });
-
-
-            // --- Delegated Click Listener for Table Links ---
-            document.body.addEventListener('click', (event) =>
-            {
-                const songLink = event.target.closest('a[data-song-identifier]');
-                const editLink = event.target.closest('a.edit-btn');
-                if (editLink && (currentUserRole === 'Admin' || currentUserRole === 'User'))
-                {
-                    event.preventDefault();
-                    openEditModal(editLink.dataset.songIdentifier, editLink.dataset.displayName);
-                }
-                else if (songLink)
-                {
-                    event.preventDefault();
-                    handleSongClick(event, songLink);
-                }
-            });
-
-            // --- Listeners for Modals ---
-            saveSongBtn.addEventListener('click', saveSongChanges);
-            cancelEditBtn.addEventListener('click', () => editSongModal.style.display = 'none');
-            saveNewSongBtn.addEventListener('click', saveNewSong);
-            cancelAddBtn.addEventListener('click', () => addSongModal.style.display = 'none');
-
-            if (songSearchInput)
-            {
-                songSearchInput.addEventListener('input', () =>
-                {
-                    const searchTerm = songSearchInput.value.trim().toLowerCase();
-                    resultsListDiv.innerHTML = ''; selectedSongIdentifierInput.value = ''; selectedSongDisplayNameInput.value = '';
-                    if (searchTerm.length < 1) { resultsListDiv.style.display = 'none'; return; }
-                    const matchedSongs = allSongsData.filter(song => song.displayName.toLowerCase().includes(searchTerm));
-                    if (matchedSongs.length > 0)
-                    {
-                        matchedSongs.forEach(song =>
-                        {
-                            const itemDiv = document.createElement('div');
-                            itemDiv.className = 'result-item'; itemDiv.textContent = song.displayName;
-                            itemDiv.addEventListener('click', () => { songSearchInput.value = song.displayName; selectedSongIdentifierInput.value = song.identifier; selectedSongDisplayNameInput.value = song.displayName; resultsListDiv.style.display = 'none'; });
-                            resultsListDiv.appendChild(itemDiv);
-                        });
-                        resultsListDiv.style.display = 'block';
-                    } else { resultsListDiv.style.display = 'none'; }
-                });
-            }
-            if (addSongToSetlistBtn) { addSongToSetlistBtn.addEventListener('click', async () => { const songFileIdentifier = selectedSongIdentifierInput.value, displayName = selectedSongDisplayNameInput.value; if (!songFileIdentifier || !displayName) { alert('Please search for a song and select it from the list.'); return; } currentSetlist.push({ songName: songFileIdentifier, displayName: displayName, key: keySelectDropdown.value }); renderSetlistUI(); await saveSetlistToSupabase(); songSearchInput.value = ''; }); }
-
-            // --- Setlist Item Listeners (Remove Button and Drag-Drop) ---
-            if (currentSetlistItemsUl)
-            {
-                // Listener for remove button
-                currentSetlistItemsUl.addEventListener('click', async (event) => { if (event.target.classList.contains('remove-song-btn')) { const indexToRemove = parseInt(event.target.dataset.index, 10); currentSetlist.splice(indexToRemove, 1); renderSetlistUI(); await saveSetlistToSupabase(); } });
-
-                // --- Drag and Drop for Setlist Reordering ---
-                const getDragAfterElement = (container, y) =>
-                {
-                    const draggableElements = [...container.querySelectorAll('li[draggable="true"]:not(.dragging)')];
-
-                    return draggableElements.reduce((closest, child) =>
-                    {
-                        const box = child.getBoundingClientRect();
-                        const offset = y - box.top - box.height / 2;
-                        if (offset < 0 && offset > closest.offset)
-                        {
-                            return { offset: offset, element: child };
-                        } else
-                        {
-                            return closest;
-                        }
-                    }, { offset: Number.NEGATIVE_INFINITY }).element;
-                };
-
-                currentSetlistItemsUl.addEventListener('dragstart', e =>
-                {
-                    const listItem = e.target.closest('li[draggable="true"]');
-                    if (listItem)
-                    {
-                        // A brief timeout allows the browser to capture the drag image before we modify the element's style
-                        setTimeout(() =>
-                        {
-                            listItem.classList.add('dragging');
-                        }, 0);
-                    }
-                });
-
-                currentSetlistItemsUl.addEventListener('dragover', e =>
-                {
-                    e.preventDefault(); // Necessary to allow dropping
-                    const afterElement = getDragAfterElement(currentSetlistItemsUl, e.clientY);
-                    const draggingElement = currentSetlistItemsUl.querySelector('.dragging');
-
-                    if (draggingElement)
-                    {
-                        if (afterElement == null)
-                        {
-                            currentSetlistItemsUl.appendChild(draggingElement);
-                        } else
-                        {
-                            currentSetlistItemsUl.insertBefore(draggingElement, afterElement);
-                        }
-                    }
-                });
-
-                currentSetlistItemsUl.addEventListener('dragend', async (e) =>
-                {
-                    const draggingElement = currentSetlistItemsUl.querySelector('.dragging');
-                    if (draggingElement)
-                    {
-                        draggingElement.classList.remove('dragging');
-
-                        // Rebuild the currentSetlist array based on the new DOM order
-                        const newOrderedIndices = Array.from(currentSetlistItemsUl.querySelectorAll('li')).map(li => parseInt(li.dataset.index));
-                        const newOrderedSetlist = newOrderedIndices.map(originalIndex => currentSetlist[originalIndex]);
-
-                        // Update the global state with the new order
-                        currentSetlist = newOrderedSetlist;
-
-                        // Re-render the UI to update the data-index attributes for the next drag operation
-                        renderSetlistUI();
-                        // Persist the new order to the database
-                        await saveSetlistToSupabase();
-                    }
-                });
-            }
-
-            // --- General Modal Close Listeners ---
-            document.querySelector('.close-login-modal-btn').addEventListener('click', () => loginModal.style.display = 'none');
-            document.querySelector('.close-signup-modal-btn').addEventListener('click', () => signupModal.style.display = 'none');
-            document.querySelector('.close-edit-modal-btn').addEventListener('click', () => editSongModal.style.display = 'none');
-            document.querySelector('.close-add-modal-btn').addEventListener('click', () => addSongModal.style.display = 'none');
-            if (closeSetlistModalBtn) { closeSetlistModalBtn.addEventListener('click', () => { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }); }
-            closeUserManagementModalBtn.addEventListener('click', () => userManagementModal.style.display = 'none');
-
-
-            window.addEventListener('click', (event) =>
-            {
-                if (event.target == loginModal) loginModal.style.display = 'none';
-                if (event.target == signupModal) signupModal.style.display = 'none';
-                if (event.target == setlistModal) { setlistModal.style.display = 'none'; updateTableOneWithSetlist(); }
-                if (event.target == userManagementModal) userManagementModal.style.display = 'none';
-            });
-        });
-    </script>
 </body>
 
 </html>
