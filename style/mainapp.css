@@ -324,6 +324,30 @@ input[type="text"]#myInput {
     margin-top: 15px;
 }
 
+/* ===== DESKTOP LAYOUT FOR SONG MODALS ===== */
+@media (min-width: 900px) {
+    /* Wider modal for song editing on desktop */
+    #edit-song-modal .modal-content,
+    #add-song-modal .modal-content {
+        max-width: 950px;
+        width: 90%;
+    }
+
+    /* Grid container for the textarea sections */
+    #edit-song-modal .textarea-row,
+    #add-song-modal .textarea-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    /* Make textareas taller on desktop since they're now side-by-side */
+    #edit-song-modal textarea,
+    #add-song-modal textarea {
+        height: 45vh;
+    }
+}
+
 #save-song-btn,
 #save-new-song-btn {
     background-color: #28a745;

@@ -163,13 +163,15 @@
         <div class="modal-content">
             <span class="close-edit-modal-btn close-modal-btn" aria-label="Close edit song dialog">×</span>
             <h2 id="edit-song-title">Edit Song</h2>
-            <div>
-                <label for="edit-song-textarea">Chords:</label>
-                <textarea id="edit-song-textarea" aria-label="Edit song chords"></textarea>
-            </div>
-            <div>
-                <label for="edit-song-lyrics-textarea">Lyrics:</label>
-                <textarea id="edit-song-lyrics-textarea" aria-label="Edit song lyrics"></textarea>
+            <div class="textarea-row">
+                <div>
+                    <label for="edit-song-textarea">Chords:</label>
+                    <textarea id="edit-song-textarea" aria-label="Edit song chords"></textarea>
+                </div>
+                <div>
+                    <label for="edit-song-lyrics-textarea">Lyrics:</label>
+                    <textarea id="edit-song-lyrics-textarea" aria-label="Edit song lyrics"></textarea>
+                </div>
             </div>
             <p id="edit-song-msg" style="height: 16px; color: green;" role="status"></p>
             <div class="modal-footer">
@@ -202,16 +204,16 @@
                     hyphens-for-spaces only).</p>
             </div>
 
-            <div>
-                <label for="new-song-chords">Chords:</label>
-                <textarea id="new-song-chords" style="height: 20vh; width: 100%; font-family: monospace;"
-                    aria-label="Enter song chords"></textarea>
-            </div>
+            <div class="textarea-row">
+                <div>
+                    <label for="new-song-chords">Chords:</label>
+                    <textarea id="new-song-chords" aria-label="Enter song chords"></textarea>
+                </div>
 
-            <div>
-                <label for="new-song-lyrics">Lyrics:</label>
-                <textarea id="new-song-lyrics" style="height: 20vh; width: 100%; font-family: monospace;"
-                    aria-label="Enter song lyrics"></textarea>
+                <div>
+                    <label for="new-song-lyrics">Lyrics:</label>
+                    <textarea id="new-song-lyrics" aria-label="Enter song lyrics"></textarea>
+                </div>
             </div>
 
             <p id="add-song-error-msg" style="height: 16px; color: red;" role="alert"></p>
