@@ -87,6 +87,16 @@ async function handleSongClick(event, linkElement)
     {
         targetURL += `&hideTranspose=true`;
     }
+    else if (contentType === 'chords')
+    {
+        // Check if this song is in the setlist and get the target key
+        const currentSetlist = window.setlistModule ? window.setlistModule.getCurrentSetlist() : [];
+        const setlistItem = currentSetlist.find(item => item.songName === songIdentifier);
+        if (setlistItem && setlistItem.key)
+        {
+            targetURL += `&targetKey=${encodeURIComponent(setlistItem.key)}`;
+        }
+    }
 
     window.location.href = targetURL;
 }

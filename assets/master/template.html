@@ -106,12 +106,26 @@
 
                 preElement.textContent = lines.slice(contentStartIndex).join('\n');
 
-                const finalKey = targetKey || key;
+                const finalKey = key; // Always use original key for initialization
                 preElement.setAttribute('data-key', finalKey);
 
                 // The document title is already set above, so the old line here is removed.
 
                 $('#songContent').transpose();
+
+                // Auto-transpose to target key if specified and different from original
+                if (targetKey && targetKey !== key)
+                {
+                    const transposeLinks = document.querySelectorAll('.transpose-keys a');
+                    for (let link of transposeLinks)
+                    {
+                        if (link.textContent.trim() === targetKey)
+                        {
+                            link.click();
+                            break;
+                        }
+                    }
+                }
 
             } catch (err)
             {

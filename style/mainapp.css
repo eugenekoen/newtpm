@@ -76,6 +76,15 @@ table td:nth-child(4) {
     width: 15%;
 }
 
+/* Selected Key column styling */
+table td.selected-key {
+    text-align: center;
+    width: 8%;
+    font-weight: 600;
+    color: aqua;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
 tr:nth-child(even) {
     background-color: #1cb9be21;
 }
@@ -326,6 +335,7 @@ input[type="text"]#myInput {
 
 /* ===== DESKTOP LAYOUT FOR SONG MODALS ===== */
 @media (min-width: 900px) {
+
     /* Wider modal for song editing on desktop */
     #edit-song-modal .modal-content,
     #add-song-modal .modal-content {

@@ -52,7 +52,8 @@ function updateTableOneWithSetlist()
         const row = tableOneBody.insertRow();
         row.innerHTML = `
             <td>${displayName}</td>
-            <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="chords">Chords (${key})</a></td>
+            <td class="text-center selected-key">${key}</td>
+            <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="chords">Chords</a></td>
             <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="lyrics">Lyrics</a></td>
         `;
     });
