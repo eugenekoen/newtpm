@@ -28,14 +28,14 @@ async function populateSongDatabaseTable()
             const row = tableTwoBody.insertRow();
             row.innerHTML = `
                 <td>${song.displayName}</td>
-                <td class="edit-col text-center" style="width: 10%;">
+                <td class="edit-col text-center">
                     <a href="#" class="edit-btn" data-song-identifier="${song.identifier}" data-display-name="${song.displayName}">Edit</a>
                 </td>
-                <td class="text-center" style="width: 15%;">
-                    <a href="#" data-song-identifier="${song.identifier}" data-content-type="chords">Chords</a>
+                <td class="text-center">
+                    <a href="#" data-song-identifier="${song.identifier}" data-content-type="chords" title="Chords"><i class="fa-solid fa-music"></i></a>
                 </td>
-                <td class="text-center" style="width: 15%;">
-                    <a href="#" data-song-identifier="${song.identifier}" data-content-type="lyrics">Lyrics</a>
+                <td class="text-center">
+                    <a href="#" data-song-identifier="${song.identifier}" data-content-type="lyrics" title="Lyrics"><i class="fa-solid fa-align-left"></i></a>
                 </td>
             `;
         });

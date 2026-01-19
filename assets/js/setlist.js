@@ -53,8 +53,8 @@ function updateTableOneWithSetlist()
         row.innerHTML = `
             <td>${displayName}</td>
             <td class="text-center selected-key">${key}</td>
-            <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="chords">Chords</a></td>
-            <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="lyrics">Lyrics</a></td>
+            <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="chords" title="Chords"><i class="fa-solid fa-music"></i></a></td>
+            <td class="text-center"><a href="#" data-song-identifier="${songName}" data-content-type="lyrics" title="Lyrics"><i class="fa-solid fa-align-left"></i></a></td>
         `;
     });
 }

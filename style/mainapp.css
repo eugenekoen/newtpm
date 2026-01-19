@@ -73,7 +73,7 @@ table td:nth-child(3),
 table td:nth-child(4) {
     /* Adjusted to include lyrics column */
     text-align: center;
-    width: 15%;
+    width: 8%;
 }
 
 /* Selected Key column styling */
@@ -83,6 +83,12 @@ table td.selected-key {
     font-weight: 600;
     color: aqua;
     background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Icon styling in tables */
+table i {
+    font-size: 1.2em;
+    vertical-align: middle;
 }
 
 tr:nth-child(even) {
