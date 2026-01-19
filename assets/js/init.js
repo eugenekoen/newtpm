@@ -325,6 +325,47 @@ document.addEventListener('DOMContentLoaded', () =>
         }
     });
 
+    // Handle delete user actions (Admin only)
+    userListTableBody.addEventListener('click', async (event) =>
+    {
+        if (event.target.classList.contains('delete-user-btn'))
+        {
+            const userId = event.target.dataset.userId;
+            const label = event.target.getAttribute('aria-label') || 'this user';
+
+            if (!confirm(`Are you sure you want to delete ${label}? This will remove their profile record.`)) return;
+
+            const currentUserRole = window.authModule ? window.authModule.getCurrentUserRole() : null;
+            const { data: { user: currentUser } } = await supabaseClient.auth.getUser();
+
+            if (userId === currentUser?.id)
+            {
+                window.uiModule.showUserManagementMessage('You cannot delete your own account from here.', true);
+                return;
+            }
+
+            if (currentUserRole !== 'Admin')
+            {
+                window.uiModule.showUserManagementMessage('Only admins can delete users.', true);
+                return;
+            }
+
+            const { error } = await supabaseClient
+                .from('profiles')
+                .delete()
+                .eq('id', userId);
+
+            if (error)
+            {
+                window.uiModule.showUserManagementMessage(`Error deleting user: ${error.message}`, true);
+            } else
+            {
+                window.uiModule.showUserManagementMessage('User removed.');
+                await window.uiModule.populateUserManagementModal();
+            }
+        }
+    });
+
     // --- MODAL CLOSE LISTENERS ---
     document.querySelector('.close-login-modal-btn').addEventListener('click', () => loginModal.style.display = 'none');
     document.querySelector('.close-signup-modal-btn').addEventListener('click', () => signupModal.style.display = 'none');

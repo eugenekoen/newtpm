@@ -124,19 +124,44 @@ async function populateUserManagementModal()
 
         userListTableBody.innerHTML = '';
         const { data: { user: currentUser } } = await supabaseClient.auth.getUser();
+        const currentUserRole = window.authModule ? window.authModule.getCurrentUserRole() : null;
+
+        // Count occurrences of each name to identify duplicates
+        const nameCounts = {};
+        profiles.forEach(p =>
+        {
+            const name = p.full_name || p.email || 'N/A';
+            nameCounts[name] = (nameCounts[name] || 0) + 1;
+        });
 
         profiles.forEach(profile =>
         {
             const isCurrentUser = profile.id === currentUser?.id;
+            const name = profile.full_name || profile.email || 'N/A';
+            let displayName = name;
+
+            // Always show the email in brackets when a full name and email are available
+            if (profile.full_name && profile.email)
+            {
+                displayName = `${profile.full_name} <span class="user-email-hint">(${profile.email})</span>`;
+            }
+            else
+            {
+                displayName = profile.full_name || profile.email || 'N/A';
+            }
+
             const row = userListTableBody.insertRow();
             row.innerHTML = `
-                <td>${profile.full_name || profile.email || 'N/A'}</td>
+                <td>${displayName}</td>
                 <td>
                     <select class="role-select" data-user-id="${profile.id}" aria-label="Role for ${profile.full_name || profile.email}" ${isCurrentUser ? 'disabled' : ''}>
                         <option value="Unallocated" ${profile.role === 'Unallocated' ? 'selected' : ''}>Unallocated</option>
                         <option value="User" ${profile.role === 'User' ? 'selected' : ''}>User</option>
                         <option value="Admin" ${profile.role === 'Admin' ? 'selected' : ''}>Admin</option>
                     </select>
+                </td>
+                <td>
+                    <button class="delete-user-btn" data-user-id="${profile.id}" aria-label="Delete user ${profile.full_name || profile.email}" ${isCurrentUser || currentUserRole !== 'Admin' ? 'disabled' : ''}>Delete</button>
                 </td>
             `;
         });
